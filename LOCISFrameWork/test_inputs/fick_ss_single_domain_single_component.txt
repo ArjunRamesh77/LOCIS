@@ -1,0 +1,29 @@
+model FEMoneDtest < STEADY_STATE 0.0 1000.0 1000 1.0e-8 1.0e-8 >
+{
+	line ficks_domain::(basis = "linear",
+						segment = {id = "water", length = 1.0, numel = 3},
+						pdevar = {id = "Conc"});
+	
+	iter i;
+	
+	guess
+	{
+		# Guess for solution nodes
+		for(i = ficks_domain.water["left"], ficks_domain.water["right"])
+		{
+			ficks_domain.Conc[i] = 1.2;
+		}
+
+		# guess for Nuemann node
+		#ficks_domain.water.Conc["left"]' = 2.6;
+	}
+	 				
+	equation
+	{
+		ficks_domain.water.Conc["left"] = 10.0;
+		ficks_domain.water.Conc["right"] = 1.0;
+
+		PDE, ficks_domain.water.Conc, VALUE, VALUE: 
+				ficks_domain.Conc'*_v' + 0.001*ficks_domain.Conc*_v = 0, ficks_domain.Conc'*_v, -ficks_domain.Conc'*_v;
+	}
+}

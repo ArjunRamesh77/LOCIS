@@ -1,0 +1,38 @@
+model FEMoneDtest < DYNAMIC  0.0 10.0 50 1.0e-8 1.0e-8 >
+{
+	line ficks_domain::(basis = "linear",
+			    segment = {id = "water", length = 1.0, numel = 3},
+			    pdevar = {id = "Conc"});
+	
+	iter i;
+	
+	guess
+	{
+		# Guess for solution nodes
+		for(i = ficks_domain.water["left"], ficks_domain.water["right"])
+		{
+			ficks_domain.water.$Conc[i] = 1.0;
+			ficks_domain.Conc[i] = 1.0;
+		}
+	}
+	
+	init
+	{
+		for(i = ficks_domain.water["left"]+1, ficks_domain.water["right"]-1)
+		{
+			ficks_domain.water.Conc[i] = 0.00;
+		}	
+		ficks_domain.water.$Conc["left"] = 0.00;
+		ficks_domain.water.$Conc["right"] = 0.00;
+
+	}
+ 				
+	equation
+	{
+		ficks_domain.water.Conc["left"] = 1.0;
+		ficks_domain.water.Conc["right"] = 0.0;
+
+		PDE, ficks_domain.water.Conc, VALUE, VALUE: 
+				ficks_domain.Conc'*_v' + 0.001*ficks_domain.Conc*_v + ficks_domain.$Conc*_v = 0, ficks_domain.Conc'*_v, -ficks_domain.Conc'*_v;
+	}
+}

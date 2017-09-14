@@ -1,0 +1,69 @@
+
+#model FEMoneDtest < STEADY_STATE 0.0 1000.0 1000 1.0e-8 1.0e-8 >
+model FEMoneDtest < DYNAMIC  0.0 10.0 50 1.0e-8 1.0e-8 >
+{
+	line multidomain_line :: (basis = "linear",
+				segment = {id = "air", length = 0.01, numel = 3},
+				segment = {id = "water", length = 0.0001, numel = 3},
+				pdevar = {id = "ConcO2"});
+
+	parameter scale = 1.0e5;
+	
+	iter i;
+	
+	guess
+	{
+		for(i = multidomain_line.water["left"], multidomain_line.water["right"])
+		{
+                  multidomain_line.water.$ConcO2[i] = 1.0;
+			multidomain_line.water.ConcO2[i] = 1.0;
+		}
+		
+		for(i = multidomain_line.air["left"], multidomain_line.air["right"])
+		{
+                  multidomain_line.air.$ConcO2[i] = 1.0;
+
+			multidomain_line.air.ConcO2[i] = 1.0;
+		}
+	}
+	
+
+	init
+	{
+		for(i = multidomain_line.water["left"]+1, 
+                multidomain_line.water["right"]-1)
+		{
+			multidomain_line.water.ConcO2[i] = 0.00;
+
+		}	
+
+
+		for(i = multidomain_line.air["left"]+1, 
+                multidomain_line.air["right"]-1)
+		{
+			multidomain_line.air.ConcO2[i] = 0.00;
+		}	
+            multidomain_line.air.$ConcO2["left"] = 0.00;
+            multidomain_line.air.$ConcO2["right"] = 0.00;
+
+            multidomain_line.water.$ConcO2["left"] = 0.00;
+            multidomain_line.water.$ConcO2["right"] = 0.00;
+
+
+	}
+ 				
+	equation
+	{
+		multidomain_line.air.ConcO2["left"] = 0.9375;
+		multidomain_line.water.ConcO2["right"] = 0.00027;
+
+multidomain_line.air.ConcO2["right"] = 2.27326e-5*multidomain_line.water.ConcO2["left"];
+		0.0000214*multidomain_line.air.ConcO2["right"]' = 0.000000197*multidomain_line.water.ConcO2["left"]';	
+
+		PDE, multidomain_line.air.ConcO2, VALUE, FLUX: 
+		0.0000214*multidomain_line.ConcO2'*_v'+ multidomain_line.air.$ConcO2*_v = 0, 0.0000214*multidomain_line.ConcO2'*_v, -0.0000214*multidomain_line.ConcO2'*_v;
+	
+		PDE, multidomain_line.water.ConcO2, FLUX, VALUE: 
+		0.000000197*multidomain_line.ConcO2'*_v'+ multidomain_line.water.$ConcO2*_v = 0, 0.000000197*multidomain_line.ConcO2'*_v, -0.000000197*multidomain_line.ConcO2'*_v;		
+	}
+}

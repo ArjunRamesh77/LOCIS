@@ -1,0 +1,799 @@
+
+# This is a single line comment
+
+#* This is a 
+  multiline
+  comment
+
+  Hope this works!!
+
+*#
+
+#*
+Corner1
+*#
+
+#**#
+
+#
+
+model test
+{
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING DECLARATION Variable->Real
+	# >>>>>>>>>>>>>> Define variable
+	Variable Real Avar;
+
+	# >>>>>>>>>>>>>> Define variable with a default value 
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define arrayed variable
+	Variable Real Avar[100];
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)];
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+
+	# >>>>>>>>>>>>>> Define arrayed variable with default
+	Variable Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define variable with options
+	Variable Real Avar::(Type = Real, Unit = "1/L", desc = "is a variable");
+	Variable Real Avar::(Type = Real, Unit = "1/L");
+	Variable Real Avar::(Type = Real);
+
+	# >>>>>>>>>>>>>> Define variable with a default value and and options
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a variable");
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+
+	# >>>>>>>>>>>>>> Define arrayed variable with options
+	Variable Real Avar[100]::(Type = Real, Unit = "1/L", desc = "is a variable");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L", desc = "is a variable");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L", desc = "is a variable");
+
+	Variable Real Avar[100]::(Type = Real, Unit = "1/L");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L");
+
+	Variable Real Avar[100]::(Type = Real);
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Real);
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Real);
+
+	# >>>>>>>>>>>>>> define arrayed variable with default and options
+	Variable Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a variable");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a variable");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a variable");
+
+	Variable Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+
+	Variable Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+	Variable Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+	
+	
+	
+
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING DECLARATION Parameter->Real
+	# >>>>>>>>>>>>>> Define Parameter
+	Parameter Real Avar;
+
+	# >>>>>>>>>>>>>> Define Parameter with a default value 
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define arrayed Parameter
+	Parameter Real Avar[100];
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)];
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+
+	# >>>>>>>>>>>>>> Define arrayed Parameter with default
+	Parameter Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define Parameter with options
+	Parameter Real Avar::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+	Parameter Real Avar::(Type = Real, Unit = "1/L");
+	Parameter Real Avar::(Type = Real);
+
+	# >>>>>>>>>>>>>> Define Parameter with a default value and and options
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+
+	# >>>>>>>>>>>>>> Define arrayed Parameter with options
+	Parameter Real Avar[100]::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+
+	Parameter Real Avar[100]::(Type = Real, Unit = "1/L");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Real, Unit = "1/L");
+
+	Parameter Real Avar[100]::(Type = Real);
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Real);
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Real);
+
+	# >>>>>>>>>>>>>> define arrayed Parameter with default and options
+	Parameter Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L", desc = "is a Parameter");
+
+	Parameter Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real, Unit = "1/L");
+
+	Parameter Real Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+	Parameter Real Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Real);
+	
+	
+	
+
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING DECLARATION Parameter->Integer
+	# >>>>>>>>>>>>>> Define Parameter
+	Parameter Integer Avar;
+
+	# >>>>>>>>>>>>>> Define Parameter with a default value 
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define arrayed Parameter
+	Parameter Integer Avar[100];
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)];
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+
+	# >>>>>>>>>>>>>> Define arrayed Parameter with default
+	Parameter Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define Parameter with options
+	Parameter Integer Avar::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+	Parameter Integer Avar::(Type = Integer, Unit = "1/L");
+	Parameter Integer Avar::(Type = Integer);
+
+	# >>>>>>>>>>>>>> Define Parameter with a default value and and options
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+
+	# >>>>>>>>>>>>>> Define arrayed Parameter with options
+	Parameter Integer Avar[100]::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+
+	Parameter Integer Avar[100]::(Type = Integer, Unit = "1/L");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+
+	Parameter Integer Avar[100]::(Type = Integer);
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);
+
+	# >>>>>>>>>>>>>> define arrayed Parameter with default and options
+	Parameter Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+
+	Parameter Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+
+	Parameter Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+	Parameter Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+	
+	
+	
+
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING DECLARATION Variable->Integer
+	# >>>>>>>>>>>>>> Define Variable
+	Variable Integer Avar;
+
+	# >>>>>>>>>>>>>> Define Variable with a default value 
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define arrayed Variable
+	Variable Integer Avar[100];
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)];
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+
+	# >>>>>>>>>>>>>> Define arrayed Variable with default
+	Variable Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+
+	# >>>>>>>>>>>>>> Define Variable with options
+	Variable Integer Avar::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+	Variable Integer Avar::(Type = Integer, Unit = "1/L");
+	Variable Integer Avar::(Type = Integer);
+
+	# >>>>>>>>>>>>>> Define Variable with a default value and and options
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+
+	# >>>>>>>>>>>>>> Define arrayed Variable with options
+	Variable Integer Avar[100]::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+
+	Variable Integer Avar[100]::(Type = Integer, Unit = "1/L");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+
+	Variable Integer Avar[100]::(Type = Integer);
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);
+
+	# >>>>>>>>>>>>>> define arrayed Variable with default and options
+	Variable Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+
+	Variable Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+
+	Variable Integer Avar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+	Variable Integer Avar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+
+
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING MULTTIPLE DECLARATION Variable->Real
+	
+	# define muluple variable
+	Variable Real Avar, Bvar;
+	
+	# define multiple arrayed/simple variables
+	Variable Real Avar,
+				  Bvar[100],
+				  Cvar[100 + 2*Avar*(Avar + 100.6)],
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)],
+				  Evar,
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				  
+	# define multiple arrayed/simple variables with defaults
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	
+	# define multiple arrayed/simple with local options
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+				  
+				  
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+				  
+	
+	Variable Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+				  
+				  
+	# define multiple arrayed/simple with global options 
+	Variable::(Type = Integer, Unit = "1/L", desc = "is a Variable") Real 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Variable::(Type = Integer, Unit = "1/L") Real 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Variable::(Type = Integer) Real 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	# define multiple arrayed/simple with global and local options 
+	Variable::(Type = Integer, Unit = "1/L", desc = "is a Variable") Real Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Evar::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+				  
+	Variable::(Type = Integer, Unit = "1/L") Real Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Evar::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+				  				  
+	Variable::(Type = Integer) Real Avar,
+				  Bvar[100]::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Evar::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);
+				  
+				  
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING MULTTIPLE DECLARATION Parameter->Real
+	
+	# define muluple Parameter
+	Parameter Real Avar, Bvar;
+	
+	# define multiple arrayed/simple Parameters
+	Parameter Real Avar,
+				  Bvar[100],
+				  Cvar[100 + 2*Avar*(Avar + 100.6)],
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)],
+				  Evar,
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				  
+	# define multiple arrayed/simple Parameters with defaults
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	
+	# define multiple arrayed/simple with local options
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+				  
+				  
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+				  
+	
+	Parameter Real Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+				  
+				  
+	# define multiple arrayed/simple with global options 
+	Parameter::(Type = Integer, Unit = "1/L", desc = "is a Parameter") Real 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Parameter::(Type = Integer, Unit = "1/L") Real 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Parameter::(Type = Integer) Real 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	# define multiple arrayed/simple with global and local options 
+	Parameter::(Type = Integer, Unit = "1/L", desc = "is a Parameter") Real Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Evar::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+				  
+	Parameter::(Type = Integer, Unit = "1/L") Real Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Evar::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+				  				  
+	Parameter::(Type = Integer) Real Avar,
+				  Bvar[100]::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Evar::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);	  			  
+	
+	
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING MULTTIPLE DECLARATION Parameter->Integer
+	
+	# define muluple Parameter
+	Parameter Integer Avar, Bvar;
+	
+	# define multiple arrayed/simple Parameters
+	Parameter Integer Avar,
+				  Bvar[100],
+				  Cvar[100 + 2*Avar*(Avar + 100.6)],
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)],
+				  Evar,
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				  
+	# define multiple arrayed/simple Parameters with defaults
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	
+	# define multiple arrayed/simple with local options
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+				  
+				  
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+				  
+	
+	Parameter Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+				  
+				  
+	# define multiple arrayed/simple with global options 
+	Parameter::(Type = Integer, Unit = "1/L", desc = "is a Parameter") Integer 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Parameter::(Type = Integer, Unit = "1/L") Integer 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Parameter::(Type = Integer) Integer 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	# define multiple arrayed/simple with global and local options 
+	Parameter::(Type = Integer, Unit = "1/L", desc = "is a Parameter") Integer Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Evar::(Type = Integer, Unit = "1/L", desc = "is a Parameter"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Parameter");
+				  
+	Parameter::(Type = Integer, Unit = "1/L") Integer Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Evar::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+				  				  
+	Parameter::(Type = Integer) Integer Avar,
+				  Bvar[100]::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Evar::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);		  
+
+	
+	
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING MULTTIPLE DECLARATION Variable->Integer
+	
+	# define muluple Variable
+	Variable Integer Avar, Bvar;
+	
+	# define multiple arrayed/simple Variables
+	Variable Integer Avar,
+				  Bvar[100],
+				  Cvar[100 + 2*Avar*(Avar + 100.6)],
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)],
+				  Evar,
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				  
+	# define multiple arrayed/simple Variables with defaults
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+	
+	# define multiple arrayed/simple with local options
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+				  
+				  
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer, Unit = "1/L");
+				  
+	
+	Variable Integer Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33)::(Type = Integer);
+				  
+				  
+	# define multiple arrayed/simple with global options 
+	Variable::(Type = Integer, Unit = "1/L", desc = "is a Variable") Integer 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Variable::(Type = Integer, Unit = "1/L") Integer 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	Variable::(Type = Integer) Integer 
+				  Avar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Bvar[100] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Evar = 1.0 + 2*(Avar + 1.0E-16 + 32.33),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)] = 1.0 + 2*(Avar + 1.0E-16 + 32.33);
+				  
+	# define multiple arrayed/simple with global and local options 
+	Variable::(Type = Integer, Unit = "1/L", desc = "is a Variable") Integer Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Evar::(Type = Integer, Unit = "1/L", desc = "is a Variable"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L", desc = "is a Variable");
+				  
+	Variable::(Type = Integer, Unit = "1/L") Integer Avar,
+				  Bvar[100]::(Type = Integer, Unit = "1/L"),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L"),
+				  Evar::(Type = Integer, Unit = "1/L"),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer, Unit = "1/L");
+				  				  
+	Variable::(Type = Integer) Integer Avar,
+				  Bvar[100]::(Type = Integer),
+				  Cvar[100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Dvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer),
+				  Evar::(Type = Integer),
+				  Fvar[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]::(Type = Integer);
+				  
+				  
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING OBJECT DECLARATION
+	
+	# define simple 
+	CSTR CS1;
+	
+	# define arrayed
+	CSTR CS1[100];
+	CSTR CS1[100 + 2*Avar*(Avar + 100.6)];
+	CSTR CS1[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+	
+	# define multi
+	CSTR CSTR1,
+		 CSTR2,
+		 CSTR3[100 + 2*Avar*(Avar + 100.6)],
+		 CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				  
+				  
+	#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TESTING SET DECLARATION
+
+	set
+	{
+		# simple assignment
+		Avar := 1;
+		
+		# array elements direct assignment
+		Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]] := 1 + 1.0 + 1.0E-16;
+	
+		# compex object reference
+		CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+		
+		# Different types of assignment
+		Avar := 1 + 2.0 + 2.0E-16;
+		Avar[2].T >= 1 + 2.0 + 2.0E-16;
+		Avar[2].T <= 1 + 2.0 + 2.0E-16;
+		Avar[2].T > 1 + 2.0 + 2.0E-16;
+		Avar[2].T  < 1 + 2.0 + 2.0E-16 + Avar[2].T;
+		
+		
+		# for loop simple
+		for(i = 1, 10, 100)
+		{
+			Avar[4, 6, 5] := 1;
+			CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+		}
+		
+		# muliple for loops
+		for(i = 1, 10, 100)
+		{
+			Avar[4, 6, 5] := 1;
+			CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+			for(i = 1, 10, 100)
+			{
+				Avar[4, 6, 5] := 1;
+				CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				for(i = 1, Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]], Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]])
+				{
+					Avar[4, 6, 5] := 1;
+					CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+					for(i = 1, 10, 100)
+					{
+						Avar[4, 6, 5] := 1;
+						CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+						for(i = 1, 10, 100)
+						{
+							Avar[4, 6, 5] := 1;
+							CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+						}
+					}
+				}
+			}
+		}
+		
+		# Simple if_statement
+		if(A >B)
+		{
+			Avar = 2;
+		}
+		
+		# Complex if_statement
+		if((A > B) && (B > C) && (D <= G) || (F >= G) && !(F==G) && (CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] == CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)]))
+		{ 
+			Avar[4, 6, 5] := 1;
+			Avar[4, 6, 5] := 1;
+			CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+			Avar[4, 6, 5] := 1;
+			CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+		}
+		
+		# Combined for-loop and if
+		# Complex if_statement
+		if((A > B) && (B > C) && (D <= G) || (F >= G) && !(F==G) && (CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] == 2))
+		{ 
+			Avar[4, 6, 5] := 1;
+			Avar[4, 6, 5] := 1;
+			CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+			Avar[4, 6, 5] := 1;
+			CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+			# muliple for loops
+			for(i = 1, 10, 100)
+			{
+				Avar[4, 6, 5] := 1;
+				CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+				for(i = 1, 10, 100)
+				{
+					Avar[4, 6, 5] := 1;
+					CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+					for(i = 1, Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]], Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]])
+					{
+						Avar[4, 6, 5] := 1;
+						CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+						for(i = 1, 10, 100)
+						{
+							if((A > B) && (B > C) && (D <= G) || (F >= G) && !(F==G) && (CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] == 2))
+							{ 
+								Avar[4, 6, 5] := 1;
+								Avar[4, 6, 5] := 1;
+								CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+								Avar[4, 6, 5] := 1;
+								for(i = 1, 10, 100)
+								{
+									Avar[4, 6, 5] := 1;
+									CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+									for(i = 1, 10, 100)
+									{
+										Avar[4, 6, 5] := 1;
+										CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+										for(i = 1, Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]], Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].Avar[2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]])
+										{
+											Avar[4, 6, 5] := 1;
+											CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+											for(i = 1, 10, 100)
+											{
+												if((A > B) && (B > C) && (D <= G) || (F >= G) && !(F==G) && (CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] == 2))
+												{ 
+													Avar[4, 6, 5] := 1;
+													Avar[4, 6, 5] := 1;
+													CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+													Avar[4, 6, 5] := 1;
+												}
+												Avar[4, 6, 5] := 1;
+												CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+												for(i = 1, 10, 100)
+												{
+													Avar[4, 6, 5] := 1;
+													CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := CSTR4[100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6), 100 + 2*Avar*(Avar + 100.6)];
+												}
+											}
+										}
+									}
+								}
+							}
+							Avar[4, 6, 5] := 1;
+							CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+							for(i = 1, 10, 100)
+							{
+								Avar[4, 6, 5] := 1;
+								CSTR[1].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]].HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]],HeatExchanger[1,2 + Avar[1 + Avar[1+ Avar[1]*Avar[1]/Avar[1]]]]] := 1;
+							}
+						}
+					}
+				}
+			}
+		}	
+		
+		if(A > B)
+		{
+			a := 1
+		
+		}
+		
+		
+		
+	}
+
+
+}
+
+
+

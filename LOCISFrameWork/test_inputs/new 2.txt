@@ -1,0 +1,32 @@
+
+
+model test1
+{
+	variable a, b;
+	
+	equation
+	{
+		a + 2*b = 10;
+		a - b = 100; 
+	}
+}
+
+model test2
+{
+	variable c;
+	parameter num_obj;
+	
+	test1 test1_obj[num_obj];
+	
+	set
+	{
+		num_obj = 2;
+	}
+	
+	equation
+	{
+		test1_obj[1].a + test1_obj[1].b + 56.0;
+		test1_obj[1].a - 2*test1_obj[1].b + 56.0;
+	}
+}
+

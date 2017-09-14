@@ -1,0 +1,181 @@
+//-----------------------------------------------------------------------------------
+//
+// Grammar for LOCIS programme
+// Author: Arjun Ramesh
+// Date created: 11/01/2016
+//
+//-----------------------------------------------------------------------------------
+
+model_collection					:	model*
+
+^model								:	"MODEL" IDENT simulation_args? LCURLY model_statement* RCURLY 
+
+model_statement						:	model_entity_decl	|
+										model_section		|
+										
+^model_entity_decl					:	model_entity_type numtype? model_entities SEMICOLON
+
+model_section						:	section_type options? single_or_compound_statement
+
+section_type						:	"SET"		|
+										"FIX"		|
+										"INIT"		|
+										"GUESS"		|
+										"EQUATION"
+										
+^options							:	DCOLON LCIRCLE option_space RCIRCLE										
+
+options_space						:	option (COMMA option)*
+
+option								:	unit   	   		|
+										desc       		|
+										bounds	   		|
+										basis_type  	|
+										segment_def		|
+										pdevar_def
+										
+unit								:	"UNIT" EQUALS STRING 
+
+desc								:	"DESC" EQUALS STRING 
+
+type								:	"TYPE" EQUALS num_type	
+
+numtype								:	"REAL" 		|	 
+										"INTEGER"
+
+bounds								:	inequality expression
+
+inequality							:	GTHAN 		|
+										LTHAN 		|
+										GEQUALS		|
+										LEQUALS
+										
+noneq_statment						:	for_loop			|
+										if_statement		|
+										assignment
+								
+eq_statement						:	for_loop			|
+										if_statement		|
+										equation
+										
+model_entity_type					:	"PARAMETER"		|
+										"VARIABLE"		|
+										"ITER"			|
+										"LINE"			|
+										IDENT
+
+model_entities						:	model_entity (COMMA model_entity)*
+
+model_entity						:	type_name default? options? 	
+
+default								:	(DEQUALS | EQUALS) expression
+
+^equation							: 	expresion equation_type_operator expresion 
+
+expression							:	term ([PLUS MINUS] term)*
+
+term								:	factor([MULT DIV] factor)*
+
+factor								:	primary (RAISE primary)?
+
+primary								:	[PLUS MINUS]? 
+										real_number 				| 
+										full_type_name				| 
+										LCIRCLE logical_expression RCIRCLE
+										 
+real_number							:	REAL_VALUE 			|
+										INTEGER_VALUE		|
+										EXPO_EXPO		
+										
+equation_type_operator				:	CEQUALS		|
+										EQUALS		|
+										GTHAN		|
+										LTHAN		|
+										GEQUALS		|
+										LEQUALS
+
+comparison_type_operator			:	DEQUALS		|
+										GTHAN		|
+										LTHAN		|
+										GEQUALS		|
+										LEQUALS
+																				
+type_name							:	DOLLAR? IDENT 								derivative_sigle_var?	| 
+										DOLLAR? IDENT LSQUARE array_indices RSQUARE derivative_sigle_var?
+																				
+array_indices						:	array_index (COMMA array_index)*
+
+array_index							:	string_index 		|
+										expression   
+
+string_index						:	STRING										
+										
+full_type_name						:	type_name (DOT type_name)*
+
+function							:	IDENT LCIRCLE expresion (COMMA expression)* RCIRCLE
+											
+logical_expression					:	lterm ([AND OR] lterm)*
+
+lterm								:	NOT? lfactor
+
+lfactor								:	lprimary (equation_type_operator lprimary)*
+
+lprimary							:	expression 				|
+										LCIRCLE logical_expression RCIRCLE
+										
+for_loop							:	"FOR" LCIRCLE IDENT EQUALS expression COMMA expression (COMMA expression)? RCIRLCE single_or_compound_statement
+
+single_or_compound_statement		:	LCURCLY %(eq_statement* | noneq_statement*) RCURLY 
+										
+if_statement						:	"IF" LCIRCLE logical_expression	RCIRCLE single_or_compound_statement ("ELSE" single_or_compound_statement)?
+
+^assignment							:	full_type_name equation_type_operator expression
+
+simulation_args						:   LTHAN IDENT COMMA real_number COMMA real_number COMMA real_number COMMA real_number COMMA real_number GTHAN
+
+------------------------ [ FEM ONED GRAMMAR]-------------------------------------------------------------
+
+									
+basis_type							:	"BASIS" EQUALS STRING
+
+segment_def							:	"SEGMENT" EQUALS segment_attributes
+
+segment_attributes					:	LCURCLY segment_attribute (COMMA segment_attribute)* RCURLY
+
+segment_attribute					:	segment_id_type		|
+										segment_numel		|
+										segment_length		|
+										domain_option
+
+segment_id_type						:	"ID" EQUALS STRING
+
+segment_numel						:	"NUMEL" EQUALS expresion
+
+segment_length						:	"LENGTH" EQUALS expresion
+
+domain_option						:	"DOMAIN" EQUALS LCURCLY IDENT (COMMA IDENT)* RCURLY
+
+pdevar_def							:	"PDEVAR" EQUALS segment_attribute
+
+pde_equation						:	"PDE" COMMA full_type_name COMMA bondary_type COMMA bondary_type COLON equation COMMA expresion COMMA expresion SEMICOLON
+
+derivative_sigle_var				:	'+ 
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+

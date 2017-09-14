@@ -1,0 +1,3 @@
+$A = D'A" - K_on * R_tot * A * (1-B) + k_off * B
+$B = k_on * R_tot * A * (1- B) - k_off * B
+

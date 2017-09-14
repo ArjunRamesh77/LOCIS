@@ -1,0 +1,7 @@
+FlexPDE Version 6.50/W64  16:07:14 Jan 31 2017
+(Times listed are wall-clock times, not charged CPU).
+
+START C:\Repository\LOCIS\Docs\FEM\SampleCodes\Document1_04_19_2016_FEM\simple_1d_problem.pde  10:53:15 2/12/17
+Using 1 Thread(s)
+ +00:00:00| GRID 1 Nodes=51 Cells=25 RMS ERR= 2.621e-6 MAX ERR= 2.707e-6 MEM=238
+ +00:00:00| --DONE-- 10:53:15 2/12/17

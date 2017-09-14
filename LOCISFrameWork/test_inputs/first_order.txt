@@ -1,0 +1,27 @@
+model FEMoneDtest < STEADY_STATE 0.0 1000.0 1000 1.0e-8 1.0e-8 >
+{
+	line ficks_domain::(basis = "linear",
+						segment = {id = "water", length = 1.0, numel = 3},
+						pdevar = {id = "Conc"});
+	
+	iter i;
+	
+	guess
+	{
+		# Guess for solution nodes
+		for(i = ficks_domain.water["left"], ficks_domain.water["right"])
+		{
+			ficks_domain.Conc[i] = 1.2;
+		}
+
+	}
+	 				
+	equation
+	{
+		ficks_domain.water.Conc["left"] = 1.0;
+		ficks_domain.water.Conc["right"]' = 0.0;
+
+		PDE, ficks_domain.water.Conc, VALUE, FLUX: 
+				ficks_domain.Conc'*_v = _x*_v, ficks_domain.Conc'*_v, -ficks_domain.Conc'*_v;
+	}
+}

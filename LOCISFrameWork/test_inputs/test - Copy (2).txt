@@ -1,0 +1,44 @@
+
+# My first LOCIS program
+# Robertson DAE
+
+model test  
+{
+	parameter m = 1,
+			  g = 9.81,
+			  s = 1;
+			  
+	variable x, y, v, w, lam;
+	
+	guess
+	{
+		x = 0;
+		y = -s;
+		v = 1;
+		w = 0;
+		lam = m*(1+s*g)/(2*s*s);
+		$x = 1.0;
+		$y = 1.0;
+		$v = 1.0;
+		$w = 1.0;
+		$lam = 1.0;
+	}
+	
+	init
+	{
+		x = 0;
+		y + s = 0;
+		v = 1;
+		w = 0;
+	}
+	
+	equation
+	{
+		m*(v*v + w*w - g*y) - 2*lam*(x*x + y*y) = 0;
+		$x = v;
+		$y = w;
+		m*$v + 2*x*lam = 0;
+		m*$w + m*g + 2*y*lam = 0;
+	}
+
+}

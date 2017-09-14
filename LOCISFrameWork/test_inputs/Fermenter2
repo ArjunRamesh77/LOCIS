@@ -1,0 +1,70 @@
+model fermenter <DYNAMIC 0.0 1.0 100 1.0E-10 1.0E-10>
+{
+	parameter T_ref = 273.15 ;
+	
+	variable x = 0.1 ;
+	variable x_in = 0.1 ;
+	variable x_nonviable = 0.1 ;
+	variable x_nonviable_in = 0.1 ;
+	variable s = 0.1 ;
+	variable s_in = 0.1 ;
+	variable p = 0.1 ;
+	variable p_in = 0.1 ;
+	variable V = 1.0 ;
+	variable flow_in = 0.1 ;
+	variable flow_out = 0.1 ;
+	variable max_sp_growth_rate = 0.5 ;
+	variable saturation_const = 0.1 ;
+	variable inhibition_const = 0.1 ;
+	variable prod_inhib_const = 0.1 ;
+	variable maintenance_const = 0.5 ;
+	variable decay_const = 0.5 ;
+	variable yield_x_s = 1.0 ;
+	variable yield_p_s = 1.0 ;
+	variable alpha = 1.0 ;
+	variable beta = 0.5 ;
+	#variable (max_sp_growth_rate * s * (1.0 - p/prod_inhib_const)/(saturation_const + s + s*s/inhibition_const)) = 0.5 ;
+	
+	fix
+	{
+		max_sp_growth_rate = 0.48 ;
+		saturation_const = 1.2 ;
+		inhibition_const = 22 ;
+		prod_inhib_const = 50 ;
+		alpha = 2.2 ;
+		beta = 0.2 ;
+		yield_x_s = 0.4 ;
+		yield_p_s = 0.51 ;
+		maintenance_const = 0.1 ;
+		decay_const =0.01 ;
+		flow_in = 0 ;
+		flow_out = 0 ;
+		x_in = 0 ;
+		x_nonviable_in = 0 ;
+		s_in = 0 ;
+		p_in = 0 ;	
+	}
+	
+	equation
+	{
+		$V = flow_in - flow_out ;
+		
+		V * $x + x * $V = flow_in * x_in - flow_out * x + V * (max_sp_growth_rate * s * (1.0 - p/prod_inhib_const)/(saturation_const + s + s*s/inhibition_const)) * x - V * decay_const * x ;
+		
+		V * $x_nonviable + x_nonviable * $V = flow_in * x_nonviable_in - flow_out * x + V * decay_const * x ;
+		
+		V * $s + s * $V = flow_in * s_in - flow_out * s - V * ((max_sp_growth_rate * s * (1.0 - p/prod_inhib_const)/(saturation_const + s + s*s/inhibition_const)) * x/yield_x_s + maintenance_const * x + (alpha * (max_sp_growth_rate * s * (1.0 - p/prod_inhib_const)/(saturation_const + s + s*s/inhibition_const)) + beta) * x/yield_p_s) ;
+		
+		V * $p + p * $V = flow_in * p_in - flow_out * p + V * (alpha * (max_sp_growth_rate * s * (1.0 - p/prod_inhib_const)/(saturation_const + s + s*s/inhibition_const)) + beta) * x ;	
+	}
+	
+	init
+	{
+		s = 100 ;
+		x = 0.01 ; 
+		p = 0.0 ;
+		x_nonviable = 0.0 ;
+		V = 1.0 ;
+	}
+}
+

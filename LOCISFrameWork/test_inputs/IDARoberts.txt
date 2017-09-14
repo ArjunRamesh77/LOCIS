@@ -1,0 +1,26 @@
+
+# My first LOCIS program
+# Robertson DAE
+
+model test
+{
+	variable y1, y2, y3, y4, y5;
+	
+	guess
+	{
+		y1 = 0.000001;
+		y2 = 0.000001;
+		y3 = 0.000001;
+		y4 = 0.000001;
+		y5 = 0.000001;
+	}
+		
+	equation
+	{
+		y1 = 1;
+		y2 = 0;
+		y4 + 0.04*y1 - 1.0e4*y2*y3 = 0;
+		y5 - 0.04*y1 + 1.0e4*y2*y3 + 3.0e7*y2*y2 = 0;
+		y1 + y2 + y3 = 1;
+	}
+}

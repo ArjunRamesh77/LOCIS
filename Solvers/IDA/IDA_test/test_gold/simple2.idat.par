@@ -1,0 +1,118 @@
+------------------------------THEAD OUTPUT = SIMPLE_PENDULAM---------------------------------------------------------------------------------------- 
+>> GUESS FOR SYSTEM(y)
+     y[0] = 1.000000
+     y[1] = 0.000000
+     y[2] = 0.000000
+>> GUESS FOR SYSTEM(yp)
+     yp[0] = -0.40000
+     yp[1] = 0.40000
+     yp[2] = 0.000000
+ 
+>> OPTIONS FOR SYSTEM 
+		// SetID
+		int *setidptr = new int[NEQ] 
+		setidptr[0] = 1 
+		setidptr[1] = 1 
+		setidptr[2] = 0 
+		//	abstol = new double[3] 
+		(*options).abstol = NULL 
+		(*options).abstol = new double[3] 
+		(*options).abstol[0] = 1.0e-8 
+		(*options).abstol[1] = 1.0e-14 
+		(*options).abstol[2] = 1.0e-6 
+		(*options).reltol = 1e-4 
+		(*options).nout = 6 
+		(*options).t0 = 10 
+		(*options).tfinal = 40 
+		options->finalstatsprintlevel = 1 
+		options->LinearSolver =  IDADENSE  
+		options->callrootfn = true 
+		options->NrootFn = 2 
+		options->solvetype = 3 
+		options->callCalcIC = true 
+		options->if_jacobian = true 
+		options->setidptr = setidptr 
+		options->setidlength = NEQ 
+		options->callSetID = true 
+ 
+     >> IDA OBJECT INFO 
+     LastOrder :: 3
+     Numsteps :: 116
+     LastStep :: 116.000000
+     t :: 16.000000
+     Solution(yval)::
+        yval[1] = 0.000013
+        yval[2] = 0.197718
+        yval[3] = 0.000000
+  
+ 
+     >> IDA OBJECT INFO 
+     LastOrder :: 3
+     Numsteps :: 122
+     LastStep :: 122.000000
+     t :: 22.000000
+     Solution(yval)::
+        yval[1] = 0.000012
+        yval[2] = 0.226289
+        yval[3] = 0.000000
+  
+ 
+     >> IDA OBJECT INFO 
+     LastOrder :: 3
+     Numsteps :: 126
+     LastStep :: 126.000000
+     t :: 28.000000
+     Solution(yval)::
+        yval[1] = 0.000011
+        yval[2] = 0.248978
+        yval[3] = 0.000000
+  
+ 
+     >> IDA OBJECT INFO 
+     LastOrder :: 3
+     Numsteps :: 129
+     LastStep :: 129.000000
+     t :: 34.000000
+     Solution(yval)::
+        yval[1] = 0.000010
+        yval[2] = 0.267886
+        yval[3] = 0.000000
+  
+ 
+     >> IDA OBJECT INFO 
+     LastOrder :: 4
+     Numsteps :: 132
+     LastStep :: 132.000000
+     t :: 40.000000
+     Solution(yval)::
+        yval[1] = 0.000009
+        yval[2] = 0.284149
+        yval[3] = 0.000000
+  
+ 
+     >> IDA OBJECT INFO 
+     LastOrder :: 4
+     Numsteps :: 135
+     LastStep :: 135.000000
+     t :: 46.000000
+     Solution(yval)::
+        yval[1] = 0.000009
+        yval[2] = 0.298443
+        yval[3] = 0.000000
+  
+ 
+     >> IDA ERROR 
+     code :: -22
+     type :: Kinsol internal error
+     msg :: 
+          IDA
+          IDAGetConsistentIC
+          IDAGetConsistentIC can only be called before IDASolve.
+  
+ 
+     >> IDA ERROR 
+     code :: 9
+     type :: IDAGetConsistentIC failed
+     msg :: 
+          Input argument has illegal value
+  

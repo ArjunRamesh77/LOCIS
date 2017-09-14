@@ -1,0 +1,17 @@
+
+
+model FEMoneDtest
+{
+	line ficks_domain::(basis = "linear",
+						segment = {id = "blue_jelly", length = 1.0, numel = 10.0},
+						segment = {id = "water", length = 2.0, numel = 13.0},
+						pdevar = {id = "Conc"},
+						pdevar = {id = "RateK"});
+						
+	
+	equation
+	{
+		PDE, ficks_domain.blue_jelly.Conc, VALUE, VALUE: 
+				ficks_domain.Conc'*_v' + 1.0 = 0, ficks_domain.Conc'*v, ficks_domain.Conc'*v;
+	}
+}

@@ -1,0 +1,31 @@
+
+# My first LOCIS program
+# Robertson DAE
+
+model test < DYNAMIC 0.0 100.0 1000 1.0e-8 1.0e-8 >
+{
+	variable y1, y3, y2;
+	
+	guess
+	{
+		y1 = 1;
+		y2 = 0;
+		y3 = 0;
+		$y1 = 1.0e-6;
+		$y2 = 1.0e-6;
+		$y3 = 0;
+	}
+	
+	init
+	{
+		y1 = 1;
+		y2 = 0;
+	}
+		
+	equation
+	{
+		$y1 + 0.04*y1 - 1.0e4*y2*y3 = 0;
+		$y2 - 0.04*y1 + 1.0e4*y2*y3 + 3.0e7*y2*y2 = 0;
+		y1 + y2 + y3 - 1 = 0;
+	}
+}

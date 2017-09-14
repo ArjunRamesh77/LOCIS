@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\IDAClass">
+      <UniqueIdentifier>{6853a1be-b475-4c75-8996-f3785c616a57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ErrorClass">
+      <UniqueIdentifier>{c9e896b5-067d-444e-8d37-ce0f1c2b1681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDAClass\FREE">
+      <UniqueIdentifier>{b2960ab6-c1ca-4461-8e4c-263d362f8fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDAClass\ERROR">
+      <UniqueIdentifier>{aa1686af-e4a0-4c16-8dc5-43f981306f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDAClass\Options">
+      <UniqueIdentifier>{b0b13b54-81b9-4c4c-960b-ec07ebf4ad96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDAClass\PROBLEMSETUP">
+      <UniqueIdentifier>{aa5ab3f3-2f5a-43b4-ac6a-6be97345eed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDAClass\SOLVE">
+      <UniqueIdentifier>{55625289-fb18-43b5-a122-681ee09228c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDAClass\OUTPUT">
+      <UniqueIdentifier>{c484360a-0681-420f-93fb-31cbea6ef8bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DLL Functions">
+      <UniqueIdentifier>{579f2e63-d33d-477a-acdb-e997e3736eb5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDAclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDA_dll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jac.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="res.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="root.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDA_helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDAOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDA_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InforError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="funcpointers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dll_funcpointers.h">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddErrorLine.cpp">
+      <Filter>Source Files\ErrorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="AddErrortoVector.cpp">
+      <Filter>Source Files\ErrorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Error_IDA.cpp">
+      <Filter>Source Files\ErrorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="GetLastError.cpp">
+      <Filter>Source Files\ErrorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SetErr.cpp">
+      <Filter>Source Files\ErrorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SetOptions.cpp">
+      <Filter>Source Files\IDAClass\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckFlag.cpp">
+      <Filter>Source Files\IDAClass\ERROR</Filter>
+    </ClCompile>
+    <ClCompile Include="ProblemSetup.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+    <ClCompile Include="SetInitialGuess.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialize.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+    <ClCompile Include="SetProblemdata.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+    <ClCompile Include="SetIntegrationTol.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+    <ClCompile Include="SolveIt.cpp">
+      <Filter>Source Files\IDAClass\SOLVE</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintFinalStats.cpp">
+      <Filter>Source Files\IDAClass\OUTPUT</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintOutput.cpp">
+      <Filter>Source Files\IDAClass\OUTPUT</Filter>
+    </ClCompile>
+    <ClCompile Include="IDA_dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_INIT.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_map.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_setdata.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_solve.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_Free.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVars.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_SetOptions.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_Jac.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_res.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_error.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="IDAOptions.cpp">
+      <Filter>Source Files\IDAClass\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_Root.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Solver_IDA.cpp">
+      <Filter>Source Files\IDAClass\FREE</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL_Boss.cpp">
+      <Filter>Source Files\DLL Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="allocateJtrial.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckUserInput.cpp">
+      <Filter>Source Files\IDAClass\PROBLEMSETUP</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

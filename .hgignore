@@ -1,0 +1,109 @@
+
+syntax: glob
+
+# LOCIS Fw
+LOCISFrameWork\LOCISFrameWork.VC.db
+LOCISFrameWork\LOCISFrameWork.VC.VC.opendb
+LOCISFrameWork\.vs\LOCISFrameWork\v14\.suo
+LOCISFrameWork\LOCISFrameWork\Debug\**
+LOCISFrameWork\LOCISFrameWork\Release\**
+LOCISFrameWork\Debug\**
+LOCISFrameWork\Release\**
+LOCISFrameWork\LOCISDemo\Release\**
+LOCISFrameWork\LOCISDemo\Debug\**
+
+# KINSOL_OBJECT
+Solvers\KINSOL\.vs\kinsol_object\v14\.suo
+Solvers\KINSOL\kinsol_object.VC.db
+Solvers\KINSOL\kinsol_object.VC.VC.opendb
+Solvers\KINSOL\Debug\**
+Solvers\KINSOL\Release\**
+Solvers\KINSOL\kinsol_app\Debug\**
+Solvers\KINSOL\kinsol_app\Release\**
+Solvers\KINSOL\kinsol_object\Debug\**
+Solvers\KINSOL\kinsol_object\Release\**
+
+# KINSOL_SRC (builddir)
+Solvers\KINSOL\kinsol_src\builddir\**
+
+# KINSOL_TEST
+Solvers\KINSOL\kinsol_test\Debug\**
+Solvers\KINSOL\kinsol_test\Release\**
+Solvers\KINSOL\kinsol_test\test_output\**
+Solvers\KINSOL\kinsol_test\extra_headers.h
+Solvers\KINSOL\kinsol_test\functions.cpp
+Solvers\KINSOL\kinsol_test\kinsol_test.vcxproj.filters
+Solvers\KINSOL\kinsol_test\local_func_prototypes.h
+Solvers\KINSOL\kinsol_test\ReadMe.txt
+Solvers\KINSOL\kinsol_test\thread_data.h
+
+
+# KINSOL_HELPERS
+Solvers\KINSOL\kinsol_helpers\Debug\**
+Solvers\KINSOL\kinsol_helpers\Release\**
+Solvers\KINSOL\kinsol_helpers\kinsol_helpers.vcxproj.filters
+Solvers\KINSOL\kinsol_helpers\ReadMe.txt
+
+#IDA
+Solvers\IDA\.vs\IDA_object\v14\.suo
+Solvers\IDA\Debug\**
+Solvers\IDA\Release\**
+
+#IDA_src
+Solvers\IDA\IDA_src\builddir\**
+
+
+# IDA_OBJECT
+Solvers\IDA\IDA_object.VC.VC.opendb
+Solvers\IDA\IDA_object.VC.db
+Solvers\IDA\IDA_object\Debug\**
+Solvers\IDA\IDA_object\Release\**
+
+# IDA_HELPERS
+Solvers\IDA\IDA_helpers\Debug\**
+Solvers\IDA\IDA_helpers\Release\**
+
+# IDA_APP
+Solvers\IDA\IDA_app\Debug\**
+Solvers\IDA\IDA_app\Release\**
+
+# IDA_TEST
+Solvers\IDA\IDA_test\Debug\**
+Solvers\IDA\IDA_test\Release\**
+Solvers\IDA\IDA_test\extra_headers.h
+Solvers\IDA\IDA_test\local_func_prototypes.h
+Solvers\IDA\IDA_test\test_output\**
+Solvers\IDA\IDA_test\thread_data.h
+Solvers\IDA\IDA_test\functions.cpp
+
+# SUITESPARSE
+Solvers\SUITESPARSE\builddir\**
+
+# LAPACK
+Solvers\LAPACK\builddir\**
+
+#FEM
+FEM\FEM\Debug
+FEM\FEM\Release
+FEM\FEM\FEM.VC.db
+FEM\FEM\FEM.VC.VC.opendb
+FEM\FEM\.vs\*
+
+
+# COMMONS
+Commons\**
+
+# Python27
+Python27\**
+
+# RegexLesson
+Docs\CodeSamples\RegexLesson\RegexLesson\RegexLesson.VC.VC.opendb
+Docs\CodeSamples\RegexLesson\RegexLesson\.vs\RegexLesson\v14\.suo
+Docs\CodeSamples\RegexLesson\RegexLesson\RegexLesson.VC.db
+Docs\CodeSamples\RegexLesson\RegexLesson\RegexLesson\Debug\**
+Docs\CodeSamples\RegexLesson\RegexLesson\RegexLesson\Release\**
+Docs\CodeSamples\RegexLesson\RegexLesson\Debug\**
+Docs\CodeSamples\RegexLesson\RegexLesson\Release\**
+Docs\CodeSamples\RegexLesson\RegexLesson\RegexLesson\x64\**
+Docs\CodeSamples\RegexLesson\RegexLesson\x64\**
+LOCISFrameWork/LOCISDemo/equationOut.txt

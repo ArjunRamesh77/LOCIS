@@ -1,0 +1,84 @@
+# 1D steady state non-linear diffusion equation
+# d2C/dx2 = -K*C
+# Dirichlet conditions on both ends
+
+THREAD SIMPLE_ONE_D_DIFFUSION
+	ROUTINE SETSIZE
+		NVAR = 100;
+		NEQ = 100;
+	END 
+
+	ROUTINE SETGUESS
+		for (int i = 0; i < NVAR; i++)
+		{
+			guess[i] = 0.1;
+		}
+	END 
+
+	ROUTINE SETOPTIONS
+		options->GlobalStrategy = 0;
+		options->LinearSolver = "KINDENSE";
+		options->FuncNormTolerance = 1.e-5;
+		options->ScaledStepTol = 1.e-5;
+		options->MaxSetupCalls = 1;
+		options->if_jacobian = 1;
+		options->finalstatsPrintLevel = 0;
+	END 
+	
+	ROUTINE RESFUNC
+		
+		//Parameters
+		double K = 1.0;
+		double dx = 1.0/99.0;
+		
+		// Left Node
+		r[0] = x[0] - 1.0;
+
+		// Central Nodes
+		for(int i = 1; i <= 98; i++)
+			r[i] = x[i-1] - 2*x[i] + x[i+1] + 2*K*x[i]*x[i]*dx*dx;
+
+		// right Node
+		r[99] = x[99] - 0.5;
+			
+	END 
+
+	ROUTINE JACFUNC
+		adouble ax[100];
+		adouble ay[100];
+		double oy[100];
+		
+		//Parameters
+		double K = 1.0;
+		double dx = 1.0/99.0;
+
+		trace_on(1);
+		
+		for(int i = 0; i < 100; i++)
+			ax[i] <<= x[i];
+		
+		ay[0] = ax[0] - 1.0;
+		for(int i = 1; i <= 98; i++)
+			ay[i] = ax[i-1] - 2*ax[i] + ax[i+1] + 2*K*ax[i]*ax[i]*dx*dx;
+		ay[99] = ax[99] - 0.5;
+		
+		for(int i = 0; i < 100; i++)
+			ay[i] >>= oy[i];
+			
+		trace_off();
+
+		jacobian(1, 100, 100, x, J);
+	END 
+
+	ROUTINE INFO
+		
+	END
+		
+	ROUTINE ERR
+		return 0;
+	END
+
+END  
+
+
+

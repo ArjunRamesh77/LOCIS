@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{23A1A5E8-D74A-4E3E-B950-C072A7F25FAD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>LOCISCore</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>LOCISCore</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(LOCIS_PYTHON_HOME)\include;$(LOCIS_PYTHON_HOME)\Lib\site-packages\numpy\core\include\numpy;$(LOCIS_KINSOL_SRCDIR)\include\;$(LOCIS_KINSOL_BUILDDIR)\include\;$(LOCIS_SUNDIALS);$(LOCIS_IDA_SRCDIR)\include;$(LOCIS_IDA_BUILDDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(LOCIS_PYTHON_HOME)\libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>python27_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(LOCIS_PYTHON_HOME)\include;$(LOCIS_PYTHON_HOME)\Lib\site-packages\numpy\core\include\numpy;$(LOCIS_KINSOL_SRCDIR)\include\;$(LOCIS_KINSOL_BUILDDIR)\include\;$(LOCIS_SUNDIALS);$(LOCIS_IDA_SRCDIR)\include;$(LOCIS_IDA_BUILDDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(LOCIS_PYTHON_HOME)\libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>python27.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="..\grammar.txt" />
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AST.h" />
+    <ClInclude Include="ASTFEMoneD.h" />
+    <ClInclude Include="FEM1Dbasis.h" />
+    <ClInclude Include="DAESIda.h" />
+    <ClInclude Include="DAESIdaHelper.h" />
+    <ClInclude Include="equation.h" />
+    <ClInclude Include="error.h" />
+    <ClInclude Include="FEM1D.h" />
+    <ClInclude Include="FEM1DgenericElement.h" />
+    <ClInclude Include="FEM1Dintegrate.h" />
+    <ClInclude Include="interpreter.h" />
+    <ClInclude Include="lexer.h" />
+    <ClInclude Include="LOCIS_API.h" />
+    <ClInclude Include="LOCIS_API_INCLUDE.h" />
+    <ClInclude Include="NLSKinsol.h" />
+    <ClInclude Include="NLSKinsolHelper.h" />
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="PyFunctionServer.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Symbol.h" />
+    <ClInclude Include="SymbolFEMoneD.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AST.cpp" />
+    <ClCompile Include="ASTFEMoneD.cpp" />
+    <ClCompile Include="FEM1Dbasis.cpp" />
+    <ClCompile Include="DAESIda.cpp" />
+    <ClCompile Include="DAESIdaHelper.cpp" />
+    <ClCompile Include="equation.cpp" />
+    <ClCompile Include="equationFEMoneDutils.cpp" />
+    <ClCompile Include="equationFunctions.cpp" />
+    <ClCompile Include="equationUtils.cpp" />
+    <ClCompile Include="error.cpp" />
+    <ClCompile Include="FEM1D.cpp" />
+    <ClCompile Include="FEM1DequationFunctions.cpp" />
+    <ClCompile Include="FEM1DErrors.cpp" />
+    <ClCompile Include="FEM1DgenericElement.cpp" />
+    <ClCompile Include="FEM1Dintegrate.cpp" />
+    <ClCompile Include="interpreter.cpp" />
+    <ClCompile Include="interpreterErrors.cpp" />
+    <ClCompile Include="interpreterFEMoneD.cpp" />
+    <ClCompile Include="interpreterFEMoneDutils.cpp" />
+    <ClCompile Include="interpreterFunctions.cpp" />
+    <ClCompile Include="interpreterUtils.cpp" />
+    <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="lexerIsFunctions.cpp" />
+    <ClCompile Include="LOCISCoreManagerMessages.cpp" />
+    <ClCompile Include="LOCISCoreManagerv.cpp" />
+    <ClCompile Include="LOCISCoreManager.h" />
+    <ClCompile Include="LOCIS_API.cpp" />
+    <ClCompile Include="NLSKinsol.cpp" />
+    <ClCompile Include="NLSKinsolHelper.cpp" />
+    <ClCompile Include="parserFEMoneDRules.cpp" />
+    <ClCompile Include="parserSyntaxErrors.cpp" />
+    <ClCompile Include="parserPrintAllErrors.cpp" />
+    <ClCompile Include="PyFunctionServer.cpp" />
+    <ClCompile Include="PyFunctionServerHelpers.cpp" />
+    <ClCompile Include="PySetFunctionModuleEnvironment.cpp" />
+    <ClCompile Include="parserRules.cpp" />
+    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Symbol.cpp" />
+    <ClCompile Include="SymbolFEMoneD.cpp" />
+    <ClCompile Include="FEM1DunUsedFunctions.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Solvers\IDA\IDA_src\builddir\src\ida\sundials_ida_static.vcxproj">
+      <Project>{638a4f53-20fc-3cd4-a8d0-a61128edd179}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Solvers\KINSOL\kinsol_src\builddir\src\kinsol\sundials_kinsol_static.vcxproj">
+      <Project>{b3a90a55-3d83-3731-b275-baa35d5d918c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Solvers\KINSOL\kinsol_src\builddir\src\nvec_ser\sundials_nvecserial_static.vcxproj">
+      <Project>{0b2c3115-ef7f-3a70-81d8-5cb3b8c25e58}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
