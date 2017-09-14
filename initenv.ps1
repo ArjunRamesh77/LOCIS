@@ -1,4 +1,5 @@
 ﻿# Sets the Build Environment for the LOCIS project
+# This is the launcher for MSVS
 
 $script_root = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 
