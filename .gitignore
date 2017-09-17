@@ -1,0 +1,3 @@
+# IGNORE SOLVER BUILD DIRECTORIES
+Solvers/KINSOL/kinsol_src/builddir/**
+Solvers/IDA/IDA_src/builddir/**
