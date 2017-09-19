@@ -7,70 +7,95 @@
 #
 #------------------------------------------------------------------------------------------------
 
-# file extensions
+# FILE EXTENSIONS
 EXT_CPP := cpp
 EXT_OBJ := o
 EXT_LIB := a
 
-# include paths
-PATH_LOCIS_INCLUDE = LOCISFrameWork\include
-PATH_KINSOL_INCUDE = 
-PATH_IDA_INCLUDE = 
-PATH_PYTHON_INCLUDE = 
+# PROGRAM
+NAME_PROGRAM = locis 
 
-# src paths
-PATH_LOCIS_SOURCE = LOCISFrameWork\src
+# INCLUDE PATHS
+PATH_ROOT = $(CURDIR)
+PATH_LOCIS_INCLUDE := 				LOCISFrameWork/LOCISFrameWork/include/
+PATH_SUNDIALS_NVECTOR_INCLUDE := 	Solvers/KINSOL/kinsol_src/srcdir/include/nvector
+PATH_KINSOL_INCLUDE := 				Solvers/KINSOL/kinsol_src/srcdir/include/kinsol
+PATH_IDA_INCLUDE := 				Solvers/IDA/IDA_src/srcdir/include/ida
+PATH_PYTHON_INCLUDE := 				/usr/include/python2.7
 
-# src/include
+PATH_ALL_INCLUDE =  $(PATH_LOCIS_INCLUDE)\
+					$(PATH_SUNDIALS_NVECTOR_INCLUDE)\
+					$(PATH_KINSOL_INCLUDE)\
+					$(PATH_IDA_INCLUDE)\
+					$(PATH_PYTHON_INCLUDE)
+
+# OUTPUT PATHS
+PATH_LOCIS_OUT = Output/LOCISFrameWork
+
+# TEMP PATHS
+PATH_LOCIS_TEMP = Temp/LOCISFrameWork
+
+# SOURCE PATHS
+PATH_LOCIS_SRC = LOCISFrameWork/LOCISFrameWork/src
+
+# LIB PATHS
+PATH_KINSOL_LIB := 	Solvers/KINSOL/kinsol_src/builddir/src/kinsol
+PATH_IDA_LIB :=  	Solvers/IDA/IDA_src/builddir/src/ida
+PATH_PYTHON_LIB := 	/usr/lib/python2.7/config-x86_64-linux-gnu
+
+PATH_ALL_LIB = 		$(PATH_KINSOL_LIB)\
+					$(PATH_IDA_LIB)\
+					$(PATH_PYTHON_LIB)
+# LIBS
+LIB_KINSOL := 	-lsundials_kinsol
+LIB_IDA := 		-lsundials_ida
+LIB_PYTHON := 	-lpython2.7
+
+LIB_ALL := 		$(LIB_KINSOL)\
+				$(LIB_IDA)\
+				$(LIB_PYTHON)
+
+# SOURCE/INCLUDE NAMES
 LOCIS_INC = ""
 LOCIS_SRC = ""
-include locisInc.mk
-include locisSrc.mk
+LOCIS_OBJ = ""
 
-# lib paths
-PATH_KINSOL_LIB = 
-PATH_IDA_LIB = 
-PATH_PYTHON_LIB = 
+include $(PATH_LOCIS_TEMP)/locisInc.mk
 
-# libs
-KINSOL_LIB = 
-IDA_LIB = 
-PYTHON_LIB = 
+include $(PATH_LOCIS_TEMP)/locisSrc.mk
 
-# compiler and flags
+LOCIS_OBJ = $(subst .cpp,.o,$(LOCIS_SRC))
+
+# TRANSFORM 
+LOCIS_INC_SUBS = $(subst ~,$(PATH_LOCIS_INCLUDE)/,$(LOCIS_INC))
+LOCIS_SRC_SUBS = $(subst ~,$(PATH_LOCIS_SRC)/,$(LOCIS_SRC))
+LOCIS_OBJ_SUBS = $(subst ~,$(PATH_LOCIS_TEMP)/,$(LOCIS_OBJ))
+
+# COMPILER AND FLAGS
 CXX := g++
-ARCH := x86
-COMPILE_OPTIONS_CPP = -Wall -c $(ARCH)
-COMPILE_CPP = $(CXX) $(COMPILE_OPTIONS)
-COMPILED_CPP = $(CXX) -g $(COMPILE_OPTIONS)
+COMPILE_INCLUDE_PATHS = -I$(PATH_ALL_INCLUDE)
+COMPILE_LIB_PATHS = -L$(PATH_ALL_LIB)
+COMPILE_OPTIONS = -Wall -c 
 
-#FUNCTIONS
-# Updates the include files with locis src file names
-define getAllLocisCode
-	@echo "Loading all include files"
-	@ls $(PATH_LOCIS_INCLUDE) *.h | sed 's/\.h/\.h\\/g' | sed '1 s/^/LOCIS_INC = /g' > locisInc.mk
-
-	@echo "Loading all src files"
-	@ls $(PATH_LOCIS_INCLUDE) *.cpp | sed 's/\.cpp/\.cpp\\/g' | sed '1 s/^/LOCIS_SRC = /g' > locisSrc.mk
-endef
+# FUNCTIONS
 				  
-# RULES
-release : 	
+# TARGETS
+# default goal
+$(PATH_LOCIS_OUT)/$(NAME_PROGRAM): $(LOCIS_OBJ_SUBS) $(LIB_ALL) $(LOCIS_INC_SUBS)
+	$(CXX) $(COMPILE_LIB_PATHS) $^ -o $@
 
-debug :
+$(PATH_LOCIS_TEMP)/%.o : $(PATH_LOCIS_SRC)/%.cpp
+	$(CXX) $(COMPILE_OPTIONS) $(COMPILE_INCLUDE_PATHS) $< -o $(PATH_LOCIS_TEMP)/$@
 
+# Get all include files
+$(PATH_LOCIS_TEMP)/locisInc.mk :
+	ls $(PATH_LOCIS_INCLUDE) | sed 's/^/~/g' | sed 's/\.h/\.h\\/g' | sed '1 s/^/LOCIS_INC = /g' > $(PATH_LOCIS_TEMP)/locisInc.mk
+
+# Get all source files
+$(PATH_LOCIS_TEMP)/locisSrc.mk :
+	ls $(PATH_LOCIS_SRC) | sed 's/^/~/g' | sed 's/\.cpp/\.cpp\\/g' | sed '1 s/^/LOCIS_SRC = /g' > $(PATH_LOCIS_TEMP)/locisSrc.mk
+
+.PHONY : clean
 clean :
-
-# Compile file
-$(LOCIS_SRC) : %.$(EXT_OBJ) : %.$(EXT_CPP)
-
-
-
-locisSrc.mk : 
-	$(getAllLocisCode)
-
-
-
-
-
- 
+	rm -f $(PATH_LOCIS_TEMP)/*; \
+	rm -f $(PATH_LOCIS_OUT)/*
