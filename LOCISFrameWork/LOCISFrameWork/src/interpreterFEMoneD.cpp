@@ -230,7 +230,8 @@ bool interpreter::initFEMLine(ASTNode* buildNode)
 		}
 
 		// Add line to model
-		if (!INSERT_NEW_ENTITY_IN_MODEL(lo->getName(), lo))
+		std::string lo_getName = lo->getName();
+		if (!INSERT_NEW_ENTITY_IN_MODEL(lo_getName, lo))
 		{
 			delete lo;
 			semanticErr_EntityRedeclaration(node);

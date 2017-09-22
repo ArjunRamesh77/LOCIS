@@ -13,7 +13,7 @@ class NodeVisitor;
 enum rule {
 	model, section, parameter_section, variable_section, options, options_space, option, unit, desc, type,
 	equation_section, numtype, parameter, type_name, array_indices, array_index, full_type_name, function_name,
-	function_args, function_arg, term, default, expression, factor, primary, real_number, bounds, inequality, variable,
+	function_args, function_arg, term, default1, expression, factor, primary, real_number, bounds, inequality, variable,
 	equationn, equation_type_operator, logical_expression, lterm, lfactor, lprimary, for_loop, for_body, statement,
 	set_section, fix_section, initialize_section, object_section, object, if_statement, then, pelse, assignment,
 	model_entity_decl, model_entity_type, model_entities, model_entity, model_section, section_type, model_statment,
@@ -23,8 +23,8 @@ enum rule {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Node Visitor dispatcher (pure abstract class)
-#define VIRTUAL_DECL_DISPATCH(name) virtual ASTNode* dispatch(##name*) = 0;
-#define DECL_DISPATCH(name) ASTNode* dispatch(##name*);
+#define VIRTUAL_DECL_DISPATCH(name) virtual ASTNode* dispatch(name*) = 0;
+#define DECL_DISPATCH(name) ASTNode* dispatch(name*);
 #define DISPATCH_FUCTION_DECL ASTNode* visit(NodeVisitor* ns) override { return ns->dispatch(this); }
 
 #define UNUSED_AST_NODE_FUNCTION(MAIN_CLASS, NODE_TYPE) ASTNode* MAIN_CLASS::dispatch(NODE_TYPE* node) {return NULL;} 
@@ -150,6 +150,7 @@ public:
 	ASTNode* node;
 
 public:
+	virtual ~ASTNode() {};
 	ASTNode()
 	{
 		iNumDerivs = 0;

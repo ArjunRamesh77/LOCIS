@@ -53,7 +53,8 @@ int equation::getEquationsRecursive(Model* mod)
 	if (bInitialization)
 	{
 		ModelEntity* t0Val = NULL;
-		t0Val = mod->getModelEntity(NULL, std::string("_t")); //works only for regular models
+		std::string sym_t = "_t";
+		t0Val = mod->getModelEntity(NULL, sym_t); //works only for regular models
 		if (t0Val)
 			t0Val->SValue = t0_init_val;
 	}

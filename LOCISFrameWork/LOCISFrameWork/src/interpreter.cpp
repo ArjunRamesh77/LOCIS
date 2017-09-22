@@ -1,4 +1,5 @@
 #include "interpreter.h"
+#include <cmath>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Process Node that holds all the models
@@ -349,7 +350,8 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	// For Variable type insert dt type too
 	if (ob->geType() == VARIABLE)
 	{
-		INSERT_NEW_ENTITY_IN_MODEL("$" + node->sName, ob2);
+		std::string entityName = "$" + node->sName;
+		INSERT_NEW_ENTITY_IN_MODEL(entityName, ob2);
 	}
 
 	return node;

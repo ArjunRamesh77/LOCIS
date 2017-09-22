@@ -22,11 +22,11 @@ int InitializePythonEnv()
 	{
 		try
 		{
-			Py_NoSiteFlag = 1;
-			Py_SetPythonHome(".");
+			//Py_NoSiteFlag = 1;
+			//Py_SetPythonHome(".");
 			Py_Initialize();
-			PyRun_SimpleString("import sys");
-			PySys_SetPath(PY_PATHS);
+			//PyRun_SimpleString("import sys");
+			//PySys_SetPath(PY_PATHS);
 			
 			//Import all 
 			PYTHON_INFO_GLOBAL_OBJ.Python_module_main = PyImport_AddModule("__main__"); 

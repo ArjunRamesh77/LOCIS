@@ -3,11 +3,11 @@
 
 #include "LOCIS_API_INCLUDE.h"
 #include "PyFunctionServer.h"
-#include "kinsol\kinsol.h"
-#include "kinsol\kinsol_dense.h"
-#include "nvector\nvector_serial.h"
-#include "sundials\sundials_types.h"
-#include "sundials\sundials_math.h"
+#include "kinsol/kinsol.h"
+#include "kinsol/kinsol_dense.h"
+#include "nvector/nvector_serial.h"
+#include "sundials/sundials_types.h"
+#include "sundials/sundials_math.h"
 #include "NLSKinsolHelper.h"
 #include <iomanip>
 

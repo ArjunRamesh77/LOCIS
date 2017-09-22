@@ -129,7 +129,7 @@ public:
 	int getNumDims() const;
 	int getMaxDims() const;
 	std::string getGetMultiDimsFromSingle(int &index) const;
-	std::vector<int>* ModelEntity::getDimAt();
+	std::vector<int>* getDimAt();
 	ModelEntity* ReturnObject();
 
 	int setAllto(const double &val);

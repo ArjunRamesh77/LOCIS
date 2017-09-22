@@ -755,7 +755,8 @@ start:
 		// Add to line
 		if (FEMob->getDimType() == SY_SCALAR)
 		{
-			if (!(FEMob->SModelObject->insertModelEntity(varname, v) && FEMob->SModelObject->insertModelEntity("$" + varname, dv)))
+			std::string dollar_varname = "$" + varname;
+			if (!(FEMob->SModelObject->insertModelEntity(varname, v) && FEMob->SModelObject->insertModelEntity(dollar_varname, dv)))
 			{
 				delete v;
 				delete dv;
@@ -766,7 +767,8 @@ start:
 		else
 		{
 			// For vectors do the above operation again and again
-			if (!(FEMob->VModelObject[c].insertModelEntity(varname, v) && FEMob->VModelObject[c].insertModelEntity("$" + varname, dv)))
+			std::string dollar_varname = "$" + varname;
+			if (!(FEMob->VModelObject[c].insertModelEntity(varname, v) && FEMob->VModelObject[c].insertModelEntity(dollar_varname, dv)))
 			{
 				delete v;
 				delete dv;

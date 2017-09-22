@@ -145,10 +145,10 @@ public:
 	void setData(FEMUserData *userData, equation* equationptr, ASTNode* tree, ASTNode* leftBoundary, 
 		ASTNode* rightBoundary, std::vector<EquationUnit>*, interpreter*);
 
-	void FEM::preProcess();
+	void preProcess();
 
-	void FEM::build();
+	void build();
 
-	void FEM::solve();
+	void solve();
 
 };

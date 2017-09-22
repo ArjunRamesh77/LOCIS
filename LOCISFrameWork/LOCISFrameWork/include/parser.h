@@ -25,7 +25,7 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 #define SYNTAX_ERROR "Syntax Error"
 
 // Main construct to match tokens
-#define EXPECT_TOKEN_ELSE(TOK,posi) Consume(TOK);															\
+#define EXPECT_TOKEN_ELSE(TOK) 		Consume(TOK);															\
 									if (SHOW_ERROR)															\
 									{																		\
 
@@ -59,8 +59,8 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 // Switch statement for matching tokens
 #define	SWITCH switch(cur_tok.GetType()) {
 
-#define CASE(TOK,posi) case TOK:				    \
-				  EXPECT_TOKEN_ELSE(TOK,posi)		\
+#define CASE(TOK) case TOK:				    \
+				  EXPECT_TOKEN_ELSE(TOK)		\
 				  END_EXPECT				        \
 				  break;
 #define CASE_RULE(TOK, value) case TOK:			    \
@@ -107,7 +107,7 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 #define AST_SAV_NODE(name) astn_##name = ASTtempNode;
 #define AST_SAV_VEC(name) astvn_##name.push_back(ASTtempNode);
 #define AST_RETURN_NODE(name)	ASTReturnNode = new name;				\
-								return static_cast<##name*>(ASTReturnNode)->CreateNode
+								return static_cast<name*>(ASTReturnNode)->CreateNode
 #define AST_RETURN_NO_CREATE return ASTtempNode;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

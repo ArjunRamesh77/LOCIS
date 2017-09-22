@@ -141,7 +141,7 @@ bool parser::isDataType(int &type, std::string &val)
 		return true;
 		break;
 
-	case default:
+	default:
 		return false;
 	}
 	return false;

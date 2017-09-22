@@ -532,7 +532,8 @@ bool interpreter::initVector(ModelEntity* search_res)
 		cob = static_cast<Object*>(search_res);
 		assert(cob->allocateArray() == SY_SUCCESS);
 
-		mod = SymTab->getModel(cob->getModelName());
+		std::string cob_getModelName = cob->getModelName();
+		mod = SymTab->getModel(cob_getModelName);
 		assert(mod);
 
 		SAVE_INTERPRETER_STATE
@@ -738,7 +739,8 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 				}
 
 				// Switch to Derivative variable
-				mod = MainObj->getModelEntity(NULL, "$" + mod->getName());
+				std::string dollar_mod_getName = "$" + mod->getName();
+				mod = MainObj->getModelEntity(NULL, dollar_mod_getName);
 				//assert(mod);
 			}
 		}
@@ -867,7 +869,8 @@ bool interpreter::addExtraSymbols(Model* md)
 	FEMtrialFunction->isFEMtrialFunction = true;
 	FEMtrialFunction->setDimType(SY_SCALAR);
 	FEMtrialFunction->SValue = 1.0;
-	md->insertModelEntity(FEMtrialFunction->getName(), FEMtrialFunction);
+	std::string FEMtrialFunction_getName = FEMtrialFunction->getName();
+	md->insertModelEntity(FEMtrialFunction_getName, FEMtrialFunction);
 	assert(md);
 	
 	// Add time t 
@@ -879,7 +882,8 @@ bool interpreter::addExtraSymbols(Model* md)
 	tval->isTval = true;
 	tval->setDimType(SY_SCALAR);
 	tval->SValue = 1.0;
-	md->insertModelEntity(tval->getName(), tval);
+	std::string tval_getName = tval->getName();
+	md->insertModelEntity(tval_getName, tval);
 	assert(md);
 
 	// Add spacial x 
@@ -891,7 +895,8 @@ bool interpreter::addExtraSymbols(Model* md)
 	xval->isFEMxval = true;
 	xval->setDimType(SY_SCALAR);
 	xval->SValue = 1.0;
-	md->insertModelEntity(xval->getName(), xval);
+	std::string xval_getName = xval->getName();
+	md->insertModelEntity(xval_getName, xval);
 	assert(md);
 
 	return true;

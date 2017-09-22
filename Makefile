@@ -83,7 +83,7 @@ LOCIS_OBJ_SUBS = $(subst ~,$(PATH_LOCIS_TEMP)/,$(LOCIS_OBJ))
 CXX := g++
 COMPILE_INCLUDE_PATHS = $(PATH_ALL_INCLUDE)
 COMPILE_LIB_PATHS = $(PATH_ALL_LIB)
-COMPILE_OPTIONS = -Wall -c -fpermissive
+COMPILE_OPTIONS = -Wall -c -g -fpermissive
 
 # FUNCTIONS
 				  

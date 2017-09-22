@@ -22,9 +22,10 @@ void cerrors::AddError()
 	cLines << "TYPE:" + temp_err.type + "\n";
 	cLines << "LINE:" + std::to_string(temp_err.line_number) + "\n";
 	cLines << "POS:" + std::to_string(temp_err.position) + "\n";
-	for each(std::string line in temp_err.err_lines)
+	//foreach(std::string line in temp_err.err_lines)
+	for(auto it = temp_err.err_lines.begin(); it != temp_err.err_lines.end(); it++)
 	{
-		cLines << line + "\n";
+		cLines << *it + "\n";
 	}
 
 	//Callback

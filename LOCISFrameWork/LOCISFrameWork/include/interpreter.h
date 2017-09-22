@@ -14,24 +14,24 @@
 //#define VISIT_NODE(node) [this, node] { if(*node) (*node)->visit(this); else return NULL; }
 							
 
-#define VISIT_ALL_NODES(node, name) for(std::vector<ASTNode*>::const_iterator it = ##node->##name.begin(); it != ##node->##name.end(); ++it)	\
+#define VISIT_ALL_NODES(node, name) for(std::vector<ASTNode*>::const_iterator it = node->name.begin(); it != node->name.end(); ++it)	\
 								    { VISIT_NODE(*it); }
 
-#define VISIT(name) node->##name->visit(this);
+#define VISIT(name) node->name->visit(this);
 
-#define LOOP_OVER_NODES(node, name) for(std::vector<ASTNode*>::const_iterator it_##name = node->##name.begin(); it_##name != node->##name.end(); ++it_##name) 
+#define LOOP_OVER_NODES(node, name) for(std::vector<ASTNode*>::const_iterator it_##name = node->name.begin(); it_##name != node->name.end(); ++it_##name) 
 
 #define SET_MODEL_SCOPE(name) IS.scp = name;
 
-#define INSERT_NEW_ENTITY_IN_MODEL(name, ptr) IS.scp->insertModelEntity(##name, ##ptr)
+#define INSERT_NEW_ENTITY_IN_MODEL(name, ptr) IS.scp->insertModelEntity(name, ptr)
 
-#define SEARCH_IN_MODEL(mod, name) IS.scp->getModelEntity(##mod, ##name)
+#define SEARCH_IN_MODEL(mod, name) IS.scp->getModelEntity(mod, name)
 
 #define DECL_INTERSTATE bool interstate = true;
 
 #define AND_GOOD_STATE && interstate
 
-#define IF_GOOD_INTERSTATE(exp) if((##exp) && interstate)
+#define IF_GOOD_INTERSTATE(exp) if((exp) && interstate)
 
 #define SET_BAD_INTERSTATE interstate = false;
 
