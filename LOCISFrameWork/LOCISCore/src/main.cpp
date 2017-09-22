@@ -61,7 +61,6 @@ long dynamicResults(long lColIndex, long lpNum, const char* cNames, double* dpTi
 int main(int argc, const char** argv)
 {   
     int a;
-    std::cin >> a;
     long instanceId = -1;
     long result = -1;
     dynFlag = 0;

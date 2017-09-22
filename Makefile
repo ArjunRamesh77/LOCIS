@@ -15,7 +15,6 @@ EXT_LIB := a
 # DEFAULT CONFIGURATION
 ifeq ($(config),)
 	config=debug
-	@echo jjj;
 endif
 
 # REQUIRED FOLDERS
@@ -97,7 +96,7 @@ CXX := g++
 COMPILE_INCLUDE_PATHS = $(PATH_ALL_INCLUDE)
 COMPILE_LIB_PATHS = $(PATH_ALL_LIB)
 
-ifeq ($(config),Debug)
+ifeq ($(config),debug)
 	CXXFLAGS = -Wall -c -g -fpermissive
 else
 	CXXFLAGS = -Wall -c -O3 -fpermissive
