@@ -12,6 +12,21 @@ EXT_CPP := cpp
 EXT_OBJ := o
 EXT_LIB := a
 
+# DEFAULT CONFIGURATION
+ifeq ($(config),)
+	config=debug
+	@echo jjj;
+endif
+
+# REQUIRED FOLDERS
+REQUIRED_DIRS = Output/$(config)\
+			    Temp/LOCISFrameWork/$(config)
+
+_makeRequiredFolders := $(shell for d in $(REQUIRED_DIRS); \
+						do								   \
+	  					[[-d $$d]] || mkdir -p $$d;	   	   \
+						done)
+
 # PROGRAM
 NAME_PROGRAM = locis 
 
@@ -32,7 +47,7 @@ PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_INCLUDE)\
 				    -I$(PATH_NUMPY_INCLUDE)
 
 # OUTPUT PATHS
-PATH_LOCIS_OUT = Output/LOCISFrameWork
+PATH_LOCIS_OUT = Output
 
 # TEMP PATHS
 PATH_LOCIS_TEMP = Temp/LOCISFrameWork
@@ -70,7 +85,7 @@ include $(PATH_LOCIS_TEMP)/locisInc.mk
 
 include $(PATH_LOCIS_TEMP)/locisSrc.mk
 
-LOCIS_OBJ = $(subst .cpp,.o,$(LOCIS_SRC))
+LOCIS_OBJ = $(subst $(EXT_CPP),$(EXT_OBJ),$(LOCIS_SRC))
 
 # TRANSFORM 
 LOCIS_INC_SUBS = $(subst ~,$(PATH_LOCIS_INCLUDE)/,$(LOCIS_INC))
@@ -81,27 +96,43 @@ LOCIS_OBJ_SUBS = $(subst ~,$(PATH_LOCIS_TEMP)/,$(LOCIS_OBJ))
 CXX := g++
 COMPILE_INCLUDE_PATHS = $(PATH_ALL_INCLUDE)
 COMPILE_LIB_PATHS = $(PATH_ALL_LIB)
-COMPILE_OPTIONS = -Wall -c -g -fpermissive
+
+ifeq ($(config),Debug)
+	CXXFLAGS = -Wall -c -g -fpermissive
+else
+	CXXFLAGS = -Wall -c -O3 -fpermissive
+endif
 
 # FUNCTIONS
-				  
-# TARGETS
-# default goal
-$(PATH_LOCIS_OUT)/$(NAME_PROGRAM): $(LOCIS_OBJ_SUBS) 
-	g++ -fpermissive -Wall $^ $(PATH_ALL_LIB) $(LIB_ALL) -o $@ 
+define cleanOutputs
+	@rm -f $(PATH_LOCIS_TEMP)/*.mk; 	
+	@rm -f $(PATH_LOCIS_TEMP)/$1/*.$(EXT_OBJ);		
+	@rm -f $(PATH_LOCIS_OUT)/$1/$(NAME_PROGRAM);	
+endef
 
-$(PATH_LOCIS_TEMP)/%.o : $(PATH_LOCIS_SRC)/%.cpp $(LOCIS_INC_SUBS)
-	$(CXX) $(COMPILE_OPTIONS) $(COMPILE_INCLUDE_PATHS) $< -o $@
+# TARGETS
+$(PATH_LOCIS_OUT)/$(config)/$(NAME_PROGRAM): $(subst ~,$(PATH_LOCIS_TEMP)/$(config)/,$(LOCIS_OBJ))
+	@$(CXX) $^ $(PATH_ALL_LIB) $(LIB_ALL) -o $@ 
+
+$(PATH_LOCIS_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_SRC)/%.$(EXT_CPP) $(LOCIS_INC_SUBS)
+	@echo "Building $@"
+	@$(CXX) $(CXXFLAGS) $(COMPILE_INCLUDE_PATHS) $< -o $@ 
 
 # Get all include files
 $(PATH_LOCIS_TEMP)/locisInc.mk :
-	ls $(PATH_LOCIS_INCLUDE) | sed 's/^/~/g' | sed 's/\.h/\.h\\/g' | sed '1 s/^/LOCIS_INC = /g' > $(PATH_LOCIS_TEMP)/locisInc.mk
+	@ls $(PATH_LOCIS_INCLUDE) | sed 's/^/~/g' | sed 's/\.h/\.h\\/g' | sed '1 s/^/LOCIS_INC = /g' > $(PATH_LOCIS_TEMP)/locisInc.mk
 
 # Get all source files
 $(PATH_LOCIS_TEMP)/locisSrc.mk :
-	ls $(PATH_LOCIS_SRC) | sed 's/^/~/g' | sed 's/\.cpp/\.cpp\\/g' | sed '1 s/^/LOCIS_SRC = /g' > $(PATH_LOCIS_TEMP)/locisSrc.mk
+	@ls $(PATH_LOCIS_SRC) | sed 's/^/~/g' | sed 's/\.cpp/\.cpp\\/g' | sed '1 s/^/LOCIS_SRC = /g' > $(PATH_LOCIS_TEMP)/locisSrc.mk
+
+.PHONY : clean_debug
+clean_debug :
+	@$(call cleanOutputs,debug)
+	
+.PHONY : clean_release
+clean_release :
+	@$(call cleanOutputs,release)
 
 .PHONY : clean
-clean :
-	rm -f $(PATH_LOCIS_TEMP)/*; \
-	rm -f $(PATH_LOCIS_OUT)/*
+clean : clean_debug clean_release

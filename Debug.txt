@@ -1,0 +1,457 @@
+LOCISFrameWork/LOCISCore/src/SymbolFEMoneD.cpp: In member function ‘bool FEMOneDLineObject::calculateBoundaryNodeNumbers(int, int&, int&)’:
+LOCISFrameWork/LOCISCore/src/SymbolFEMoneD.cpp:79:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (domains.size() >= (domain_order + 1))
+      ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/DAESIda.cpp: In member function ‘void DAESIda::printFinalStats(double)’:
+LOCISFrameWork/LOCISCore/src/DAESIda.cpp:226:6: warning: unused variable ‘retval’ [-Wunused-variable]
+  int retval, kused, flag;
+      ^~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/DAESIda.h:5,
+                 from LOCISFrameWork/LOCISCore/src/DAESIda.cpp:1:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h: At global scope:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+In file included from LOCISFrameWork/LOCISCore/src/DAESIdaHelper.cpp:2:0:
+LOCISFrameWork/LOCISCore/include/DAESIda.h:15:12: warning: ‘int residualFunctionIda(realtype, N_Vector, N_Vector, N_Vector, void*)’ declared ‘static’ but never defined [-Wunused-function]
+ static int residualFunctionIda(realtype tres, N_Vector yy, N_Vector yp, N_Vector resval, void *user_data);
+            ^~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/DAESIda.h:16:12: warning: ‘int denseJacobianFunctionIda(long int, realtype, realtype, N_Vector, N_Vector, N_Vector, DlsMat, void*, N_Vector, N_Vector, N_Vector)’ declared ‘static’ but never defined [-Wunused-function]
+ static int denseJacobianFunctionIda(long Neq, realtype tt, realtype cj, N_Vector yy, N_Vector yp, N_Vector resvec,
+            ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/DAESIda.h:5,
+                 from LOCISFrameWork/LOCISCore/src/DAESIdaHelper.cpp:2:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/equationUtils.cpp: In member function ‘bool equation::MapFromStateVector(stateVars*)’:
+LOCISFrameWork/LOCISCore/src/equationUtils.cpp:327:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (Pv->NumVars == Ip->AllVars.size())
+       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1D.cpp: In member function ‘void FEM::SetExpressionTree()’:
+LOCISFrameWork/LOCISCore/src/FEM1D.cpp:48:6: warning: variable ‘a’ set but not used [-Wunused-but-set-variable]
+  int a;
+      ^
+LOCISFrameWork/LOCISCore/src/FEM1D.cpp: In member function ‘void FEM::solve()’:
+LOCISFrameWork/LOCISCore/src/FEM1D.cpp:187:6: warning: variable ‘enter_count’ set but not used [-Wunused-but-set-variable]
+  int enter_count;
+      ^~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1D.cpp: In member function ‘virtual ASTNode* FEM::dispatch(ASTQualifiedNamedReferenceNode*)’:
+LOCISFrameWork/LOCISCore/src/FEM1D.cpp:379:25: warning: unused variable ‘name’ [-Wunused-variable]
+  ASTNamedReferenceNode* name = static_cast<ASTNamedReferenceNode*>(node->astvnQualifiedName.at(0));
+                         ^~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp: In member function ‘virtual std::__cxx11::string trapezoid::compositeIntegral(std::vector<std::__cxx11::basic_string<char> >, double)’:
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:17:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < integrationStrings.size(); i++)
+                  ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:24:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i == integrationStrings.size() - 1)
+            ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp: In member function ‘virtual std::__cxx11::string simpson13::compositeIntegral(std::vector<std::__cxx11::basic_string<char> >, double)’:
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:50:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < integrationStrings.size(); i++)
+                  ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:57:28: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i % 2 == 1 && i != (integrationStrings.size() - 1))
+                          ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:61:38: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i % 2 == 0 && i != 0 && i != (integrationStrings.size() - 1))
+                                    ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:65:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i == integrationStrings.size() - 1)
+            ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp: In member function ‘virtual std::__cxx11::string simpson38::compositeIntegral(std::vector<std::__cxx11::basic_string<char> >, double)’:
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:90:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < integrationStrings.size(); i++)
+                  ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:97:38: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i % 3 == 0 && i != 0 && i != (integrationStrings.size() - 1))
+                                    ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:101:38: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i % 3 == 1 && i != 0 && i != (integrationStrings.size() - 1))
+                                    ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:105:38: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i % 3 == 2 && i != 0 && i != (integrationStrings.size() - 1))
+                                    ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/FEM1Dintegrate.cpp:109:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   else if (i == integrationStrings.size() - 1)
+            ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp: In member function ‘virtual ASTNode* interpreter::dispatch(ASTmodel_entity_declNode*)’:
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:333:2: warning: jump to label ‘insert’ [-fpermissive]
+  insert:
+  ^~~~~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:244:8: note:   from here
+   goto insert;
+        ^~~~~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:262:6: note:   crosses initialization of ‘int ret’
+  int ret = 0;
+      ^~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:340:11: warning: deleting object of polymorphic class type ‘ModelEntity’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete ob;
+           ^~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:344:11: warning: deleting object of polymorphic class type ‘ModelEntity’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete ob2;
+           ^~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:154:9: warning: unused variable ‘save’ [-Wunused-variable]
+  Model* save = NULL;
+         ^~~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:262:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret = 0;
+      ^~~
+LOCISFrameWork/LOCISCore/src/interpreter.cpp: In member function ‘virtual ASTNode* interpreter::dispatch(ASTbounds_optionNode*)’:
+LOCISFrameWork/LOCISCore/src/interpreter.cpp:436:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret = 0;
+      ^~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneD.cpp: In member function ‘bool interpreter::initFEMLine(ASTNode*)’:
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneD.cpp:236:11: warning: deleting object of polymorphic class type ‘FEMOneDLineObject’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete lo;
+           ^~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneD.cpp:8:11: warning: unused variable ‘eval’ [-Wunused-variable]
+  ASTNode* eval = NULL;
+           ^~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneD.cpp:9:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret = 0;
+      ^~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneD.cpp:38:7: warning: variable ‘got_basis’ set but not used [-Wunused-but-set-variable]
+  bool got_basis = false;
+       ^~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneD.cpp:39:7: warning: unused variable ‘got_segment’ [-Wunused-variable]
+  bool got_segment = false;
+       ^~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp: In member function ‘bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject*, ASTQualifiedNamedReferenceNode*, std::vector<ASTNode*>::const_iterator)’:
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:44:40: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    if (item1->astvnArrayIndices.size() != search_res->getNumDims())
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:54:9: warning: unused variable ‘success’ [-Wunused-variable]
+    bool success = true;
+         ^~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:214:8: warning: unused variable ‘success’ [-Wunused-variable]
+   bool success = true;
+        ^~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:19:15: warning: unused variable ‘FEMvarRef’ [-Wunused-variable]
+  ModelEntity* FEMvarRef = NULL;
+               ^~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:22:10: warning: unused variable ‘next’ [-Wunused-variable]
+  Object* next = NULL;
+          ^~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:103:7: warning: variable ‘bGotVariableFromDomain’ set but not used [-Wunused-but-set-variable]
+  bool bGotVariableFromDomain = false;
+       ^~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp: In member function ‘bool interpreter::assignFEMoneDObject(FEMOneDLineObject*, ASTQualifiedNamedReferenceNode*, std::vector<ASTNode*>::const_iterator, double&, int&)’:
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:328:40: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    if (item1->astvnArrayIndices.size() != search_res->getNumDims())
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:338:9: warning: unused variable ‘success’ [-Wunused-variable]
+    bool success = true;
+         ^~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:481:8: warning: unused variable ‘success’ [-Wunused-variable]
+   bool success = true;
+        ^~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:304:15: warning: unused variable ‘FEMvarRef’ [-Wunused-variable]
+  ModelEntity* FEMvarRef = NULL;
+               ^~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:307:10: warning: unused variable ‘next’ [-Wunused-variable]
+  Object* next = NULL;
+          ^~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp: In member function ‘bool interpreter::createFEMoneDline(Object*)’:
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:654:12: warning: deleting object of polymorphic class type ‘FEMOneDModelDomainData’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+     delete dom_actual;
+            ^~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:664:12: warning: deleting object of polymorphic class type ‘FEMOneDModelDomainData’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+     delete dom_actual;
+            ^~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:761:12: warning: deleting object of polymorphic class type ‘Variable’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+     delete v;
+            ^
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:762:12: warning: deleting object of polymorphic class type ‘Variable’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+     delete dv;
+            ^~
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:773:12: warning: deleting object of polymorphic class type ‘Variable’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+     delete v;
+            ^
+LOCISFrameWork/LOCISCore/src/interpreterFEMoneDutils.cpp:774:12: warning: deleting object of polymorphic class type ‘Variable’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+     delete dv;
+            ^~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp: In member function ‘bool interpreter::evaluate(ASTQualifiedNamedReferenceNode*)’:
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:63:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    if (item->astvnArrayIndices.size() != search_res->getNumDims())
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:79:9: warning: unused variable ‘success’ [-Wunused-variable]
+    bool success = true;
+         ^~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:32:10: warning: unused variable ‘next’ [-Wunused-variable]
+  Object* next = NULL;
+          ^~~~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp: In member function ‘bool interpreter::assign(ASTQualifiedNamedReferenceNode*, double&, int&)’:
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:257:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    if (item->astvnArrayIndices.size() != search_res->getNumDims())
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:273:9: warning: unused variable ‘success’ [-Wunused-variable]
+    bool success = true;
+         ^~~~~~~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:218:10: warning: unused variable ‘next’ [-Wunused-variable]
+  Object* next = NULL;
+          ^~~~
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp: In member function ‘bool interpreter::initVector(ModelEntity*)’:
+LOCISFrameWork/LOCISCore/src/interpreterUtils.cpp:530:10: warning: unused variable ‘save’ [-Wunused-variable]
+   Model* save = NULL;
+          ^~~~
+LOCISFrameWork/LOCISCore/src/lexerIsFunctions.cpp: In member function ‘int lexer::isMultiLineComment(token*)’:
+LOCISFrameWork/LOCISCore/src/lexerIsFunctions.cpp:236:7: warning: variable ‘inloop’ set but not used [-Wunused-but-set-variable]
+  bool inloop = false;
+       ^~~~~~
+In file included from LOCISFrameWork/LOCISCore/src/LOCIS_API.cpp:2:0:
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h: In destructor ‘LOCISCoreManager::~LOCISCoreManager()’:
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:115:11: warning: deleting object of polymorphic class type ‘interpreter’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete LOCISinterpreter;
+           ^~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:118:11: warning: deleting object of polymorphic class type ‘equation’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete LOCISEquation;
+           ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/LOCIS_API.cpp: In function ‘long int LOCISGetAllVarNames(long int, long int*, const char*)’:
+LOCISFrameWork/LOCISCore/src/LOCIS_API.cpp:155:21: warning: unused variable ‘LCMobj’ [-Wunused-variable]
+   LOCISCoreManager* LCMobj = f->second;
+                     ^~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:13,
+                 from LOCISFrameWork/LOCISCore/src/LOCIS_API.cpp:2:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h: At global scope:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+In file included from LOCISFrameWork/LOCISCore/src/LOCISCoreManagerMessages.cpp:1:0:
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h: In destructor ‘LOCISCoreManager::~LOCISCoreManager()’:
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:115:11: warning: deleting object of polymorphic class type ‘interpreter’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete LOCISinterpreter;
+           ^~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:118:11: warning: deleting object of polymorphic class type ‘equation’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete LOCISEquation;
+           ^~~~~~~~~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:13,
+                 from LOCISFrameWork/LOCISCore/src/LOCISCoreManagerMessages.cpp:1:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h: At global scope:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:7:0: warning: ignoring #pragma optimize  [-Wunknown-pragmas]
+ #pragma optimize( "", off )
+ 
+LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:431:0: warning: ignoring #pragma optimize  [-Wunknown-pragmas]
+ #pragma optimize( "", on )
+ 
+In file included from LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:1:0:
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h: In destructor ‘LOCISCoreManager::~LOCISCoreManager()’:
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:115:11: warning: deleting object of polymorphic class type ‘interpreter’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete LOCISinterpreter;
+           ^~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:118:11: warning: deleting object of polymorphic class type ‘equation’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete LOCISEquation;
+           ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp: In member function ‘int LOCISCoreManager::solve(int, double, double, int, std::__cxx11::string, double, double)’:
+LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:340:12: warning: unused variable ‘sol’ [-Wunused-variable]
+    double* sol = new double[DAESimVars->NumVars];
+            ^~~
+LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:341:8: warning: unused variable ‘temp’ [-Wunused-variable]
+    int temp;
+        ^~~~
+In file included from LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:2:0:
+LOCISFrameWork/LOCISCore/include/NLSKinsol.h: At global scope:
+LOCISFrameWork/LOCISCore/include/NLSKinsol.h:16:12: warning: ‘int residualFunctionKinsol(N_Vector, N_Vector, void*)’ declared ‘static’ but never defined [-Wunused-function]
+ static int residualFunctionKinsol(N_Vector y, N_Vector f, void *user_data);
+            ^~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/NLSKinsol.h:17:12: warning: ‘int denseJacobianFunctionKinsol(long int, N_Vector, N_Vector, DlsMat, void*, N_Vector, N_Vector)’ declared ‘static’ but never defined [-Wunused-function]
+ static int denseJacobianFunctionKinsol(long int N, N_Vector y, N_Vector f, DlsMat J, void *user_data, N_Vector tmp1, N_Vector tmp2);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:3:0:
+LOCISFrameWork/LOCISCore/include/DAESIda.h:15:12: warning: ‘int residualFunctionIda(realtype, N_Vector, N_Vector, N_Vector, void*)’ declared ‘static’ but never defined [-Wunused-function]
+ static int residualFunctionIda(realtype tres, N_Vector yy, N_Vector yp, N_Vector resval, void *user_data);
+            ^~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/DAESIda.h:16:12: warning: ‘int denseJacobianFunctionIda(long int, realtype, realtype, N_Vector, N_Vector, N_Vector, DlsMat, void*, N_Vector, N_Vector, N_Vector)’ declared ‘static’ but never defined [-Wunused-function]
+ static int denseJacobianFunctionIda(long Neq, realtype tt, realtype cj, N_Vector yy, N_Vector yp, N_Vector resvec,
+            ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/LOCISCoreManager.h:13,
+                 from LOCISFrameWork/LOCISCore/src/LOCISCoreManagerv.cpp:1:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/main.cpp: In function ‘long int errorCallback(long int, const char*)’:
+LOCISFrameWork/LOCISCore/src/main.cpp:15:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+LOCISFrameWork/LOCISCore/src/main.cpp: In function ‘long int infoCallback(long int, const char*)’:
+LOCISFrameWork/LOCISCore/src/main.cpp:20:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+LOCISFrameWork/LOCISCore/src/main.cpp: In function ‘long int steadyStateResults(long int, const char*, double*)’:
+LOCISFrameWork/LOCISCore/src/main.cpp:32:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+LOCISFrameWork/LOCISCore/src/main.cpp: In function ‘long int dynamicResults(long int, long int, const char*, double*, double*)’:
+LOCISFrameWork/LOCISCore/src/main.cpp:57:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+LOCISFrameWork/LOCISCore/src/main.cpp: In function ‘int main(int, const char**)’:
+LOCISFrameWork/LOCISCore/src/main.cpp:66:10: warning: variable ‘result’ set but not used [-Wunused-but-set-variable]
+     long result = -1;
+          ^~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/NLSKinsol.h:5,
+                 from LOCISFrameWork/LOCISCore/src/NLSKinsol.cpp:1:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/NLSKinsolHelper.cpp: In function ‘void NLSKinsolOutputInfoHandler(void*, int)’:
+LOCISFrameWork/LOCISCore/src/NLSKinsolHelper.cpp:85:9: warning: unused variable ‘temp’ [-Wunused-variable]
+  double temp;
+         ^~~~
+In file included from LOCISFrameWork/LOCISCore/src/NLSKinsolHelper.cpp:2:0:
+LOCISFrameWork/LOCISCore/include/NLSKinsol.h: At global scope:
+LOCISFrameWork/LOCISCore/include/NLSKinsol.h:16:12: warning: ‘int residualFunctionKinsol(N_Vector, N_Vector, void*)’ declared ‘static’ but never defined [-Wunused-function]
+ static int residualFunctionKinsol(N_Vector y, N_Vector f, void *user_data);
+            ^~~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/include/NLSKinsol.h:17:12: warning: ‘int denseJacobianFunctionKinsol(long int, N_Vector, N_Vector, DlsMat, void*, N_Vector, N_Vector)’ declared ‘static’ but never defined [-Wunused-function]
+ static int denseJacobianFunctionKinsol(long int N, N_Vector y, N_Vector f, DlsMat J, void *user_data, N_Vector tmp1, N_Vector tmp2);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/include/NLSKinsol.h:5,
+                 from LOCISFrameWork/LOCISCore/src/NLSKinsolHelper.cpp:2:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+In file included from LOCISFrameWork/LOCISCore/src/parserRules.cpp:1:0:
+LOCISFrameWork/LOCISCore/src/parserRules.cpp: In member function ‘ASTNode* parser::P_model_entity_decl()’:
+LOCISFrameWork/LOCISCore/include/parser.h:105:37: warning: unused variable ‘astn_options’ [-Wunused-variable]
+ #define AST_DEC_NODE(name) ASTNode* astn_##name = NULL;
+                                     ^
+LOCISFrameWork/LOCISCore/src/parserRules.cpp:89:2: note: in expansion of macro ‘AST_DEC_NODE’
+  AST_DEC_NODE(options)
+  ^~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘int PyFunctionServer::registerDAEResidualFunction(std::stringstream*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:195:108: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  pyDAEResidualFunctionModule = PyImport_ExecCodeModule("DAEResidualFunctionModule", pyDAEResidualCompiledFn);
+                                                                                                            ^
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘void PyFunctionServer::fDAEResidualFunction(double, double*, double*, double*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:228:6: warning: variable ‘rc’ set but not used [-Wunused-but-set-variable]
+  int rc;
+      ^~
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘int PyFunctionServer::registerDAEDenseJacobianFunction(std::stringstream*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:319:123: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  pyDAEDenseJacobianFunctionModule = PyImport_ExecCodeModule("DAEDenseJacobianFunctionModule", pyDAEDenseJacobianCompiledFn);
+                                                                                                                           ^
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘void PyFunctionServer::fDAEDenseJacobianFunction(double, double*, double*, double*, double)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:352:6: warning: variable ‘rc’ set but not used [-Wunused-but-set-variable]
+  int rc;
+      ^~
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘int PyFunctionServer::registerSSResidualFunction(std::stringstream*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:418:105: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  pySSResidualFunctionModule = PyImport_ExecCodeModule("SSResidualFunctionModule", pySSResidualCompiledFn);
+                                                                                                         ^
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘void PyFunctionServer::fSSResidualFunction(double*, double*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:451:6: warning: variable ‘rc’ set but not used [-Wunused-but-set-variable]
+  int rc;
+      ^~
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘int PyFunctionServer::registerSSDenseJacobianFunction(std::stringstream*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:524:120: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  pySSDenseJacobianFunctionModule = PyImport_ExecCodeModule("SSDenseJacobianFunctionModule", pySSDenseJacobianCompiledFn);
+                                                                                                                        ^
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp: In member function ‘void PyFunctionServer::fSSDenseJacobianFunction(double*, double*)’:
+LOCISFrameWork/LOCISCore/src/PyFunctionServer.cpp:557:6: warning: variable ‘rc’ set but not used [-Wunused-but-set-variable]
+  int rc;
+      ^~
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/src/PyFunctionServerHelpers.cpp:1:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp: In function ‘int AddEnvironmentToCompiledModules(PyObject*)’:
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:15:110: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* autograd_grad = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_autograd_dict, "grad");
+                                                                                                              ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:16:102: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_add = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "add");
+                                                                                                      ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:17:102: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_sin = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "sin");
+                                                                                                      ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:18:102: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_cos = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "cos");
+                                                                                                      ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:19:102: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_tan = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "tan");
+                                                                                                      ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:20:108: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_arccos = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "arccos");
+                                                                                                            ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:21:108: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_arctan = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "arctan");
+                                                                                                            ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:22:104: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_sinh = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "sinh");
+                                                                                                        ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:23:104: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_cosh = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "cosh");
+                                                                                                        ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:24:104: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_tanh = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "tanh");
+                                                                                                        ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:25:110: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_arcsinh = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "arcsinh");
+                                                                                                              ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:26:110: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_arccosh = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "arccosh");
+                                                                                                              ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:27:110: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_arctanh = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "arctanh");
+                                                                                                              ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:28:102: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_exp = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "exp");
+                                                                                                      ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:29:102: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_log = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "log");
+                                                                                                      ^
+LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:30:106: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  PyObject* numpy_log10 = PyMapping_GetItemString(PYTHON_INFO_GLOBAL_OBJ.Python_module_numpy_dict, "log10");
+                                                                                                          ^
+In file included from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/ndarrayobject.h:27:0,
+                 from /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h:4,
+                 from LOCISFrameWork/LOCISCore/include/PyFunctionServer.h:6,
+                 from LOCISFrameWork/LOCISCore/src/PySetFunctionModuleEnvironment.cpp:1:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h: At global scope:
+/home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy/__multiarray_api.h:1453:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+ _import_array(void)
+ ^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/Symbol.cpp: In member function ‘int ModelEntity::setDims(int)’:
+LOCISFrameWork/LOCISCore/src/Symbol.cpp:110:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < Dims.size(); i++)
+                  ~~^~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/Symbol.cpp: In destructor ‘Model::~Model()’:
+LOCISFrameWork/LOCISCore/src/Symbol.cpp:607:15: warning: deleting object of polymorphic class type ‘ModelEntity’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+    delete it->second;
+               ^~~~~~
+LOCISFrameWork/LOCISCore/src/SymbolFEMoneD.cpp: In member function ‘bool FEMOneDLineObject::calculateBoundaryNodeNumbers(int, int&, int&)’:
+LOCISFrameWork/LOCISCore/src/SymbolFEMoneD.cpp:79:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (domains.size() >= (domain_order + 1))
+      ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+LOCISFrameWork/LOCISCore/src/AST.cpp:19:21: error: found ‘:’ in nested-name-specifier, expected ‘::’
+ bool modelCollection:insertModel(std::string &symbolName, ASTNode* node)
+                     ^
