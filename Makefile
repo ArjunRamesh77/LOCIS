@@ -12,19 +12,17 @@ EXT_CPP := cpp
 EXT_OBJ := o
 EXT_LIB := a
 
-VPATH = Solvers/KINSOL/kinsol_src/srcdir/include/sundials
-
 # PROGRAM
 NAME_PROGRAM = locis 
 
 # INCLUDE PATHS
 PATH_ROOT = $(CURDIR)
-PATH_LOCIS_INCLUDE :=	 LOCISFrameWork/LOCISFrameWork/include
-PATH_KINSOL_INCLUDE :=	 Solvers/KINSOL/kinsol_src/srcdir/include
-PATH_SUNDIALS_INCLUDE := Solvers/KINSOL/kinsol_src/builddir/include
-PATH_IDA_INCLUDE :=		 Solvers/IDA/IDA_src/srcdir/include
+PATH_LOCIS_INCLUDE :=	 LOCISFrameWork/LOCISCore/include
+PATH_KINSOL_INCLUDE :=	 Solvers/KINSOL/srcdir/include
+PATH_SUNDIALS_INCLUDE := Solvers/KINSOL/builddir/include
+PATH_IDA_INCLUDE :=		 Solvers/IDA/srcdir/include
 PATH_PYTHON_INCLUDE :=	 /usr/include/python2.7
-PATH_NUMPY_INCLUDE :=	 /home/arjun/.local/lib/python2.7/site-packages/numpy/core/include/numpy
+PATH_NUMPY_INCLUDE :=	 /home/$(USER)/.local/lib/python2.7/site-packages/numpy/core/include/numpy
 
 PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_INCLUDE)\
 					-I$(PATH_SUNDIALS_INCLUDE)\
@@ -40,12 +38,12 @@ PATH_LOCIS_OUT = Output/LOCISFrameWork
 PATH_LOCIS_TEMP = Temp/LOCISFrameWork
 
 # SOURCE PATHS
-PATH_LOCIS_SRC = LOCISFrameWork/LOCISFrameWork/src
+PATH_LOCIS_SRC = LOCISFrameWork/LOCISCore/src
 
 # LIB PATHS
-PATH_KINSOL_LIB := 		Solvers/KINSOL/kinsol_src/builddir/src/kinsol
-PATH_IDA_LIB :=  		Solvers/IDA/IDA_src/builddir/src/ida
-PATH_NVEC_SERIAL_LIB := Solvers/IDA/IDA_src/builddir/src/nvec_ser
+PATH_KINSOL_LIB := 		Solvers/KINSOL/builddir/src/kinsol
+PATH_IDA_LIB :=  		Solvers/IDA/builddir/src/ida
+PATH_NVEC_SERIAL_LIB := Solvers/IDA/builddir/src/nvec_ser
 PATH_PYTHON_LIB := 		/usr/lib/python2.7/config-x86_64-linux-gnu
 
 PATH_ALL_LIB = 		-L$(PATH_KINSOL_LIB)\
