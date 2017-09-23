@@ -60,7 +60,7 @@ long dynamicResults(long lColIndex, long lpNum, const char* cNames, double* dpTi
 // Entry point
 int main(int argc, const char** argv)
 {   
-    int a;
+    int b;
     long instanceId = -1;
     long result = -1;
     dynFlag = 0;
