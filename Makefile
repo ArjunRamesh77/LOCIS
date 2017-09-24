@@ -97,9 +97,9 @@ COMPILE_INCLUDE_PATHS = $(PATH_ALL_INCLUDE)
 COMPILE_LIB_PATHS = $(PATH_ALL_LIB)
 
 ifeq ($(config),debug)
-	CXXFLAGS = -Wall -c -g -fpermissive
+	CXXFLAGS = -Wall -c -std=c++11 -g -fpermissive
 else
-	CXXFLAGS = -Wall -c -O3 -fpermissive
+	CXXFLAGS = -Wall -c -std=c++11 -O3 -fpermissive
 endif
 
 # FUNCTIONS
