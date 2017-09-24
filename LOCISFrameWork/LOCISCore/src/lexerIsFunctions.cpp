@@ -481,7 +481,7 @@ int lexer::isTabOrSpaceOrEnd()
 		return 1;
 	}
 
-	if (*current_it == '\t' || *current_it == ' ')
+    if (*current_it == '\t' || *current_it == ' ' || *current_it == '\r')
 	{
 		incIter();
 		return 1;
