@@ -1,21 +1,72 @@
 #include "lexer.h"
 
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOCIS lexer constructor ( File source )
-lexer::lexer(std::string name, cerrors *errorptr)
-{
-	bIsFile = true;
-	fname = name;
-	lex_err = errorptr;
-	file.open(fname, std::ifstream::in);
-	std::getline(file, line);
-	current_it = line.begin();
-	current_pos = 0;
-	FEOF = false;
-	enable_generic_error = true;
-}
-*/
+///////////////////////////////////////////////// <KEYWORDS> //////////////////////////////////////////////////////////////////////
+// LOCIS Keywords
+const std::string keywords[NUM_KEYWORDS] = { "MODEL",
+                                                    "PARAMETER",
+                                                    "VARIABLE",
+                                                    "EQUATION",
+                                                    "REAL",
+                                                    "INTEGER",
+                                                    "UNIT",
+                                                    "TYPE",
+                                                    "DESC",
+                                                    "FOR",
+                                                    "SET",
+                                                    "FIX",
+                                                    "INIT",
+                                                    "OBJECT",
+                                                    "IF",
+                                                    "ELSE",
+                                                    "ITER",
+                                                    "GUESS",
+                                                    "LINE",
+                                                    "BASIS",
+                                                    "SEGMENT",
+                                                    "ID",
+                                                    "NUMEL",
+                                                    "LENGTH",
+                                                    "DOMAIN",
+                                                    "PDEVAR",
+                                                    "PDE",
+                                                    "VALUE",
+                                                    "FLUX"
+                                                  };
+
+
+
+///////////////////////////////////////////////// <OPERATORS> //////////////////////////////////////////////////////////////////////
+const std::string operators[NUM_OPERATORS] = { "==",
+                                                      ">=",
+                                                      "<=",
+                                                      "!=",
+                                                      ":=",
+                                                      "::",
+                                                      "&&",
+                                                      "||",
+                                                      "(",
+                                                      ")",
+                                                      "[",
+                                                      "]",
+                                                      "{",
+                                                      "}",
+                                                      "?",
+                                                      ";",
+                                                      "\\",
+                                                      ":",
+                                                      ".",
+                                                      ">",
+                                                      "<",
+                                                      "=",
+                                                      "+",
+                                                      "-",
+                                                      "/",
+                                                      "*",
+                                                      "^",
+                                                      "!",
+                                                      ",",
+                                                      "$",
+                                                      "'"};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOCIS lexer constructor ( Char source )
