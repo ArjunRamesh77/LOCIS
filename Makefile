@@ -11,6 +11,7 @@
 EXT_CPP := cpp
 EXT_OBJ := o
 EXT_LIB := a
+EXT_HEADER := h
 
 # DEFAULT CONFIGURATION
 ifeq ($(config),)
@@ -75,27 +76,13 @@ LIB_ALL := 		$(LIB_KINSOL)\
 				$(LIB_NVEC)\
 				$(LIB_PYTHON)
 
-# SOURCE/INCLUDE NAMES
-LOCIS_INC = ""
-LOCIS_SRC = ""
-LOCIS_OBJ = ""
-
-include $(PATH_LOCIS_TEMP)/locisInc.mk
-
-include $(PATH_LOCIS_TEMP)/locisSrc.mk
-
-LOCIS_OBJ = $(subst $(EXT_CPP),$(EXT_OBJ),$(LOCIS_SRC))
-
-# TRANSFORM 
-LOCIS_INC_SUBS = $(subst ~,$(PATH_LOCIS_INCLUDE)/,$(LOCIS_INC))
-LOCIS_SRC_SUBS = $(subst ~,$(PATH_LOCIS_SRC)/,$(LOCIS_SRC))
-LOCIS_OBJ_SUBS = $(subst ~,$(PATH_LOCIS_TEMP)/,$(LOCIS_OBJ))
+# SOURCE/INCLUDE/OBJ NAMES
+LOCIS_INC = $(wildcard $(PATH_LOCIS_INCLUDE)/*.$(EXT_HEADER))
+LOCIS_SRC = $(notdir $(wildcard $(PATH_LOCIS_SRC)/*.$(EXT_CPP)))
+LOCIS_OBJ = $(addprefix $(PATH_LOCIS_TEMP)/$(config)/,$(patsubst %.$(EXT_CPP),%.$(EXT_OBJ),$(LOCIS_SRC)))
 
 # COMPILER AND FLAGS
 CXX := g++
-COMPILE_INCLUDE_PATHS = $(PATH_ALL_INCLUDE)
-COMPILE_LIB_PATHS = $(PATH_ALL_LIB)
-
 ifeq ($(config),debug)
 	CXXFLAGS = -Wall -c -std=c++11 -g -fpermissive
 else
@@ -103,27 +90,18 @@ else
 endif
 
 # FUNCTIONS
-define cleanOutputs
-	@rm -f $(PATH_LOCIS_TEMP)/*.mk; 	
+define cleanOutputs	
 	@rm -f $(PATH_LOCIS_TEMP)/$1/*.$(EXT_OBJ);		
 	@rm -f $(PATH_LOCIS_OUT)/$1/$(NAME_PROGRAM);	
 endef
 
 # TARGETS
-$(PATH_LOCIS_OUT)/$(config)/$(NAME_PROGRAM): $(subst ~,$(PATH_LOCIS_TEMP)/$(config)/,$(LOCIS_OBJ))
+$(PATH_LOCIS_OUT)/$(config)/$(NAME_PROGRAM): $(LOCIS_OBJ)
 	@$(CXX) $^ $(PATH_ALL_LIB) $(LIB_ALL) -o $@ 
 
-$(PATH_LOCIS_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_SRC)/%.$(EXT_CPP) $(LOCIS_INC_SUBS)
+$(PATH_LOCIS_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_SRC)/%.$(EXT_CPP) $(LOCIS_INC)
 	@echo "Building $@"
-	@$(CXX) $(CXXFLAGS) $(COMPILE_INCLUDE_PATHS) $< -o $@ 
-
-# Get all include files
-$(PATH_LOCIS_TEMP)/locisInc.mk :
-	@ls $(PATH_LOCIS_INCLUDE) | sed 's/^/~/g' | sed 's/\.h/\.h\\/g' | sed '1 s/^/LOCIS_INC = /g' > $(PATH_LOCIS_TEMP)/locisInc.mk
-
-# Get all source files
-$(PATH_LOCIS_TEMP)/locisSrc.mk :
-	@ls $(PATH_LOCIS_SRC) | sed 's/^/~/g' | sed 's/\.cpp/\.cpp\\/g' | sed '1 s/^/LOCIS_SRC = /g' > $(PATH_LOCIS_TEMP)/locisSrc.mk
+	@$(CXX) $(CXXFLAGS) $(PATH_ALL_INCLUDE) $< -o $@ 
 
 .PHONY : clean_debug
 clean_debug :
