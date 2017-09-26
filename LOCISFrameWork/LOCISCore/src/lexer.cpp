@@ -69,17 +69,56 @@ const std::string operators[NUM_OPERATORS] = { "==",
                                                       "'"};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOCIS lexer constructor ( Char source )
-lexer::lexer(const char* source, cerrors *errorptr)
+// token
+token::token() :
+ type(-1),
+ value(""),
+ lineNum(-1),
+ pos(-1)
 {
-	bIsFile = false;
-	lex_err = errorptr;
-	file << source;				// Read character source as stringstream
+
+}
+
+void token::set_token(int type_arg, std::string value_arg, long lineNum_arg, int pos_arg)
+{
+    type = type_arg;
+    value = value_arg;
+    lineNum = lineNum_arg;
+    pos = pos_arg;
+}
+
+int token::GetType()
+{
+    return type;
+}
+
+std::string token::GetValue()
+{
+    return value;
+}
+
+void token::GetLnAndPos(int &lineNumber_arg, int &pos_arg)
+{
+    lineNumber_arg = lineNum;
+    pos_arg = pos;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// LOCIS lexer constructor ( Char source )
+lexer::lexer(const char* source, cerrors *errorptr) :
+    file(source),
+    line(""),
+    lineNum(0),
+    currentPos(0),
+    currentIt(NULL),
+    FEOF(false),
+    enableGenericError(true),
+    currentItSave(NULL),
+    currentPosSave(0),
+    lexErr(errorptr)
+{
 	std::getline(file, line);
-	current_it = line.begin();
-	current_pos = 0;
-	FEOF = false;
-	enable_generic_error = true;
+    currentIt = line.begin();
 }
 
 
@@ -87,51 +126,35 @@ lexer::lexer(const char* source, cerrors *errorptr)
 //
 lexer::~lexer()
 {
-	//Close file
-	/*
-	if (file.is_open())
-	{
-		file.close();
-	}
-	*/
-}
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
-void lexer::checkNewLine()
-{
-	if (current_it == line.end())
-	{
-		current_read = false;
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 void lexer::getNewLine(bool force)
 {
-	if (current_it == line.end() || force)
+    if (currentIt == line.end() || force)
 	{
 		if (!std::getline(file, line))
 		{
 			FEOF = true;
 			return;
 		}
-		line_num++;
-		current_pos = 0;
-		current_it = line.begin();
+        lineNum++;
+        currentPos = 0;
+        currentIt = line.begin();
 
 		// Skip Blank lines
-		while (!FEOF && current_it == line.end())
+        while (!FEOF && currentIt == line.end())
 		{
 			if (!std::getline(file, line))
 			{
 				FEOF = true;
 				return;
 			}
-			line_num++;
-			current_pos = 0;
-			current_it = line.begin();
+            lineNum++;
+            currentPos = 0;
+            currentIt = line.begin();
 		}
 
 		return;
@@ -216,12 +239,12 @@ start:
 	}
 
 	// If token not reco
-	if (enable_generic_error)
+    if (enableGenericError)
 	{
-		lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-		lex_err->AddErrorLine(" Unidentified token found ");
-		lex_err->AddError();
-		enable_generic_error = true;
+        lexErr->SetError(1113, "Lexer Error", lineNum, currentPos);
+        lexErr->AddErrorLine(" Unidentified token found ");
+        lexErr->AddError();
+        enableGenericError = true;
 	}
 
 	// Recover
@@ -236,10 +259,10 @@ start:
 //
 void lexer::incIter(bool nl)
 {
-	if (current_it != line.end())
+    if (currentIt != line.end())
 	{
-		current_it++;
-		current_pos++;
+        currentIt++;
+        currentPos++;
 	}
 	if (nl)
 		getNewLine();
@@ -249,16 +272,16 @@ void lexer::incIter(bool nl)
 //
 void lexer::resetIter()
 {
-	current_it = current_it_save;
-	current_pos = current_pos_save;
+    currentIt = currentItSave;
+    currentPos = currentPosSave;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 void lexer::saveIter()
 {
-	current_it_save = current_it;
-	current_pos_save = current_pos;
+    currentItSave = currentIt;
+    currentPosSave = currentPos;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -266,9 +289,9 @@ void lexer::saveIter()
 int lexer::tryRecover()
 {
 	//Skip to Next Readable token
-	while (current_it != line.end())
+    while (currentIt != line.end())
 	{
-		if (*current_it == '\t' || *current_it == ' ')
+        if (*currentIt == '\t' || *currentIt == ' ')
 		{
 			return 1;
 		}
@@ -277,3 +300,5 @@ int lexer::tryRecover()
 
 	return 0;
 }
+
+

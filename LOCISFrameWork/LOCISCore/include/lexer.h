@@ -106,37 +106,15 @@ class token
 private:
 	int type;
 	std::string value;
-	long int line_num;
+    long int lineNum;
 	int pos;
 
 public:
-	//Assign
-	void set_token(int type, std::string value, long int line_num, int pos)
-	{
-		this->type = type;
-		this->value = value;
-		this->line_num = line_num;
-		this->pos = pos;
-	}
-
-	//Return type
-	int GetType()
-	{
-		return type;
-	}
-
-	//Return Value
-	std::string GetValue()
-	{
-		return value;
-	}
-
-	//Return Line number
-	void GetLnAndPos(int &line_number, int &pos1)
-	{
-		line_number = line_num;
-		pos1 = pos;
-	}
+    token();
+    void set_token(int type, std::string value, long int lineNum, int pos);
+    int GetType();
+    std::string GetValue();
+    void GetLnAndPos(int &line_number, int &pos1);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,34 +123,30 @@ class lexer
 {
 private:
 	//file data
-	std::string fname;
 	std::stringstream file;
 
 	//line data
 	std::string line;
-	long int line_num;
-	bool current_read;
-	int current_pos;
-	std::string::iterator current_it;
+    long int lineNum;
+    int currentPos;
+    std::string::iterator currentIt;
 	bool FEOF;
-	bool enable_generic_error;
+    bool enableGenericError;
 
 	//Save data
-	std::string::iterator current_it_save;
-	int current_pos_save;
+    std::string::iterator currentItSave;
+    int currentPosSave;
 
 	//Error
-	cerrors *lex_err;
+    cerrors *lexErr;
 
 public:
 	
-	lexer(std::string name, cerrors *errorptr);
 	lexer(const char* source, cerrors *errorptr);
 	~lexer();
 
 	//Control Functions
 	int getNextToken(token *tok);
-	void checkNewLine();
 	void saveIter();
 	void resetIter();
 	void incIter(bool nl = false);
@@ -191,8 +165,6 @@ public:
 	int isMultiLineComment(token *tok);
 	int isSingleLineComment(token *tok);
 	void isEscapeSeq();
-private:
-	bool bIsFile;
 };
 
 #endif // ! LOCIS_LEXER_H
