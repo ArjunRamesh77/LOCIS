@@ -167,75 +167,65 @@ int lexer::getNextToken(token *tok)
 {
 
 start:
+    enableGenericError = true;
 
 	//Set Invalid Token
 	tok->set_token(-100, "EOF", -1, -1);
 
-	int retval = 0;
-
 	// Ignore Multiline comment
-	retval = isMultiLineComment(tok);
-	if (retval == 1)
+    if (isMultiLineComment(tok))
 		goto start;
 
 	// Ignore singleline comment
-	retval = isSingleLineComment(tok);
-	if (retval == 1)
+    if (isSingleLineComment(tok))
 		goto start;
 
 	// Try Keywords
-	retval = isKeyword(tok);
-	if (retval == 1)
+    if (isKeyword(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try String
-	retval = isString(tok);
-	if (retval == 1)
+    if (isString(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Identifier
-	retval = isIdentifier(tok);
-	if (retval == 1)
+    if (isIdentifier(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Operator
-	retval = isOperator(tok);
-	if (retval == 1)
+    if (isOperator(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Exponential
-	retval = isExpo(tok);
-	if (retval == 1)
+    if (isExpo(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Real
-	retval = isReal(tok);
-	if (retval == 1)
+    if (isReal(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Integer
-	retval = isInteger(tok);
-	if (retval == 1)
+    if (isInteger(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Get out if no tokens identified and EOF
-	if (retval == 0 && FEOF)
+    if (FEOF)
 	{
-		return -1;
+        return LEXER_EOF;
 	}
 
 	// If token not reco
@@ -244,15 +234,13 @@ start:
         lexErr->SetError(1113, "Lexer Error", lineNum, currentPos);
         lexErr->AddErrorLine(" Unidentified token found ");
         lexErr->AddError();
-        enableGenericError = true;
 	}
 
 	// Recover
 	tryRecover();
 	if (FEOF)
-		return -1;
+        return LEXER_EOF;
 	goto start;
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,19 +274,17 @@ void lexer::saveIter()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-int lexer::tryRecover()
+void lexer::tryRecover()
 {
 	//Skip to Next Readable token
     while (currentIt != line.end())
 	{
-        if (*currentIt == '\t' || *currentIt == ' ')
+        if (*currentIt == '\t' || *currentIt == ' ' || *currentIt == '\r')
 		{
-			return 1;
+            return;
 		}
 		incIter();
 	}
-
-	return 0;
 }
 
 

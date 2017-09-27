@@ -19,6 +19,11 @@
 #define NUM_OPERATORS 31
 #define OPERATORS_OFFEST 2000
 
+// Lexer error codes
+#define LEXER_EOF -1
+#define LEXER_SUCCESS 0
+#define LEXER_FAIL 1
+
 extern const std::string keywords[NUM_KEYWORDS];
 extern const std::string operators[NUM_OPERATORS];
 
@@ -104,10 +109,10 @@ enum token_operators {
 class token
 {
 private:
-	int type;
-	std::string value;
+    int type;
+    std::string value;
     long int lineNum;
-	int pos;
+    int pos;
 
 public:
     token();
@@ -122,49 +127,49 @@ public:
 class lexer
 {
 private:
-	//file data
-	std::stringstream file;
+    //file data
+    std::stringstream file;
 
-	//line data
-	std::string line;
+    //line data
+    std::string line;
     long int lineNum;
     int currentPos;
     std::string::iterator currentIt;
-	bool FEOF;
+    bool FEOF;
     bool enableGenericError;
 
-	//Save data
+    //Save data
     std::string::iterator currentItSave;
     int currentPosSave;
 
-	//Error
+    //Error
     cerrors *lexErr;
 
 public:
-	
-	lexer(const char* source, cerrors *errorptr);
-	~lexer();
 
-	//Control Functions
-	int getNextToken(token *tok);
-	void saveIter();
-	void resetIter();
-	void incIter(bool nl = false);
-	void getNewLine(bool force = false);
-	int tryRecover();
+    lexer(const char* source, cerrors *errorptr);
+    ~lexer();
 
-	//isFunctions
-	int isTabOrSpaceOrEnd();
-	int isInteger(token *tok);
-	int isReal(token *tok);
-	int isKeyword(token *tok);
-	int isOperator(token *tok);
-	int isString(token *tok);
-	int isExpo(token *tok);
-	int isIdentifier(token *tok);
-	int isMultiLineComment(token *tok);
-	int isSingleLineComment(token *tok);
-	void isEscapeSeq();
+    //Control Functions
+    int getNextToken(token *tok);
+    void saveIter();
+    void resetIter();
+    void incIter(bool nl = false);
+    void getNewLine(bool force = false);
+    void tryRecover();
+
+    //isFunctions
+    bool isTabOrSpaceOrEnd();
+    bool isInteger(token *tok);
+    bool isReal(token *tok);
+    bool isKeyword(token *tok);
+    bool isOperator(token *tok);
+    bool isString(token *tok);
+    bool isExpo(token *tok);
+    bool isIdentifier(token *tok);
+    bool isMultiLineComment(token *tok);
+    bool isSingleLineComment(token *tok);
+    void isEscapeSeq();
 };
 
 #endif // ! LOCIS_LEXER_H
