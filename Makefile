@@ -24,7 +24,7 @@ REQUIRED_DIRS = Output/$(config)\
 
 _makeRequiredFolders := $(shell for d in $(REQUIRED_DIRS); \
 						do								   \
-	  					[[-d $$d]] || mkdir -p $$d;	   	   \
+	  					[[ -d $$d ]] || mkdir -p $$d;	   	   \
 						done)
 
 # PROGRAM
@@ -103,13 +103,13 @@ $(PATH_LOCIS_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_SRC)/%.$(EXT_CPP) $(LOC
 	@echo "Building $@"
 	@$(CXX) $(CXXFLAGS) $(PATH_ALL_INCLUDE) $< -o $@ 
 
-.PHONY : clean_debug
-clean_debug :
+.PHONY : cleand
+cleand :
 	@$(call cleanOutputs,debug)
 	
-.PHONY : clean_release
-clean_release :
+.PHONY : cleanr
+cleanr :
 	@$(call cleanOutputs,release)
 
 .PHONY : clean
-clean : clean_debug clean_release
+clean : cleand cleanr
