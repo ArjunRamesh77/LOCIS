@@ -5,7 +5,7 @@
 ASTNode* ASTBasisTypeNode::CreateNode(token* t_BasisType)
 {
 	tBasisType = *t_BasisType;
-	sBasisType = t_BasisType->GetValue();
+	sBasisType = t_BasisType->getValue();
 	return this;
 }
 
@@ -31,7 +31,7 @@ ASTNode* ASTPdevarAttributesNode::CreateNode(std::vector<ASTNode*> &astvnSegment
 ASTNode* ASTSegmentIdTypeNode::CreateNode(token* t_ID)
 {
 	tID = *t_ID;
-	sID = t_ID->GetValue();
+	sID = t_ID->getValue();
 	return this;
 }
 
@@ -76,13 +76,13 @@ ASTNode* ASTFEMoneDEquation::CreateNode(ASTNode* astnDomain, ASTNode* astnEqn, A
 	if (astnLeftbType)
 	{
 		ASTBoundaryConditions* bc = static_cast<ASTBoundaryConditions*>(astnLeftbType);
-		iLeftBoundaryType = bc->tBoundaryType.GetType();
+		iLeftBoundaryType = bc->tBoundaryType.getType();
 	}
 
 	if (astnRightbType)
 	{
 		ASTBoundaryConditions* bc = static_cast<ASTBoundaryConditions*>(astnRightbType);
-		iRightBoundaryType = bc->tBoundaryType.GetType();
+		iRightBoundaryType = bc->tBoundaryType.getType();
 	}
 
 	astvnDomain = static_cast<ASTQualifiedNamedReferenceNode*>(astnDomain)->astvnQualifiedName;
@@ -95,7 +95,7 @@ ASTNode* ASTstringIndex::CreateNode(token* tString)
 {
 	this->tString = *tString;
 	bIsStringIndex = true;
-	sString = tString->GetValue();
+	sString = tString->getValue();
 	return this;
 }
 
@@ -104,6 +104,6 @@ ASTNode* ASTstringIndex::CreateNode(token* tString)
 ASTNode* ASTBoundaryConditions::CreateNode(token* tBoundaryType)
 {
 	this->tBoundaryType = *tBoundaryType;
-	sBoundaryType = tBoundaryType->GetValue();
+	sBoundaryType = tBoundaryType->getValue();
 	return this;
 }

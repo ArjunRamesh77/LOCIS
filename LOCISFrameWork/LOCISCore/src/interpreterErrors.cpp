@@ -7,7 +7,7 @@ void interpreter::semanticErr_ModelNoExist(ASTNode* node)
 	ASTmodel_entity_decl_groupNode* errNode = static_cast<ASTmodel_entity_decl_groupNode*>(node);
 
 	int pos, line;
-	static_cast<ASTgeneric_tokenNode*>(errNode->astnModelEntityType)->tok.GetLnAndPos(line, pos);
+	static_cast<ASTgeneric_tokenNode*>(errNode->astnModelEntityType)->tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1001, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine("object of model " + errNode->sModelBaseName + " is not defined");
@@ -23,7 +23,7 @@ void interpreter::semanticErr_MultipleModelDefinitions(ASTNode* node)
 	ASTmodelNode* modelNode = static_cast<ASTmodelNode*>(node);
 
 	int line, pos;
-	modelNode->tName.GetLnAndPos(line, pos);
+	modelNode->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1002, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine("model " + modelNode->sName + " is already defined");
@@ -61,7 +61,7 @@ void interpreter::semanticErr_EntityWrongPositionDecl(ASTNode* node)
 	ASTmodel_entity_decl_groupNode* node1 = static_cast<ASTmodel_entity_decl_groupNode*>(node);
 
 	int line, pos;
-	node1->tEntityType.GetLnAndPos(line, pos);
+	node1->tEntityType.getLnAndPos(line, pos);
 
 	errptr->SetError(1013, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine("Model entities can only be declared at the start of the model");
@@ -77,7 +77,7 @@ void interpreter::semanticErr_ModelUndefined(ASTNode* node)
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Model named is undefined");
@@ -93,7 +93,7 @@ void interpreter::semanticErr_dtVariableDefined(ASTNode* node)
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" A time dependent variable cannot be defined directly.");
@@ -110,7 +110,7 @@ void interpreter::semanticErr_EntityTypeNoVector(ASTNode* node)
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" An iteration variable has to be a scalar.");
@@ -126,7 +126,7 @@ void interpreter::semanticErr_EntityTypeNoDefault(const std::string EntityBase, 
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" An " + EntityBase + " variable cannot have a default.");
@@ -142,7 +142,7 @@ void interpreter::semanticErr_EntityTypeNoOptions(const std::string EntityBaseTy
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" An " + EntityBaseType + " variable cannot have options.");
@@ -170,10 +170,10 @@ void interpreter::semanticErr_EntityRedeclaration(ASTNode* node)
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity with name \"" + node1->tName.GetValue() +"\" already declared");
+	errptr->AddErrorLine(" Entity with name \"" + node1->tName.getValue() +"\" already declared");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -186,7 +186,7 @@ void interpreter::semanticErr_SectionRedeclaration(ASTNode* node)
 	ASTmodel_sectionNode* node1 = static_cast<ASTmodel_sectionNode*>(node);
 
 	int line, pos;
-	node1->tSectionName.GetLnAndPos(line, pos);
+	node1->tSectionName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Section \"" + node1->sName + "\" is already declared");
@@ -202,7 +202,7 @@ void interpreter::semanticErr_SectionBehindGuess(ASTNode* node)
 	ASTmodel_sectionNode* node1 = static_cast<ASTmodel_sectionNode*>(node);
 
 	int line, pos;
-	node1->tSectionName.GetLnAndPos(line, pos);
+	node1->tSectionName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Section \"" + node1->sName + "\" must be defined before \"GUESS\"");
@@ -218,7 +218,7 @@ void interpreter::semanticErr_SectionBehindEquationInit(ASTNode* node)
 	ASTmodel_sectionNode* node1 = static_cast<ASTmodel_sectionNode*>(node);
 
 	int line, pos;
-	node1->tSectionName.GetLnAndPos(line, pos);
+	node1->tSectionName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Section \"" + node1->sName + "\" must be defined before \"INIT\" or \"EQUATION\"");
@@ -234,10 +234,10 @@ void interpreter::semanticErr_BoundsOnlyForVariables(ASTNode* node)
 	ASTbounds_optionNode* node1 = static_cast<ASTbounds_optionNode*>(node);
 
 	int line, pos;
-	node1->tInequalityOp.GetLnAndPos(line, pos);
+	node1->tInequalityOp.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" The entity " + IS.ob_tok.GetValue() + " cannot have a " + node1->sInequalityOp + " option");
+	errptr->AddErrorLine(" The entity " + IS.ob_tok.getValue() + " cannot have a " + node1->sInequalityOp + " option");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -250,7 +250,7 @@ void interpreter::semanticErr_OnlyEqualityInEquation(ASTNode* node)
 	ASTequationNode* node1 = static_cast<ASTequationNode*>(node);
 
 	int line, pos;
-	node1->tEquationTypeOp.GetLnAndPos(line, pos);
+	node1->tEquationTypeOp.getLnAndPos(line, pos);
 
 	errptr->SetError(1007, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Currently only equality equations are supported in the the equality section");
@@ -266,7 +266,7 @@ void interpreter::semanticErr_OnlyIterAllowedInFor(ASTNode* node)
 	ASTfor_loopNode* node1 = static_cast<ASTfor_loopNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1008, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Only an iteration variable may be used in a for loop");
@@ -282,7 +282,7 @@ void interpreter::semanticErr_EndlessForDetected(ASTNode* node)
 	ASTfor_loopNode* node1 = static_cast<ASTfor_loopNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Invalid for statement, results in infinite iterations");
@@ -296,10 +296,10 @@ void interpreter::semanticErr_EndlessForDetected(ASTNode* node)
 void interpreter::semanticErr_UndeclaredEntity(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " does not exist in the model");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " does not exist in the model");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -310,10 +310,10 @@ void interpreter::semanticErr_UndeclaredEntity(token tok)
 void interpreter::semanticErr_NotAVector(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " is not a vector");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " is not a vector");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -324,10 +324,10 @@ void interpreter::semanticErr_NotAVector(token tok)
 void interpreter::semanticErr_DimensionMismatch(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " has a dimension mismatch while referencing");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " has a dimension mismatch while referencing");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -338,10 +338,10 @@ void interpreter::semanticErr_DimensionMismatch(token tok)
 void interpreter::semanticErr_IndexOutOfBounds(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " has a dimension mismatch while referencing");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " has a dimension mismatch while referencing");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -352,10 +352,10 @@ void interpreter::semanticErr_IndexOutOfBounds(token tok)
 void interpreter::semanticErr_InvalidQualification(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " cannot be qualified");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " cannot be qualified");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -366,10 +366,10 @@ void interpreter::semanticErr_InvalidQualification(token tok)
 void interpreter::semanticErr_UninitializedVector(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " is not initialized");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " is not initialized");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -380,10 +380,10 @@ void interpreter::semanticErr_UninitializedVector(token tok)
 void interpreter::semanticErr_EntityIsNotAScalar(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " is not a scalar, cannot be referenced as one");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " is not a scalar, cannot be referenced as one");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -394,10 +394,10 @@ void interpreter::semanticErr_EntityIsNotAScalar(token tok)
 void interpreter::semanticErr_IterCannotBeAssigned(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " is an iteration variable, cannot be directly assigned");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " is an iteration variable, cannot be directly assigned");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -408,10 +408,10 @@ void interpreter::semanticErr_IterCannotBeAssigned(token tok)
 void interpreter::semanticErr_OnlyParametersSet(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " is not a parameter, only parameters can be set");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " is not a parameter, only parameters can be set");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -422,10 +422,10 @@ void interpreter::semanticErr_OnlyParametersSet(token tok)
 void interpreter::semanticErr_NoBoundsAllowed(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " cannot have bounds");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " cannot have bounds");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -436,10 +436,10 @@ void interpreter::semanticErr_NoBoundsAllowed(token tok)
 void interpreter::semanticErr_OnlyVariablesFix(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " only Variables can be fixed");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " only Variables can be fixed");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -450,10 +450,10 @@ void interpreter::semanticErr_OnlyVariablesFix(token tok)
 void interpreter::semanticErr_OnlyVariablesGuess(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " only Variables can be given guesses");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " only Variables can be given guesses");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -464,10 +464,10 @@ void interpreter::semanticErr_OnlyVariablesGuess(token tok)
 void interpreter::semanticErr_NoBoundsInGuess(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " No bounds can be set in Guess section");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " No bounds can be set in Guess section");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -483,7 +483,7 @@ void interpreter::semanticErr_ExpectedAVariableRefInDomain(ASTNode* node)
 	ASTNamedReferenceNode* node3 = static_cast<ASTNamedReferenceNode*>(node2->astvnQualifiedName.at(0));
 
 	int line, pos;
-	node3->tName.GetLnAndPos(line, pos);
+	node3->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1010, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Expected a variable reference in a domain");
@@ -501,7 +501,7 @@ void interpreter::semanticErr_NoDomainAssociatedWithVar(ASTNode* node)
 	ASTNamedReferenceNode* node3 = static_cast<ASTNamedReferenceNode*>(node2->astvnQualifiedName.at(0));
 
 	int line, pos;
-	node3->tName.GetLnAndPos(line, pos);
+	node3->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1011, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(" Missing domain information");
@@ -519,7 +519,7 @@ void interpreter::semanticErr_NotAFieldVariable(ASTNode* node)
 	ASTNamedReferenceNode* node3 = static_cast<ASTNamedReferenceNode*>(*(node2->astvnQualifiedName.end() - 1));
 
 	int line, pos;
-	node3->tName.GetLnAndPos(line, pos);
+	node3->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node3->sName + "is not a valid field variable");
@@ -535,7 +535,7 @@ void interpreter::semanticErr_NoArgsFunction(ASTNode* node)
 	ASTfunctionCallNode* node1 = static_cast<ASTfunctionCallNode*>(node);
 
 	int line, pos;
-	node1->tFunctionName.GetLnAndPos(line, pos);
+	node1->tFunctionName.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sFunctionName + " | has zero arguments");
@@ -553,7 +553,7 @@ void interpreter::semanticErr_FEMEquationGenFail(ASTNode* node)
 	ASTNamedReferenceNode* node3 = static_cast<ASTNamedReferenceNode*>(node2->astvnQualifiedName.at(0));
 
 	int line, pos;
-	node3->tName.GetLnAndPos(line, pos);
+	node3->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node3->sName + " | Internal error generating FEM equations");
@@ -569,7 +569,7 @@ void interpreter::semanticErr_InvalidFunction(ASTNode* node)
 	ASTfunctionCallNode* node1 = static_cast<ASTfunctionCallNode*>(node);
 
 	int line, pos;
-	node1->tFunctionName.GetLnAndPos(line, pos);
+	node1->tFunctionName.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sFunctionName + " | Function not found");
@@ -585,7 +585,7 @@ void interpreter::semanticErr_InvalidBasisType(ASTNode* node)
 	ASTBasisTypeNode* node1 = static_cast<ASTBasisTypeNode*>(node);
 
 	int line, pos;
-	node1->tBasisType.GetLnAndPos(line, pos);
+	node1->tBasisType.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sBasisType + " | is in invalid basis type.");
@@ -602,7 +602,7 @@ void interpreter::semanticErr_RedefinitionOfSegmentID(ASTNode* node)
 	ASTSegmentIdTypeNode* node1 = static_cast<ASTSegmentIdTypeNode*>(node);
 
 	int line, pos;
-	node1->tID.GetLnAndPos(line, pos);
+	node1->tID.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sID + " | is already defined for this segment");
@@ -618,10 +618,10 @@ void interpreter::semanticErr_RedefinitionNumberOfElements(ASTNode* node)
 	ASTNumelNode* node1 = static_cast<ASTNumelNode*>(node);
 	
 	int line, pos;
-	node1->t_Tag.GetLnAndPos(line, pos);
+	node1->t_Tag.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(node1->t_Tag.GetValue() + " | this attribute is already defined");
+	errptr->AddErrorLine(node1->t_Tag.getValue() + " | this attribute is already defined");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -634,10 +634,10 @@ void interpreter::semanticErr_RedefinitionLength(ASTNode* node)
 	ASTLengthNode* node1 = static_cast<ASTLengthNode*>(node);
 
 	int line, pos;
-	node1->t_Tag.GetLnAndPos(line, pos);
+	node1->t_Tag.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(node1->t_Tag.GetValue() + " | this attribute is already defined");
+	errptr->AddErrorLine(node1->t_Tag.getValue() + " | this attribute is already defined");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -648,10 +648,10 @@ void interpreter::semanticErr_RedefinitionLength(ASTNode* node)
 void interpreter::semanticErr_MissingSegmentAttributes(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(tok.GetValue() + " | this object has some missing segment attributes.");
+	errptr->AddErrorLine(tok.getValue() + " | this object has some missing segment attributes.");
 	errptr->AddErrorLine("This could be \"id\", \"numel\" or \"length\"");
 	errptr->AddError();
 
@@ -666,7 +666,7 @@ void interpreter::semanticErr_SegmentIDExistsAlready(ASTNode* node)
 	ASTSegmentIdTypeNode* node1 = static_cast<ASTSegmentIdTypeNode*>(node);
 
 	int line, pos;
-	node1->tID.GetLnAndPos(line, pos);
+	node1->tID.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sID + " | This segment does not have a unique ID, it already exists in the object");
@@ -682,7 +682,7 @@ void interpreter::semanticErr_RedefinitionPDEid(ASTNode* node)
 	ASTSegmentIdTypeNode* node1 = static_cast<ASTSegmentIdTypeNode*>(node);
 
 	int line, pos;
-	node1->tID.GetLnAndPos(line, pos);
+	node1->tID.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sID + " | Redefinition of \"id\" attribute");
@@ -698,10 +698,10 @@ void interpreter::semanticErr_RedefinitionDomains(ASTNode* node)
 	ASTdomainOptionNode* node1 = static_cast<ASTdomainOptionNode*>(node);
 
 	int line, pos;
-	node1->tTag.GetLnAndPos(line, pos);
+	node1->tTag.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(node1->tTag.GetValue() + " | Redefinition of attribute");
+	errptr->AddErrorLine(node1->tTag.getValue() + " | Redefinition of attribute");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -714,7 +714,7 @@ void interpreter::semanticErr_DomainDoesNotExist(ASTNode* node)
 	ASTNamedReferenceNode* node1 = static_cast<ASTNamedReferenceNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + " | domain with this name has not been defined");
@@ -730,7 +730,7 @@ void interpreter::semanticErr_RedefinitionDomainName(ASTNode* node)
 	ASTNamedReferenceNode* node1 = static_cast<ASTNamedReferenceNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1012, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + " | domain with this name has already been applied");
@@ -746,7 +746,7 @@ void interpreter::semanticErr_UndefinedLine(ASTNode* node)
 	ASTmodel_entity_declNode* node1 = static_cast<ASTmodel_entity_declNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + "| the line is undefined, Needs options to define it");
@@ -762,7 +762,7 @@ void interpreter::semanticErr_MissingReferenceToDomOrVar(ASTNode* node)
 	ASTNamedReferenceNode* node1 = static_cast<ASTNamedReferenceNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + "| the line is undefined, Needs options to define it");
@@ -778,7 +778,7 @@ void interpreter::semanticErr_IndexInDomainOnlyString(ASTNode* node)
 	ASTNamedReferenceNode* node1 = static_cast<ASTNamedReferenceNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + "| only string indices allowed for this type");
@@ -794,7 +794,7 @@ void interpreter::semanticErr_InvalidStringIndex(ASTNode* node)
 	ASTstringIndex* node1 = static_cast<ASTstringIndex*>(node);
 
 	int line, pos;
-	node1->tString.GetLnAndPos(line, pos);
+	node1->tString.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sString + "| is an invalid index");
@@ -810,7 +810,7 @@ void interpreter::semanticErr_DirectVarWithoutDomain(ASTNode* node)
 	ASTNamedReferenceNode* node1 = static_cast<ASTNamedReferenceNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + "| Cannot be directly referenced without a domain qualification");
@@ -826,7 +826,7 @@ void interpreter::semanticErr_OnlyGuessForFEMVars(ASTNode* node)
 	ASTNamedReferenceNode* node1 = static_cast<ASTNamedReferenceNode*>(node);
 
 	int line, pos;
-	node1->tName.GetLnAndPos(line, pos);
+	node1->tName.getLnAndPos(line, pos);
 
 	errptr->SetError(1006, "SEMANTIC ERROR", line, pos);
 	errptr->AddErrorLine(node1->sName + "| only guesses can be applied to FEM type variables");
@@ -840,10 +840,10 @@ void interpreter::semanticErr_OnlyGuessForFEMVars(ASTNode* node)
 void interpreter::semanticErr_CalculatingBoundaryValues(token tok)
 {
 	int line, pos;
-	tok.GetLnAndPos(line, pos);
+	tok.getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + tok.GetValue() + " | invalid inputs causing error in calculating boundary values");
+	errptr->AddErrorLine(" Entity " + tok.getValue() + " | invalid inputs causing error in calculating boundary values");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")
@@ -854,10 +854,10 @@ void interpreter::semanticErr_CalculatingBoundaryValues(token tok)
 void interpreter::semanticErr_optionRedefined(const std::string, ModelEntity* me)
 {
 	int line, pos;
-	me->tok->GetLnAndPos(line, pos);
+	me->tok->getLnAndPos(line, pos);
 
 	errptr->SetError(1009, "SEMANTIC ERROR", line, pos);
-	errptr->AddErrorLine(" Entity " + me->tok->GetValue() + " | The option 'description' has been redefined for this option");
+	errptr->AddErrorLine(" Entity " + me->tok->getValue() + " | The option 'description' has been redefined for this option");
 	errptr->AddError();
 
 	THROW_INTERPRETER_EX(443, "Interpreter Error")

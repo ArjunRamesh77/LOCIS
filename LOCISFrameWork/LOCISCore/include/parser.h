@@ -14,7 +14,8 @@
 enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 
 // Initiate beginning of a production rule
-#define START_RULE(rule)  ASTReturnNode = NULL; ASTtempNode = NULL;												
+#define START_RULE        ASTNode* ASTReturnNode = NULL; \
+                          ASTNode* ASTtempNode = NULL;
 
 // End of a production rule
 #define END_RULE }
@@ -25,7 +26,7 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 #define SYNTAX_ERROR "Syntax Error"
 
 // Main construct to match tokens
-#define EXPECT_TOKEN_ELSE(TOK) 		Consume(TOK);															\
+#define EXPECT_TOKEN_ELSE(TOK) 		consume(TOK);															\
 									if (SHOW_ERROR)															\
 									{																		\
 
@@ -38,26 +39,26 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 
 // For loop construct for matching tokens
 #define FOR_ALL_WHILE  while(
-#define ITEM_S(TOK)		  Teq(&cur_tok,TOK) ||
-#define ITEM_E(TOK)		  Teq(&cur_tok, TOK)) {
+#define ITEM_S(TOK)		  Teq(&curTok,TOK) ||
+#define ITEM_E(TOK)		  Teq(&curTok, TOK)) {
 #define END_WHILE       }
 
 // If statement for matching different type tokens
 #define FOR_ALL_IF		  if(
-#define ITEM_S(TOK)		  Teq(&cur_tok,TOK) ||
-#define ITEM_E(TOK)		  Teq(&cur_tok, TOK)) {
+#define ITEM_S(TOK)		  Teq(&curTok,TOK) ||
+#define ITEM_E(TOK)		  Teq(&curTok, TOK)) {
 #define END_IF			  }
 
 // Call a new production rule
 #define DO_RULE(value)	  ASTtempNode = P_##value(); 
 
 // If statement for matching a single type of token
-#define IF(TOK)		if(Teq(&cur_tok, TOK)) {			
-#define ELIF(TOK)	} else if(Teq(&cur_tok, TOK)) {
+#define IF(TOK)		if(Teq(&curTok, TOK)) {
+#define ELIF(TOK)	} else if(Teq(&curTok, TOK)) {
 #define ELSE        } else {
 
 // Switch statement for matching tokens
-#define	SWITCH switch(cur_tok.GetType()) {
+#define	SWITCH switch(curTok.getType()) {
 
 #define CASE(TOK) case TOK:				    \
 				  EXPECT_TOKEN_ELSE(TOK)		\
@@ -72,43 +73,36 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 #define END_SWITCH }
 
 // eats a token
-#define EAT(posi)   Consume(cur_tok.GetType());												
+#define EAT  consume(curTok.getType());
 	
-// Syntax Error Types
-#define SYNTAX_ERROR_EXPECTED_TYPE(type) ErrorSyntaxType1(type);
-
-#define SYNTAX_ERROR_EXPECTED_ANYOF_TYPE(possible_states) ErrorSyntaxType2(possible_states);
-
-#define SYNTAX_ERROR_EXPECTED_STRING(string) ErrorSyntaxType6(string);
-
-#define SYNTAX_ERROR_EXPECTED_ANYOF_STRING(possible_states) ErrorSyntaxType3(possible_states);
-
-#define SYNTAX_ERROR_UNEXPECTED	ErrorSyntaxType4();
-
-#define SYNTAX_ERROR_MISSING(type) ErrorSyntaxType7(type);
-
-#define SYNTAX_ERROR_UNEXPECTED_EOF ErrorSyntaxType8();
-
 // Forces/Unforces error reporting
-#define FORCE_ERROR state.error = true; err_tok = cur_tok;
+#define FORCE_ERROR state.error = true; errTok = curTok;
 #define UNFORCE_ERROR state.error = false;	ex.type = TERMINAL_ERR;	throw &ex;	
 
 // Context switches
-#define NONE 0
-#define FOR_EQ_TYPE 1
-#define FOR_NONEQ_TYPE  2
+#define CONTEXT_NONE 0
+#define CONTEXT_EQ_TYPE 1
+#define CONTEXT_NONEQ_TYPE  2
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //AST BUILD HELPERS
-#define AST_DEC_TOK(name) token t_##name; t_##name.set_token(-1, "", -1, -1);
+#define AST_DEC_TOK(name) token t_##name; t_##name.setToken(-1, "", -1, -1);
+
 #define AST_DEC_VEC(name) std::vector<ASTNode*> astvn_##name;
+
 #define AST_DEC_NODE(name) ASTNode* astn_##name = NULL;
-#define AST_SAV_TOK(name) t_##name = cur_tok;
+
+#define AST_SAV_TOK(name) t_##name = curTok;
+
 #define AST_SAV_NODE(name) astn_##name = ASTtempNode;
+
 #define AST_SAV_VEC(name) astvn_##name.push_back(ASTtempNode);
+
 #define AST_RETURN_NODE(name)	ASTReturnNode = new name;				\
 								return static_cast<name*>(ASTReturnNode)->CreateNode
+
 #define AST_RETURN_NO_CREATE return ASTtempNode;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOCIS Parser Structures
@@ -142,45 +136,44 @@ class parser
 {
 private:
 	parserException ex;
+    parserState state;
 	lexer* lex;
-	cerrors *parse_err;
-	token cur_tok;
-	token err_tok;
-	parserState state;
-	ASTNode *ASTtempNode;
-	ASTNode* ASTReturnNode;
+    cerrors *parseErr;
+    token curTok;
+    token errTok;
 	std::deque<token> LAtoks;
 
 	bool FEOF;
 	int tokenTypeBeforeEOF;
 	bool enable_error_write;
 	int context;
-	int retval;
 
 private:
 	//Control
-	void GetNextTokenP();
-	void Consume(const int &type, bool is_terminal = false);
-	bool Teq(token *tok, const int &val);
-	bool CheckStateError();
-	bool CheckEnableError();
-	void LookAhead(const int &num);
-	void GetActualTokenType(int type, std::string &out);
-	bool isDataType(int &type, std::string &val);
-	void PrintAllErrors();
+    void getNextToken();
+    void consume(int type, bool is_terminal = false);
+    bool Teq(token *tok, int val);
+    bool CheckStateError();  // to be removed
+    bool CheckEnableError(); // to be removed
+    void lookAhead(int num);
+    void getActualTokenType(const int type, std::string &out);
+    bool isDataType(int type, std::string &val);
+    void PrintAllErrors();  // to be removed
 
 	//Errors
-	void ErrorSyntaxType1(int expected);
-	void ErrorSyntaxType2(std::vector<int> &expected);
-	void ErrorSyntaxType3(std::vector<std::string> &expected);
-	void ErrorSyntaxType4();
-	void ErrorSyntaxType6(std::string expected);
-	void ErrorSyntaxType7(int expected);
-	void ErrorSyntaxType8();
+    void syntaxErrorExpectedType(int expected);
+    void syntaxErrorExpectedAnyofType(std::vector<int> &expected);
+    void syntaxErrorExpectedString(std::string expected);
+    void syntaxErrorExpectedAnyofString(std::vector<std::string> &expected);
+    void syntaxErrorUnexpected();
+    void syntaxErrorMissing(int expected);
+    void syntaxErrorUnexpectedEof();
 
 public:
+    parser();
 	parser(lexer* lex0, cerrors *errorptr);
 	~parser();
+
 	ASTNode* startRule(int rule);
 
 	//Rules

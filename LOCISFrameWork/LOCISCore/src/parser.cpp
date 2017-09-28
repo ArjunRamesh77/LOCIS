@@ -3,21 +3,28 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Parser 
-parser::parser(lexer* lex0, cerrors *errorptr)
+parser::parser() :
+    parser(NULL, NULL)
 {
-	//Initialize main
-	lex = lex0;
-	parse_err = errorptr;
-	enable_error_write = true;
-	context = -1;
-	ASTtempNode = NULL;
-	ASTReturnNode = NULL;
-	tokenTypeBeforeEOF = -1;
-	FEOF = false;
+
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Parser
+parser::parser(lexer* lex_arg, cerrors *errorptr) :
+    ex(),
+    state(),
+    lex(lex_arg),
+    parseErr(errorptr),
+    curTok(),
+    errTok(),
+    LAtoks(),
+    FEOF(false),
+    tokenTypeBeforeEOF(-1),
+    enable_error_write(true),
+    context(-1)
+{
+
+}
+
 parser::~parser()
 {
 
@@ -47,26 +54,26 @@ bool parser::CheckStateError()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Consumes a single token
-void parser::Consume(const int &type, bool is_terminal)
+void parser::consume(int type, bool is_terminal)
 {
 	ex.type = type;
 	tokenTypeBeforeEOF = type;
-	if (cur_tok.GetType() != type)
+    if (curTok.getType() != type)
 	{
 		// To show error after first fail
 		state.error = 1;
-		err_tok = cur_tok;
+        errTok = curTok;
 	}
 	else
 	{
 		state.error = false;
-		GetNextTokenP();
+        getNextToken();
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Gets the string value of a given non generic token type
-void parser::GetActualTokenType(int type, std::string &out)
+void parser::getActualTokenType(const int type, std::string &out)
 {
 	out.assign("");
 	// Keywords
@@ -84,20 +91,21 @@ void parser::GetActualTokenType(int type, std::string &out)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Gets the next token to process
-void parser::GetNextTokenP()
+void parser::getNextToken()
 {
+    int retval = 0;
 	// Throw exception after a consume tries to consume a EOF token
 	if (FEOF)
 	{
-		SYNTAX_ERROR_EXPECTED_TYPE(tokenTypeBeforeEOF);
+        syntaxErrorExpectedType(tokenTypeBeforeEOF);
 		ex.type = FILE_ENDs;
 		throw &ex;
 	}
 
 	if (!LAtoks.empty())
 	{
-		cur_tok = LAtoks.front();
-		if (cur_tok.GetType() == -100)
+        curTok = LAtoks.front();
+        if (curTok.getType() == -100)
 		{
 			FEOF = true;
 		}
@@ -105,7 +113,7 @@ void parser::GetNextTokenP()
 	}
 	else
 	{
-		retval = lex->getNextToken(&cur_tok);
+        retval = lex->getNextToken(&curTok);
 		if (retval == -1)
 		{
 			FEOF = true;
@@ -113,10 +121,9 @@ void parser::GetNextTokenP()
 	}
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Gets the string value for Data type
-bool parser::isDataType(int &type, std::string &val)
+bool parser::isDataType(int type, std::string &val)
 {
 	switch (type)
 	{
@@ -150,15 +157,16 @@ bool parser::isDataType(int &type, std::string &val)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // for LL(k) grammars
-void parser::LookAhead(const int &num)
+void parser::lookAhead(int num)
 {
+    int retval = 0;
 	token latok;
 	for (int i = 1; i <= num; i++)
 	{
 		retval = lex->getNextToken(&latok);
 		if (retval == -1)
 		{
-			latok.set_token(-100, NULL, -1, -1);
+            latok.setToken(-100, NULL, -1, -1);
 			LAtoks.push_back(latok);
 		}
 		LAtoks.push_back(latok);
@@ -167,10 +175,10 @@ void parser::LookAhead(const int &num)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Checks for equality of token type and given type
-bool parser::Teq(token *tok, const int &val)
+bool parser::Teq(token *tok, int val)
 {
 
-	if (tok->GetType() == val)
+    if (tok->getType() == val)
 	{
 		return true;
 	}
@@ -184,7 +192,7 @@ ASTNode* parser::startRule(int rule)
 	try
 	{
 		// Get first token
-		GetNextTokenP();
+        getNextToken();
 
 		switch (rule)
 		{

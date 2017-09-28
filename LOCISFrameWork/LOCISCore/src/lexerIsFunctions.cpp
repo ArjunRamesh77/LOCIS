@@ -70,7 +70,7 @@ bool lexer::isExpo(token *tok)
 				}
 				if (inloop)
 				{
-                    tok->set_token(EXPO_VALUE, real_value, lineNum, currentPosSave);
+                    tok->setToken(EXPO_VALUE, real_value, lineNum, currentPosSave);
                     return true;
 				}
 				else
@@ -118,7 +118,7 @@ bool lexer::isIdentifier(token *tok)
 			incIter();
 		}
 
-        tok->set_token(IDENT, identifier, lineNum, currentPosSave);
+        tok->setToken(IDENT, identifier, lineNum, currentPosSave);
         return true;
 	}
 
@@ -152,7 +152,7 @@ bool lexer::isInteger(token *tok)
 	}
 	if (inloop)
 	{
-        tok->set_token(INTEGER_VALUE, integer_value, lineNum, currentPosSave);
+        tok->setToken(INTEGER_VALUE, integer_value, lineNum, currentPosSave);
         return true;
 	}
 
@@ -197,7 +197,7 @@ bool lexer::isKeyword(token *tok)
 		{
             if (isTabOrSpaceOrEnd() || !isalnum(*currentIt))
 			{
-                tok->set_token(KEYWORDS_OFFSET + i, keywords[i], lineNum, currentPosSave);
+                tok->setToken(KEYWORDS_OFFSET + i, keywords[i], lineNum, currentPosSave);
                 return true;
 			}
 		}
@@ -291,7 +291,7 @@ bool lexer::isOperator(token *tok)
 		//Check if successful
 		if (it2 == op.end())
 		{
-            tok->set_token(OPERATORS_OFFEST + i, operators[i], lineNum, currentPosSave);
+            tok->setToken(OPERATORS_OFFEST + i, operators[i], lineNum, currentPosSave);
             return true;
 		}
 	}
@@ -334,7 +334,7 @@ bool lexer::isReal(token *tok)
 		}
 		if (inloop)
 		{
-            tok->set_token(REAL_VALUE, real_value, lineNum, currentPosSave);
+            tok->setToken(REAL_VALUE, real_value, lineNum, currentPosSave);
             return true;
 		}
 		else
@@ -396,7 +396,7 @@ bool lexer::isString(token *tok)
         if (currentIt != line.end() && *currentIt == qtype)
 		{
 			incIter();
-            tok->set_token(STRING, string_value, lineNum, currentPosSave);
+            tok->setToken(STRING, string_value, lineNum, currentPosSave);
             return true;
 		}
 		else

@@ -9,7 +9,7 @@ void parser::PrintAllErrors()
 	std::ofstream efile("C:\\ARJUN\\compiler_errors.txt");
 	if (efile.is_open())
 	{
-		for (std::vector<error>::iterator it = parse_err->errors.begin(); it != parse_err->errors.end(); it++)
+		for (std::vector<error>::iterator it = parseErr->errors.begin(); it != parseErr->errors.end(); it++)
 		{
 			// Error Header
 			efile << "  \n";

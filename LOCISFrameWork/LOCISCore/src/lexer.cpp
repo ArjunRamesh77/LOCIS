@@ -79,7 +79,7 @@ token::token() :
 
 }
 
-void token::set_token(int type_arg, std::string value_arg, long lineNum_arg, int pos_arg)
+void token::setToken(int type_arg, std::string value_arg, long lineNum_arg, int pos_arg)
 {
     type = type_arg;
     value = value_arg;
@@ -87,17 +87,17 @@ void token::set_token(int type_arg, std::string value_arg, long lineNum_arg, int
     pos = pos_arg;
 }
 
-int token::GetType()
+int token::getType()
 {
     return type;
 }
 
-std::string token::GetValue()
+std::string token::getValue()
 {
     return value;
 }
 
-void token::GetLnAndPos(int &lineNumber_arg, int &pos_arg)
+void token::getLnAndPos(int &lineNumber_arg, int &pos_arg)
 {
     lineNumber_arg = lineNum;
     pos_arg = pos;
@@ -105,6 +105,12 @@ void token::GetLnAndPos(int &lineNumber_arg, int &pos_arg)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOCIS lexer constructor ( Char source )
+lexer::lexer() :
+    lexer(NULL, NULL)
+{
+
+}
+
 lexer::lexer(const char* source, cerrors *errorptr) :
     file(source),
     line(""),
@@ -121,12 +127,23 @@ lexer::lexer(const char* source, cerrors *errorptr) :
     currentIt = line.begin();
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
 lexer::~lexer()
 {
 
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+void lexer::setSource(const char *cpSource)
+{
+    file << cpSource;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+void lexer::setErrorHandler(cerrors *errorptr)
+{
+    lexErr = errorptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,7 +187,7 @@ start:
     enableGenericError = true;
 
 	//Set Invalid Token
-	tok->set_token(-100, "EOF", -1, -1);
+    tok->setToken(-100, "EOF", -1, -1);
 
 	// Ignore Multiline comment
     if (isMultiLineComment(tok))

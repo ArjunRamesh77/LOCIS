@@ -2,6 +2,7 @@
 #define LOCIS_INTERPRETER_H
 
 #include "AST.h"
+#include "modelcollection.h"
 #include "ASTFEMoneD.h"
 #include "Symbol.h"
 #include "SymbolFEMoneD.h"

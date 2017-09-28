@@ -87,10 +87,10 @@ ASTNode* interpreter::dispatch(ASTmodelNode* node)
 		{
 			ASTSimulationArgs* simArgs = static_cast<ASTSimulationArgs*>(node->astnSimulationArgs);
 			if (!setSimulationArgs(node->astnSimulationArgs,
-				simArgs->simType.GetValue(),
+				simArgs->simType.getValue(),
 				simArgs->dsimStartt,
 				simArgs->dsimEndt,
-				std::stoi(simArgs->simNumSteps.GetValue()),
+				std::stoi(simArgs->simNumSteps.getValue()),
 				simArgs->dsimAbsTol,
 				simArgs->dsimRelTol))
 			{

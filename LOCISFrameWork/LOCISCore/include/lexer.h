@@ -116,10 +116,10 @@ private:
 
 public:
     token();
-    void set_token(int type, std::string value, long int lineNum, int pos);
-    int GetType();
-    std::string GetValue();
-    void GetLnAndPos(int &line_number, int &pos1);
+    void setToken(int type, std::string value, long int lineNum, int pos);
+    int getType();
+    std::string getValue();
+    void getLnAndPos(int &line_number, int &pos1);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,11 +146,13 @@ private:
     cerrors *lexErr;
 
 public:
-
+    lexer();
     lexer(const char* source, cerrors *errorptr);
     ~lexer();
 
     //Control Functions
+    void setSource(const char* cpSource);
+    void setErrorHandler(cerrors *errorptr);
     int getNextToken(token *tok);
     void saveIter();
     void resetIter();

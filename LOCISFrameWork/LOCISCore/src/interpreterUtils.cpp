@@ -923,7 +923,7 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		if (absTol < 0.0)
 		{
 			//SEMANTIC ERROR::
-			static_cast<ASTNumberNode*>(simulationArgsNode->simAbsTol)->tNumber.GetLnAndPos(line, pos);
+			static_cast<ASTNumberNode*>(simulationArgsNode->simAbsTol)->tNumber.getLnAndPos(line, pos);
 			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
 			errptr->AddErrorLine("Absolute tolerance cannot be negative");
 			errptr->AddError();
@@ -938,7 +938,7 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		if (absTol < 0.0)
 		{
 			//SEMANTIC ERROR::
-			static_cast<ASTNumberNode*>(simulationArgsNode->simAbsTol)->tNumber.GetLnAndPos(line, pos);
+			static_cast<ASTNumberNode*>(simulationArgsNode->simAbsTol)->tNumber.getLnAndPos(line, pos);
 			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
 			errptr->AddErrorLine("Absolute error tolerance cannot be negative");
 			errptr->AddError();
@@ -949,7 +949,7 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		if (relTol < 0.0)
 		{
 			//SEMANTIC ERROR::
-			static_cast<ASTNumberNode*>(simulationArgsNode->simRelTol)->tNumber.GetLnAndPos(line, pos);
+			static_cast<ASTNumberNode*>(simulationArgsNode->simRelTol)->tNumber.getLnAndPos(line, pos);
 			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
 			errptr->AddErrorLine("Relative error tolerance cannot be negative");
 			errptr->AddError();
@@ -960,7 +960,7 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		if (tEnd < tStart)
 		{
 			//SEMANTIC ERROR::
-			static_cast<ASTNumberNode*>(simulationArgsNode->simEndt)->tNumber.GetLnAndPos(line, pos);
+			static_cast<ASTNumberNode*>(simulationArgsNode->simEndt)->tNumber.getLnAndPos(line, pos);
 			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
 			errptr->AddErrorLine("End time must be greater than start time for integration");
 			errptr->AddError();
@@ -971,7 +971,7 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		if (numSteps <= 0)
 		{
 			//SEMANTIC ERROR::
-			simulationArgsNode->simNumSteps.GetLnAndPos(line, pos);
+			simulationArgsNode->simNumSteps.getLnAndPos(line, pos);
 			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
 			errptr->AddErrorLine("There must be at least one time step for integration");
 			errptr->AddError();
