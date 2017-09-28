@@ -5,34 +5,29 @@
 #include "Symbol.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Contains the implementation of LOCIS AST
-class NodeVisitor;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// All rules for parser
-enum rule {
-	model, section, parameter_section, variable_section, options, options_space, option, unit, desc, type,
-	equation_section, numtype, parameter, type_name, array_indices, array_index, full_type_name, function_name,
-	function_args, function_arg, term, default1, expression, factor, primary, real_number, bounds, inequality, variable,
-	equationn, equation_type_operator, logical_expression, lterm, lfactor, lprimary, for_loop, for_body, statement,
-	set_section, fix_section, initialize_section, object_section, object, if_statement, then, pelse, assignment,
-	model_entity_decl, model_entity_type, model_entities, model_entity, model_section, section_type, model_statment,
-	noneq_statment, eq_statment, model_statement, comparison_type_operator, single_or_compound_statement, math_bin_op,
-	math_un_op, number, logical_bin_op, logical_un_op, generic_token, model_collection, functionCall, simulation_args
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Node Visitor dispatcher (pure abstract class)
 #define VIRTUAL_DECL_DISPATCH(name) virtual ASTNode* dispatch(name*) = 0;
+
 #define DECL_DISPATCH(name) ASTNode* dispatch(name*);
+
 #define DISPATCH_FUCTION_DECL ASTNode* visit(NodeVisitor* ns) override { return ns->dispatch(this); }
 
 #define UNUSED_AST_NODE_FUNCTION(MAIN_CLASS, NODE_TYPE) ASTNode* MAIN_CLASS::dispatch(NODE_TYPE* node) {return NULL;} 
 
 #define AST_DOMAIN_NODE 0
 
+#define DELETE_VECTOR(name) for (std::vector<ASTNode*>::iterator it = name.begin(); it != name.end(); ++it) \
+                            { \
+                                if(*it) \
+                                    delete *it; \
+                            } \
+                            name.clear();
+
+# define DELETE_SCALAR(name) if(name) delete name;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Node Visitor Class forward defines
+class NodeVisitor;
 class ASTmodel_collectionNode;
 class ASTmodelNode;
 class ASTmodel_entity_decl_groupNode;
@@ -150,7 +145,7 @@ public:
 	ASTNode* node;
 
 public:
-	virtual ~ASTNode() {};
+    virtual ~ASTNode() {}
 	ASTNode()
 	{
 		iNumDerivs = 0;
@@ -164,7 +159,7 @@ public:
 		bIsFEMtrialFunction = false;
 		bIsStringIndex = false;
 	}
-	virtual ASTNode* CreateNode(std::vector<ASTNode*> &astvnDomain, token* tTag)
+    virtual ASTNode* CreateNode(std::vector<ASTNode*> &astvnDomain, token tTag)
 	{
 		return node;
 	}
@@ -180,19 +175,16 @@ public:
 	std::vector<ASTNode*> astvnModelCollection;
 
 public:
-	ASTmodel_collectionNode() : ASTNode()	{
+    ASTmodel_collectionNode() : ASTNode()
+    {
 
 	}
 	~ASTmodel_collectionNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnModelCollection.begin(); it != astvnModelCollection.end(); ++it)
-		{
-			if(*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnModelCollection)
 	}
 	DISPATCH_FUCTION_DECL
-	ASTNode* CreateNode(std::vector<ASTNode*> astvnModelCollection);
+    ASTNode* CreateNode(std::vector<ASTNode*> astvnModelCollection_arg);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,24 +199,21 @@ public:
 	ASTNode* astnSimulationArgs;
 
 public:
-	ASTmodelNode() : ASTNode()	
+    ASTmodelNode() : ASTNode(),
+        tName(),
+        sName(""),
+        astvnModelStatements(),
+        astnSimulationArgs(NULL)
 	{
-		astnSimulationArgs = NULL;
-		sName.assign("");
 	}
+
 	~ASTmodelNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnModelStatements.begin(); it != astvnModelStatements.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
-
-		if (astnSimulationArgs)
-			delete astnSimulationArgs;
+        DELETE_VECTOR(astvnModelStatements)
+        DELETE_SCALAR(astnSimulationArgs)
 	}
 	DISPATCH_FUCTION_DECL
-	ASTNode* CreateNode(token* t_name, std::vector<ASTNode*> &astvnModelStatements, ASTNode* astnSimulationArgs);
+    ASTNode* CreateNode(token* t_name_arg, std::vector<ASTNode*> &astvnModelStatements_arg, ASTNode* astnSimulationArgs_arg);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,25 +235,26 @@ public:
 	token tEntityNumberType;
 
 public:
-	ASTmodel_entity_decl_groupNode() : ASTNode()	{
-		astnModelEntityType = NULL;
-		astnNumtype = NULL;
-		astnModelEntities = NULL;
-		iDeclType = -1;
-		iNumType = -1;
-		sModelBaseName.assign("");
+    ASTmodel_entity_decl_groupNode() : ASTNode(),
+        astnModelEntityType(NULL),
+        astnNumtype(NULL),
+        astnModelEntities(),
+        iDeclType(-1),
+        iNumType(-1),
+        sModelBaseName(""),
+        astvnModelEntities(),
+        tEntityType(),
+        tEntityNumberType()
+    {
 	}
 	~ASTmodel_entity_decl_groupNode()
 	{
-		if (astnModelEntityType)
-			delete astnModelEntityType;
-		if (astnNumtype)
-			delete astnNumtype;
-		if (astnModelEntities)
-			delete astnModelEntities;
+        DELETE_SCALAR(astnModelEntityType)
+        DELETE_SCALAR(astnNumtype)
+        DELETE_SCALAR(astnModelEntities)
 	}
 	DISPATCH_FUCTION_DECL
-	ASTNode* CreateNode(ASTNode* astnModelEntityType, ASTNode* astnNumtype, ASTNode* astnModelEntities);
+    ASTNode* CreateNode(ASTNode* astnModelEntityType_arg, ASTNode* astnNumtype_arg, ASTNode* astnModelEntities_arg);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,23 +276,24 @@ public:
 	std::vector<ASTNode*> astvnOptions;
 	std::vector<ASTNode*> astvnArrayIndices;
 public:
-	ASTmodel_entity_declNode() : ASTNode()	{
-		astnTypeName = NULL;
-		astnOptions = NULL;
-		astnDefault = NULL;
-		bIsdt = false;
-		bIsArray = false;
-		bHasOptions = false;
-		bHasDefault = false;
+    ASTmodel_entity_declNode() : ASTNode(),
+        astnTypeName(NULL),
+        astnOptions(NULL),
+        astnDefault(NULL),
+        sName(""),
+        bIsdt(false),
+        bIsArray(false),
+        bHasDefault(false),
+        tName(),
+        astvnOptions(),
+        astvnArrayIndices()
+    {
 	}
 	~ASTmodel_entity_declNode()
 	{
-		if (astnTypeName)
-			delete astnTypeName;
-		if (astnOptions)
-			delete astnOptions;
-		if (astnDefault)
-			delete astnDefault;
+        DELETE_SCALAR(astnTypeName)
+        DELETE_SCALAR(astnOptions)
+        DELETE_SCALAR(astnDefault)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnTypeName, ASTNode* astnOptions, ASTNode* astnDefault);
@@ -317,16 +308,14 @@ public:
 	std::vector<ASTNode*> astvnModelEntities;
 
 public:
-	ASTmodel_entities_collectionNode() : ASTNode()	{
+    ASTmodel_entities_collectionNode() : ASTNode(),
+        astvnModelEntities()
+    {
 
 	}
 	~ASTmodel_entities_collectionNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnModelEntities.begin(); it != astvnModelEntities.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnModelEntities)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(std::vector<ASTNode*> astvnModelEntities);
@@ -347,21 +336,22 @@ public:
 	bool bHasOptions;
 	std::vector<ASTNode*> astvnSectionStatements;
 public:
-	ASTmodel_sectionNode() : ASTNode()	{
-		astnSectionType = NULL;
-		astnOptions = NULL;
-		astnSectionStatements = NULL;
-		sName.assign("");
-		bHasOptions = false;
+    ASTmodel_sectionNode() : ASTNode(),
+        astnSectionType(NULL),
+        astnOptions(NULL),
+        astnSectionStatements(NULL),
+        tSectionName(),
+        sName(""),
+        bHasOptions(false),
+        astvnSectionStatements()
+    {
+
 	}
 	~ASTmodel_sectionNode()
 	{
-		if (astnSectionType)
-			delete astnSectionType;
-		if (astnOptions)
-			delete astnOptions;
-		if (astnSectionStatements)
-			delete astnSectionStatements;
+        DELETE_SCALAR(astnSectionType)
+        DELETE_SCALAR(astnOptions)
+        DELETE_SCALAR(astnSectionStatements)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnSectionType, ASTNode* astnOptions, ASTNode* astnSectionStatements);
@@ -378,10 +368,14 @@ public:
 	std::string sTokenValue;
 
 public:
-	ASTgeneric_tokenNode() : ASTNode()	{
-		iTokenType = -1;
-		sTokenValue.assign("");
+    ASTgeneric_tokenNode() : ASTNode(),
+        tok(),
+        iTokenType(-1),
+        sTokenValue("")
+    {
+
 	}
+
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tok);
 	int get_iTokenType();
@@ -397,16 +391,14 @@ public:
 	std::vector<ASTNode*> astvnOptions;
 
 public:
-	ASToptions_groupNode() : ASTNode()	{
+    ASToptions_groupNode() : ASTNode(),
+        astvnOptions()
+    {
 
 	}
 	~ASToptions_groupNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnOptions.begin(); it != astvnOptions.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnOptions)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(std::vector<ASTNode*> &astnOptions);
@@ -423,14 +415,16 @@ public:
 	token tUnitVal;
 	std::string sValue;
 public:
-	ASTunit_optionNode() : ASTNode()	{
-		astnUnitValue = NULL;
-		sValue.assign("");
+    ASTunit_optionNode() : ASTNode(),
+        astnUnitValue(NULL),
+        tUnitVal(),
+        sValue("")
+    {
+
 	}
 	~ASTunit_optionNode()
 	{
-		if (astnUnitValue)
-			delete astnUnitValue;
+        DELETE_SCALAR(astnUnitValue)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token* tUnitVal);
@@ -447,14 +441,16 @@ public:
 	token tDescValue;
 	std::string sValue;
 public:
-	ASTdesc_optionNode() : ASTNode()	{
-		astnNodeDescValue = NULL;
-		sValue.assign("");
+    ASTdesc_optionNode() : ASTNode(),
+        astnNodeDescValue(NULL),
+        tDescValue(),
+        sValue("")
+    {
+
 	}
 	~ASTdesc_optionNode()
 	{
-		if (astnNodeDescValue)
-			delete astnNodeDescValue;
+        DELETE_SCALAR(astnNodeDescValue)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token* tNodeDescValue);
@@ -471,15 +467,16 @@ public:
 	int iNumType;
 	std::string sNumType;
 public:
-	ASTtype_optionNode() : ASTNode()	{
-		astnType = NULL;
-		iNumType = -1;
-		sNumType.assign("");
+    ASTtype_optionNode() : ASTNode(),
+        astnType(NULL),
+        iNumType(-1),
+        sNumType("")
+    {
+
 	}
 	~ASTtype_optionNode()
 	{
-		if (astnType)
-			delete astnType;
+        DELETE_SCALAR(astnType)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnType);
@@ -498,18 +495,19 @@ public:
 	token tInequalityOp;
 	std::string sInequalityOp;
 public:
-	ASTbounds_optionNode() : ASTNode()	{
-		astnInequality = NULL;
-		astnExpr = NULL;
-		iInequalityOp = -1;
-		sInequalityOp.assign("");
+    ASTbounds_optionNode() : ASTNode(),
+        astnInequality(NULL),
+        astnExpr(NULL),
+        iInequalityOp(-1),
+        tInequalityOp(),
+        sInequalityOp("")
+    {
+
 	}
 	~ASTbounds_optionNode()
 	{
-		if (astnInequality)
-			delete astnInequality;
-		if (astnExpr)
-			delete astnInequality;
+        DELETE_SCALAR(astnInequality)
+        DELETE_SCALAR(astnExpr)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnInequality, ASTNode* astnExpr);
@@ -527,15 +525,17 @@ public:
 	int iEqualityOp;
 	std::string sEqualityOp;
 public:
-	ASTdefualtNode() : ASTNode()	{
-		astnExpr = NULL;
-		iEqualityOp = -1;
-		sEqualityOp.assign("");
+    ASTdefualtNode() : ASTNode(),
+        tEqualityOp(),
+        astnExpr(NULL),
+        iEqualityOp(-1),
+        sEqualityOp("")
+    {
+
 	}
 	~ASTdefualtNode()
 	{
-		if (astnExpr)
-			delete astnExpr;
+        DELETE_SCALAR(astnExpr)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tEqualityOp, ASTNode* astnExpr);
@@ -556,21 +556,21 @@ public:
 	std::string sEquationTypeOp;
 
 public:
-	ASTequationNode() : ASTNode()	{
-		astnLHS = NULL;
-		astnEquationTypeOp = NULL;
-		astnRHS = NULL;
-		iEquationTypeOp = -1;
-		sEquationTypeOp.assign("");
+    ASTequationNode() : ASTNode(),
+        astnLHS(NULL),
+        astnEquationTypeOp(NULL),
+        astnRHS(NULL),
+        tEquationTypeOp(),
+        iEquationTypeOp(-1),
+        sEquationTypeOp("")
+    {
+
 	}
 	~ASTequationNode()
 	{
-		if (astnLHS)
-			delete astnLHS;
-		if (astnEquationTypeOp)
-			delete astnEquationTypeOp;
-		if (astnRHS)
-			delete astnRHS;
+        DELETE_SCALAR(astnLHS)
+        DELETE_SCALAR(astnEquationTypeOp)
+        DELETE_SCALAR(astnRHS)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnLHS, ASTNode* astnEquationTypeOp, ASTNode* astnRHS);
@@ -589,21 +589,22 @@ public:
 	int iBinaryOp;
 	std::string sBinaryOp;
 public:
-	ASTMathBinaryOpNode() : ASTNode()	{
-		astnLeft = NULL;
-		astnRight = NULL;
-		iBinaryOp = -1;
-		sBinaryOp.assign("");
+    ASTMathBinaryOpNode() : ASTNode(),
+        astnLeft(NULL),
+        tBinaryOp(),
+        astnRight(NULL),
+        iBinaryOp(-1),
+        sBinaryOp("")
+    {
+
 	}
 	~ASTMathBinaryOpNode()
 	{
-		if (astnLeft)
-			delete astnLeft;
-		if (astnRight)
-			delete astnRight;
+        DELETE_SCALAR(astnLeft)
+        DELETE_SCALAR(astnRight)
 	}
 	//DISPATCH_FUCTION_DECL
-	ASTNode* visit(NodeVisitor* ns) override { return ns->dispatch(this); }
+    ASTNode* visit(NodeVisitor* ns) override { return ns->dispatch(this); }
 	ASTNode* CreateNode(ASTNode* astnLeft, token *tBinaryOp, ASTNode* astnRight);
 };
 
@@ -619,15 +620,17 @@ public:
 	int iUnaryOp;
 	std::string sUnaryOp;
 public:
-	ASTMathUnaryNode() : ASTNode()	{
-		astnRight = NULL;
-		iUnaryOp = -1;
-		sUnaryOp.assign("");
+    ASTMathUnaryNode() : ASTNode(),
+        tUnaryOp(),
+        astnRight(NULL),
+        iUnaryOp(-1),
+        sUnaryOp("")
+    {
+
 	}
 	~ASTMathUnaryNode()
 	{
-		if (astnRight)
-			delete astnRight;
+        DELETE_SCALAR(astnRight)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tUnaryOp, ASTNode* astnRight);
@@ -644,11 +647,17 @@ public:
 	int iNumber;
 	std::string  sNumber;
 public:
-	ASTNumberNode() : ASTNode()	{
-		value = 0.0;
-		iNumber = -1;
-		sNumber.assign("");
+    ASTNumberNode() : ASTNode(),
+        tNumber(),
+        iNumber(-1),
+        sNumber("")
+    {
+
 	}
+    ~ASTNumberNode()
+    {
+
+    }
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tNumber);
 };
@@ -669,18 +678,22 @@ public:
 	bool bIsdt;
 	std::vector<ASTNode*> astvnArrayIndices;
 public:
-	ASTNamedReferenceNode() : ASTNode()	{
-		bIsdt = false;
-		astnArrayIndices = NULL;
-		sName.assign("");
-		bIsArray = false;
+    ASTNamedReferenceNode() : ASTNode(),
+        tdt(),
+        tName(),
+        astnArrayIndices(NULL),
+        astnDerivative(NULL),
+        sName(""),
+        bIsArray(false),
+        bIsdt(false),
+        astvnArrayIndices()
+    {
+
 	}
 	~ASTNamedReferenceNode()
 	{
-		if (astnArrayIndices)
-			delete astnArrayIndices;
-		if (astnDerivative)
-			delete astnDerivative;
+        DELETE_SCALAR(astnArrayIndices)
+        DELETE_SCALAR(astnDerivative)
 	}
 	bool get_IsArray();
 	std::string get_sName();
@@ -697,16 +710,14 @@ public:
 	std::vector<ASTNode*> astvnArrayIndices;
 
 public:
-	ASTArrayIndicesNode() : ASTNode()	{
+    ASTArrayIndicesNode() : ASTNode(),
+        astvnArrayIndices()
+    {
 
 	}
 	~ASTArrayIndicesNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnArrayIndices.begin(); it != astvnArrayIndices.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnArrayIndices)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(std::vector<ASTNode*> &astvnArrayIndices);
@@ -721,13 +732,14 @@ public:
 	ASTNode* astnExpr;
 
 public:
-	ASTarray_indexNode() : ASTNode()	{
-		astnExpr = NULL;
+    ASTarray_indexNode() : ASTNode(),
+        astnExpr(NULL)
+    {
+
 	}
 	~ASTarray_indexNode()
 	{
-		if (astnExpr)
-			delete astnExpr;
+        DELETE_SCALAR(astnExpr)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnExpr);
@@ -742,16 +754,14 @@ public:
 	std::vector<ASTNode*> astvnQualifiedName;
 
 public:
-	ASTQualifiedNamedReferenceNode() : ASTNode()	{
+    ASTQualifiedNamedReferenceNode() : ASTNode(),
+        astvnQualifiedName()
+    {
 
 	}
 	~ASTQualifiedNamedReferenceNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnQualifiedName.begin(); it != astvnQualifiedName.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnQualifiedName)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(std::vector<ASTNode*> astvnQualifiedName);
@@ -768,17 +778,18 @@ public:
 	int iFuncType;
 	std::vector<ASTNode*> astvnFunctionArgs;
 public:
-	ASTfunctionCallNode() : ASTNode()	{
+    ASTfunctionCallNode() : ASTNode(),
+        tFunctionName(),
+        sFunctionName(""),
+        iFuncType(-1),
+        astvnFunctionArgs()
+    {
 		sFunctionName.assign("");
 		iFuncType = -1;
 	}
 	~ASTfunctionCallNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnFunctionArgs.begin(); it != astvnFunctionArgs.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnFunctionArgs)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tFunctionName, std::vector<ASTNode*> &astvnFunctionArgs);
@@ -797,18 +808,19 @@ public:
 	int iBinaryOp;
 	std::string sBinaryOp;
 public:
-	ASTLogicalBinaryOpNode() : ASTNode()	{
-		astnLeft = NULL;
-		astnRight = NULL;
-		iBinaryOp = -1;
-		sBinaryOp.assign("");
+    ASTLogicalBinaryOpNode() : ASTNode(),
+        astnLeft(NULL),
+        tBinaryOp(),
+        astnRight(NULL),
+        iBinaryOp(-1),
+        sBinaryOp("")
+    {
+
 	}
 	~ASTLogicalBinaryOpNode()
 	{
-		if (astnLeft)
-			delete astnLeft;
-		if (astnRight)
-			delete astnRight;
+        DELETE_SCALAR(astnLeft)
+        DELETE_SCALAR(astnRight)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnLeft, token *tBinaryOp, ASTNode* astnRight);
@@ -826,15 +838,17 @@ public:
 	int iUnaryOp;
 	std::string sUnaryOp;
 public:
-	ASTLogicalUnaryNode() : ASTNode()	{
-		astnRight = NULL;
-		iUnaryOp = -1;
-		sUnaryOp.assign("");
+    ASTLogicalUnaryNode() : ASTNode(),
+        tUnaryOp(),
+        astnRight(NULL),
+        iUnaryOp(-1),
+        sUnaryOp("")
+    {
+
 	}
 	~ASTLogicalUnaryNode()
 	{
-		if (astnRight)
-			delete astnRight;
+        DELETE_SCALAR(astnRight)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tUnaryOp, ASTNode* astnRight);
@@ -856,23 +870,22 @@ public:
 	std::vector<ASTNode*> astvnfors;
 
 public:
-	ASTfor_loopNode() : ASTNode()	{
-		astnStartExpr = NULL;
-		astnTillExpr = NULL;
-		astnIncrExpr = NULL;
-		astnStatementBlock = NULL;
-		sName.assign("");
+    ASTfor_loopNode() : ASTNode(),
+        astnStartExpr(NULL),
+        astnTillExpr(NULL),
+        astnIncrExpr(NULL),
+        astnStatementBlock(NULL),
+        sName(""),
+        astvnfors()
+    {
+
 	}
 	~ASTfor_loopNode()
 	{
-		if (astnStartExpr)
-			delete astnStartExpr;
-		if (astnTillExpr)
-			delete astnTillExpr;
-		if (astnIncrExpr)
-			delete astnIncrExpr;
-		if (astnStatementBlock)
-			delete astnStatementBlock;
+        DELETE_SCALAR(astnStartExpr)
+        DELETE_SCALAR(astnTillExpr)
+        DELETE_SCALAR(astnIncrExpr)
+        DELETE_SCALAR(astnStatementBlock)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token *tName, ASTNode* astnStartExpr, ASTNode* astnTillExpr, ASTNode* astnIncrExpr, ASTNode* astnStatementBlock);
@@ -893,20 +906,20 @@ public:
 	std::vector<ASTNode*> astvnelses;
 
 public:
-	ASTif_statmentNode() : ASTNode()	{
-		astnCondition = NULL;
-		astnThen = NULL;
-		astnElse = NULL;
-		bHasElse = false;
+    ASTif_statmentNode() : ASTNode(),
+        astnCondition(NULL),
+        astnThen(NULL),
+        astnElse(NULL),
+        bHasElse(false),
+        astvnifs(),
+        astvnelses()
+    {
 	}
 	~ASTif_statmentNode()
 	{
-		if (astnCondition)
-			delete astnCondition;
-		if (astnThen)
-			delete astnThen;
-		if (astnElse)
-			delete astnElse;
+        DELETE_SCALAR(astnCondition)
+        DELETE_SCALAR(astnThen)
+        DELETE_SCALAR(astnElse)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnCondition, ASTNode* astnThen, ASTNode* astnElse);
@@ -921,16 +934,14 @@ public:
 	std::vector<ASTNode*> astvnStatements;
 
 public:
-	ASTstatement_blockNode() : ASTNode()	{
+    ASTstatement_blockNode() : ASTNode(),
+        astvnStatements()
+    {
 
 	}
 	~ASTstatement_blockNode()
 	{
-		for (std::vector<ASTNode*>::iterator it = astvnStatements.begin(); it != astvnStatements.end(); ++it)
-		{
-			if (*it)
-				delete *it;
-		}
+        DELETE_VECTOR(astvnStatements)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(std::vector<ASTNode*> &astvnStatements);
@@ -949,43 +960,22 @@ public:
 	int iEquationTypeOp;
 	std::string sEquationTypeOp;
 public:
-	ASTassignmentNode() : ASTNode()	{
-		astnLHS = NULL;
-		astnRHS = NULL;
-		iEquationTypeOp = -1;
-		sEquationTypeOp.assign("");
+    ASTassignmentNode() : ASTNode(),
+        astnLHS(NULL),
+        tEquationTypeOp(),
+        astnRHS(NULL),
+        iEquationTypeOp(-1),
+        sEquationTypeOp("")
+    {
+
 	}
 	~ASTassignmentNode()
 	{
-		if (astnLHS)
-			delete astnLHS;
-		if (astnRHS)
-			delete astnRHS;
+        DELETE_SCALAR(astnLHS)
+        DELETE_SCALAR(astnRHS)
 	}
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(ASTNode* astnLHS, token *tEquationTypeOp, ASTNode* astnRHS);
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Stores all the models
-class modelCollection
-{
-
-public:
-	std::unordered_map<std::string, ASTNode*> models;
-
-public:
-	modelCollection();
-	~modelCollection();
-
-	// Insert a new model
-	bool insertModel(std::string &symbolName, ASTNode* node);
-
-	// Get model
-	ASTNode* getModel(std::string &symbolName);
-
-	// Get all models
-	std::unordered_map<std::string, ASTNode*>* getAllmodel();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -997,10 +987,16 @@ public:
 	std::vector<token> astvtnSingleQuotes;
 
 public:
-	ASTDerivativeSingleVar()
+    ASTDerivativeSingleVar() : ASTNode(),
+        iNumQuotes(0),
+        astvtnSingleQuotes()
 	{
-		iNumQuotes = 0;
+
 	}
+    ~ASTDerivativeSingleVar()
+    {
+
+    }
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(std::vector<token>& astvtnSingleQuotes);
 };
@@ -1023,18 +1019,28 @@ public:
 	double dsimRelTol;
 
 public:
-	ASTSimulationArgs()
-	{
-		simStartt = NULL;
-		simEndt = NULL;
-		simAbsTol = NULL;
-		simRelTol = NULL;
+    ASTSimulationArgs() : ASTNode(),
+        simType(),
+        simStartt(NULL),
+        simEndt(NULL),
+        simNumSteps(),
+        simAbsTol(NULL),
+        simRelTol(NULL),
+        dsimStartt(0),
+        dsimEndt(0),
+        dsimAbsTol(0),
+        dsimRelTol(0)
 
-		dsimStartt = 0.0;
-		dsimEndt = 0.0;
-		dsimAbsTol = 0.0;
-		dsimRelTol = 0.0;
+	{
+
 	}
+    ~ASTSimulationArgs()
+    {
+        DELETE_SCALAR(simStartt)
+        DELETE_SCALAR(simEndt)
+        DELETE_SCALAR(simAbsTol)
+        DELETE_SCALAR(simRelTol)
+    }
 
 	DISPATCH_FUCTION_DECL
 	ASTNode* CreateNode(token* simType, ASTNode* simStartt, ASTNode* simEndt, token* simNumSteps, ASTNode* simAbsTol, ASTNode* simRelTol);
