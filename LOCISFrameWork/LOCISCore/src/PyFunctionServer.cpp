@@ -285,13 +285,6 @@ std::stringstream* PyFunctionServer::generateDAEDenseJacobianFunction()
 		resi_num++;
 	}
 
-	std::ofstream myfile("C:\\ARJUN\\DAEResidual.txt");
-	if (myfile.is_open())
-	{
-		myfile << code->str();
-		myfile.close();
-	}
-
 	return code;
 }
 

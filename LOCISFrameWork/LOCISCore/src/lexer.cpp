@@ -1,34 +1,124 @@
 #include "lexer.h"
 
-/*
+///////////////////////////////////////////////// <KEYWORDS> //////////////////////////////////////////////////////////////////////
+// LOCIS Keywords
+const std::string keywords[NUM_KEYWORDS] = { "MODEL",
+                                                    "PARAMETER",
+                                                    "VARIABLE",
+                                                    "EQUATION",
+                                                    "REAL",
+                                                    "INTEGER",
+                                                    "UNIT",
+                                                    "TYPE",
+                                                    "DESC",
+                                                    "FOR",
+                                                    "SET",
+                                                    "FIX",
+                                                    "INIT",
+                                                    "OBJECT",
+                                                    "IF",
+                                                    "ELSE",
+                                                    "ITER",
+                                                    "GUESS",
+                                                    "LINE",
+                                                    "BASIS",
+                                                    "SEGMENT",
+                                                    "ID",
+                                                    "NUMEL",
+                                                    "LENGTH",
+                                                    "DOMAIN",
+                                                    "PDEVAR",
+                                                    "PDE",
+                                                    "VALUE",
+                                                    "FLUX"
+                                                  };
+
+
+
+///////////////////////////////////////////////// <OPERATORS> //////////////////////////////////////////////////////////////////////
+const std::string operators[NUM_OPERATORS] = { "==",
+                                                      ">=",
+                                                      "<=",
+                                                      "!=",
+                                                      ":=",
+                                                      "::",
+                                                      "&&",
+                                                      "||",
+                                                      "(",
+                                                      ")",
+                                                      "[",
+                                                      "]",
+                                                      "{",
+                                                      "}",
+                                                      "?",
+                                                      ";",
+                                                      "\\",
+                                                      ":",
+                                                      ".",
+                                                      ">",
+                                                      "<",
+                                                      "=",
+                                                      "+",
+                                                      "-",
+                                                      "/",
+                                                      "*",
+                                                      "^",
+                                                      "!",
+                                                      ",",
+                                                      "$",
+                                                      "'"};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOCIS lexer constructor ( File source )
-lexer::lexer(std::string name, cerrors *errorptr)
+// token
+token::token() :
+ type(-1),
+ value(""),
+ lineNum(-1),
+ pos(-1)
 {
-	bIsFile = true;
-	fname = name;
-	lex_err = errorptr;
-	file.open(fname, std::ifstream::in);
-	std::getline(file, line);
-	current_it = line.begin();
-	current_pos = 0;
-	FEOF = false;
-	enable_generic_error = true;
+
 }
-*/
+
+void token::set_token(int type_arg, std::string value_arg, long lineNum_arg, int pos_arg)
+{
+    type = type_arg;
+    value = value_arg;
+    lineNum = lineNum_arg;
+    pos = pos_arg;
+}
+
+int token::GetType()
+{
+    return type;
+}
+
+std::string token::GetValue()
+{
+    return value;
+}
+
+void token::GetLnAndPos(int &lineNumber_arg, int &pos_arg)
+{
+    lineNumber_arg = lineNum;
+    pos_arg = pos;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOCIS lexer constructor ( Char source )
-lexer::lexer(const char* source, cerrors *errorptr)
+lexer::lexer(const char* source, cerrors *errorptr) :
+    file(source),
+    line(""),
+    lineNum(0),
+    currentPos(0),
+    currentIt(NULL),
+    FEOF(false),
+    enableGenericError(true),
+    currentItSave(NULL),
+    currentPosSave(0),
+    lexErr(errorptr)
 {
-	bIsFile = false;
-	lex_err = errorptr;
-	file << source;				// Read character source as stringstream
 	std::getline(file, line);
-	current_it = line.begin();
-	current_pos = 0;
-	FEOF = false;
-	enable_generic_error = true;
+    currentIt = line.begin();
 }
 
 
@@ -36,51 +126,35 @@ lexer::lexer(const char* source, cerrors *errorptr)
 //
 lexer::~lexer()
 {
-	//Close file
-	/*
-	if (file.is_open())
-	{
-		file.close();
-	}
-	*/
-}
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
-void lexer::checkNewLine()
-{
-	if (current_it == line.end())
-	{
-		current_read = false;
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 void lexer::getNewLine(bool force)
 {
-	if (current_it == line.end() || force)
+    if (currentIt == line.end() || force)
 	{
 		if (!std::getline(file, line))
 		{
 			FEOF = true;
 			return;
 		}
-		line_num++;
-		current_pos = 0;
-		current_it = line.begin();
+        lineNum++;
+        currentPos = 0;
+        currentIt = line.begin();
 
 		// Skip Blank lines
-		while (!FEOF && current_it == line.end())
+        while (!FEOF && currentIt == line.end())
 		{
 			if (!std::getline(file, line))
 			{
 				FEOF = true;
 				return;
 			}
-			line_num++;
-			current_pos = 0;
-			current_it = line.begin();
+            lineNum++;
+            currentPos = 0;
+            currentIt = line.begin();
 		}
 
 		return;
@@ -93,102 +167,90 @@ int lexer::getNextToken(token *tok)
 {
 
 start:
+    enableGenericError = true;
 
 	//Set Invalid Token
 	tok->set_token(-100, "EOF", -1, -1);
 
-	int retval = 0;
-
 	// Ignore Multiline comment
-	retval = isMultiLineComment(tok);
-	if (retval == 1)
+    if (isMultiLineComment(tok))
 		goto start;
 
 	// Ignore singleline comment
-	retval = isSingleLineComment(tok);
-	if (retval == 1)
+    if (isSingleLineComment(tok))
 		goto start;
 
 	// Try Keywords
-	retval = isKeyword(tok);
-	if (retval == 1)
+    if (isKeyword(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try String
-	retval = isString(tok);
-	if (retval == 1)
+    if (isString(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Identifier
-	retval = isIdentifier(tok);
-	if (retval == 1)
+    if (isIdentifier(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Operator
-	retval = isOperator(tok);
-	if (retval == 1)
+    if (isOperator(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Exponential
-	retval = isExpo(tok);
-	if (retval == 1)
+    if (isExpo(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Real
-	retval = isReal(tok);
-	if (retval == 1)
+    if (isReal(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Try Integer
-	retval = isInteger(tok);
-	if (retval == 1)
+    if (isInteger(tok))
 	{
-		return 1;
+        return LEXER_SUCCESS;
 	}
 
 	// Get out if no tokens identified and EOF
-	if (retval == 0 && FEOF)
+    if (FEOF)
 	{
-		return -1;
+        return LEXER_EOF;
 	}
 
 	// If token not reco
-	if (enable_generic_error)
+    if (enableGenericError)
 	{
-		lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-		lex_err->AddErrorLine(" Unidentified token found ");
-		lex_err->AddError();
-		enable_generic_error = true;
+        lexErr->SetError(1113, "Lexer Error", lineNum, currentPos);
+        lexErr->AddErrorLine(" Unidentified token found ");
+        lexErr->AddError();
 	}
 
 	// Recover
 	tryRecover();
 	if (FEOF)
-		return -1;
+        return LEXER_EOF;
 	goto start;
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 void lexer::incIter(bool nl)
 {
-	if (current_it != line.end())
+    if (currentIt != line.end())
 	{
-		current_it++;
-		current_pos++;
+        currentIt++;
+        currentPos++;
 	}
 	if (nl)
 		getNewLine();
@@ -198,31 +260,31 @@ void lexer::incIter(bool nl)
 //
 void lexer::resetIter()
 {
-	current_it = current_it_save;
-	current_pos = current_pos_save;
+    currentIt = currentItSave;
+    currentPos = currentPosSave;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 void lexer::saveIter()
 {
-	current_it_save = current_it;
-	current_pos_save = current_pos;
+    currentItSave = currentIt;
+    currentPosSave = currentPos;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-int lexer::tryRecover()
+void lexer::tryRecover()
 {
 	//Skip to Next Readable token
-	while (current_it != line.end())
+    while (currentIt != line.end())
 	{
-		if (*current_it == '\t' || *current_it == ' ')
+        if (*currentIt == '\t' || *currentIt == ' ' || *currentIt == '\r')
 		{
-			return 1;
+            return;
 		}
 		incIter();
 	}
-
-	return 0;
 }
+
+

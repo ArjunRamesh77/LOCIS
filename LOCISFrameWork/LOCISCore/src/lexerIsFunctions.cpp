@@ -1,10 +1,16 @@
 #include "lexer.h"
 
+#define GET_NEXT_READABLE_INPUT  if (FEOF)                      \
+                                     return false;              \
+                                 while (isTabOrSpaceOrEnd());   \
+                                 if (FEOF)                      \
+                                    return false;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Escape Sequence
 void lexer::isEscapeSeq()
 {
-	if (*current_it == '\\')
+    if (*currentIt == '\\')
 	{
 		incIter();
 	}
@@ -12,104 +18,92 @@ void lexer::isEscapeSeq()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Exponential number
-int lexer::isExpo(token *tok)
+bool lexer::isExpo(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
 	std::string real_value("");
-	bool inloop = false;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    bool inloop(false);
 
 	saveIter();
 
 	//Get First integer if it exists
-	while (current_it != line.end() && isdigit(*current_it))
+    while (currentIt != line.end() && isdigit(*currentIt))
 	{
-		real_value += *current_it;
+        real_value += *currentIt;
 		incIter();
 	}
 
 	//Get dot
-	if (current_it != line.end() && *current_it == '.')
+    if (currentIt != line.end() && *currentIt == '.')
 	{
 		// Put dot
-		real_value += *current_it;
+        real_value += *currentIt;
 		incIter();
 
 		// Get Integer
-		while (current_it != line.end() && isdigit(*current_it))
+        while (currentIt != line.end() && isdigit(*currentIt))
 		{
-			real_value += *current_it;
+            real_value += *currentIt;
 			incIter();
 			inloop = true;
 		}
 		if (inloop)
 		{
 			//Get E
-			if (current_it != line.end() && (*current_it == 'e' || *current_it == 'E'))
+            if (currentIt != line.end() && (*currentIt == 'e' || *currentIt == 'E'))
 			{
-				real_value += *current_it;
+                real_value += *currentIt;
 				incIter();
 
 				//Get Integer
-				if (current_it != line.end() && (*current_it == '+' || *current_it == '-'))
+                if (currentIt != line.end() && (*currentIt == '+' || *currentIt == '-'))
 				{
-					real_value += *current_it;
+                    real_value += *currentIt;
 					incIter();
 				}
-				while (current_it != line.end() && isdigit(*current_it))
+                while (currentIt != line.end() && isdigit(*currentIt))
 				{
-					real_value += *current_it;
+                    real_value += *currentIt;
 					incIter();
 					inloop = true;
 				}
 				if (inloop)
 				{
-					tok->set_token(EXPO_VALUE, real_value, line_num, current_pos_save);
-					return 1;
+                    tok->set_token(EXPO_VALUE, real_value, lineNum, currentPosSave);
+                    return true;
 				}
 				else
 				{
 					//LEX_ERROR
-					lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-					lex_err->AddErrorLine(" Missing exponent ");
-					lex_err->AddError();
-					enable_generic_error = false;
+                    lexErr->SetError(1001, "Lexer Error", lineNum, currentPos);
+                    lexErr->AddErrorLine(" Missing exponent ");
+                    lexErr->AddError();
+                    enableGenericError = false;
 				}
 			}
 		}
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Indentifier
-int lexer::isIdentifier(token *tok)
+bool lexer::isIdentifier(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
 	std::string identifier("");
-	bool inloop = false;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    bool inloop(false);
 
 	saveIter();
 
 	//Check if first character is a alphabet
-	if (current_it != line.end() && (isalpha(*current_it) || (*current_it == '_')))
+    if (currentIt != line.end() && (isalpha(*currentIt) || (*currentIt == '_')))
 	{
-		identifier += *current_it;
+        identifier += *currentIt;
 		incIter();
 		inloop = true;
 	}
@@ -118,82 +112,69 @@ int lexer::isIdentifier(token *tok)
 	if (inloop)
 	{
 		//Check if it has more characters
-		while (current_it != line.end() && (isalnum(*current_it) || *current_it == '_'))
+        while (currentIt != line.end() && (isalnum(*currentIt) || *currentIt == '_'))
 		{
-			identifier += *current_it;
+            identifier += *currentIt;
 			incIter();
 		}
 
-		tok->set_token(IDENT, identifier, line_num, current_pos_save);
-		return 1;
+        tok->set_token(IDENT, identifier, lineNum, currentPosSave);
+        return true;
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Integer
-int lexer::isInteger(token *tok)
+bool lexer::isInteger(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
 	std::string integer_value("");
-	bool inloop = false;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    bool inloop(false);
 
 	saveIter();
 
 	//Check if first character is a digit
-	if (current_it != line.end() && !isdigit(*current_it))
+    if (currentIt != line.end() && !isdigit(*currentIt))
 	{
-		return 0;
+        return false;
 	}
 
 	// Get Integer
-	while (current_it != line.end() && isdigit(*current_it))
+    while (currentIt != line.end() && isdigit(*currentIt))
 	{
-		integer_value += *current_it;
+        integer_value += *currentIt;
 		incIter();
 		inloop = true;
 	}
 	if (inloop)
 	{
-		tok->set_token(INTEGER_VALUE, integer_value, line_num, current_pos_save);
-		return 1;
+        tok->set_token(INTEGER_VALUE, integer_value, lineNum, currentPosSave);
+        return true;
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Function loops over all the keywords and returns a keyword token if encountered
-int lexer::isKeyword(token *tok)
+bool lexer::isKeyword(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
-	std::string key;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    std::string key("");
 
 	saveIter();
 
 	//Check if first character alphabet
-	if (current_it != line.end() && !isalpha(*current_it))
+    if (currentIt != line.end() && !isalpha(*currentIt))
 	{
-		return 0;
+        return false;
 	}
-
 
 	// Main loop for all keywords
 	std::string::iterator it2;
@@ -205,7 +186,7 @@ int lexer::isKeyword(token *tok)
 		it2 = key.begin();
 		key = keywords[i];
 
-		while (current_it != line.end() && it2 != key.end() && toupper(*current_it) == *it2)
+        while (currentIt != line.end() && it2 != key.end() && toupper(*currentIt) == *it2)
 		{
 			it2++;
 			incIter();
@@ -214,72 +195,63 @@ int lexer::isKeyword(token *tok)
 		//Check if successful
 		if (it2 == key.end())
 		{
-			if (isTabOrSpaceOrEnd() || !isalnum(*current_it))
+            if (isTabOrSpaceOrEnd() || !isalnum(*currentIt))
 			{
-				tok->set_token(KEYWORDS_OFFSET + i, keywords[i], line_num, current_pos_save);
-				return 1;
+                tok->set_token(KEYWORDS_OFFSET + i, keywords[i], lineNum, currentPosSave);
+                return true;
 			}
 		}
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Multiline Comment
-int lexer::isMultiLineComment(token *tok)
+bool lexer::isMultiLineComment(token *tok)
 {
-	if (FEOF)
-		return 0;
-
-	bool inloop = false;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
 	saveIter();
 
 	// Get Comment
-	if (current_it != line.end() && *current_it == '#')
+    if (currentIt != line.end() && *currentIt == '#')
 	{
 		incIter();
-		if (current_it != line.end() && *current_it == '*')
+        if (currentIt != line.end() && *currentIt == '*')
 		{
 			incIter(true);
-			while (current_it != line.end() && !FEOF && (*current_it != '*'))
+            while (currentIt != line.end() && !FEOF && (*currentIt != '*'))
 			{
 				incIter(true);
-				inloop = true;
 			}
-			if (current_it != line.end() && *current_it == '*')
+            if (currentIt != line.end() && *currentIt == '*')
 			{
 				incIter();
-				if (current_it != line.end() && *current_it == '#')
+                if (currentIt != line.end() && *currentIt == '#')
 				{
 					incIter();
-					return 1;
+                    return true;
 				}
 				else
 				{
 					//ERROR
-					lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-					lex_err->AddErrorLine(" Missing * for comment end ");
-					lex_err->AddError();
-					enable_generic_error = false;
-					return 0;
+                    lexErr->SetError(1002, "Lexer Error", lineNum, currentPos);
+                    lexErr->AddErrorLine(" Missing * for comment end ");
+                    lexErr->AddError();
+                    enableGenericError = false;
+                    return false;
 				}
 			}
 			else
 			{
 				//ERROR
-				lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-				lex_err->AddErrorLine(" Missing # for comment end ");
-				lex_err->AddError();
-				enable_generic_error = false;
-				return 0;
+                lexErr->SetError(1003, "Lexer Error", lineNum, currentPos);
+                lexErr->AddErrorLine(" Missing # for comment end ");
+                lexErr->AddError();
+                enableGenericError = false;
+                return false;
 			}
 		}
 		else
@@ -288,22 +260,16 @@ int lexer::isMultiLineComment(token *tok)
 		}
 	}
 
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Function loops over all the keywords and returns a keyword token if encountered
-int lexer::isOperator(token *tok)
+bool lexer::isOperator(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
-	std::string op;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    std::string op("");
 
 	saveIter();
 
@@ -316,7 +282,7 @@ int lexer::isOperator(token *tok)
 		//Operator data
 		op = operators[i];
 		it2 = op.begin();
-		while (current_it != line.end() && it2 != op.end() && *current_it == *it2)
+        while (currentIt != line.end() && it2 != op.end() && *currentIt == *it2)
 		{
 			it2++;
 			incIter();
@@ -325,166 +291,147 @@ int lexer::isOperator(token *tok)
 		//Check if successful
 		if (it2 == op.end())
 		{
-			tok->set_token(OPERATORS_OFFEST + i, operators[i], line_num, current_pos_save);
-			return 1;
+            tok->set_token(OPERATORS_OFFEST + i, operators[i], lineNum, currentPosSave);
+            return true;
 		}
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Real number
-int lexer::isReal(token *tok)
+bool lexer::isReal(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
 	std::string real_value("");
-	bool inloop = false;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    bool inloop(false);
 
 	saveIter();
 
 	//Get first integer if exists
-	while (current_it != line.end() && isdigit(*current_it))
+    while (currentIt != line.end() && isdigit(*currentIt))
 	{
-		real_value += *current_it;
+        real_value += *currentIt;
 		incIter();
 	}
 
 	//Get dot
-	if (current_it != line.end() && *current_it == '.')
+    if (currentIt != line.end() && *currentIt == '.')
 	{
 		// Put dot
-		real_value += *current_it;
+        real_value += *currentIt;
 		incIter();
 
 		// Get Integer
-		while (current_it != line.end() && isdigit(*current_it))
+        while (currentIt != line.end() && isdigit(*currentIt))
 		{
-			real_value += *current_it;
+            real_value += *currentIt;
 			incIter();
 			inloop = true;
 		}
 		if (inloop)
 		{
-			tok->set_token(REAL_VALUE, real_value, line_num, current_pos_save);
-			return 1;
+            tok->set_token(REAL_VALUE, real_value, lineNum, currentPosSave);
+            return true;
 		}
 		else
 		{
 			//LEX_ERROR
-			lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-			lex_err->AddErrorLine(" Missing decimal point ");
-			lex_err->AddError();
-			enable_generic_error = false;
+            lexErr->SetError(1004, "Lexer Error", lineNum, currentPos);
+            lexErr->AddErrorLine(" Missing decimal point ");
+            lexErr->AddError();
+            enableGenericError = false;
 		}
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Single line comment
-int lexer::isSingleLineComment(token *tok)
+bool lexer::isSingleLineComment(token *tok)
 {
-	if (FEOF)
-		return 0;
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
 	saveIter();
 
 	// Get Comment
-	if (current_it != line.end() && *current_it == '#')
+    if (currentIt != line.end() && *currentIt == '#')
 	{
 		getNewLine(true);
-		return 1;
+        return true;
 	}
 
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // String
-int lexer::isString(token *tok)
+bool lexer::isString(token *tok)
 {
-	if (FEOF)
-		return 0;
+    GET_NEXT_READABLE_INPUT
 
-	char qtype;
-
+    char qtype('\0');
 	std::string string_value("");
-
-	// Ignore starting space or tabs
-	while (isTabOrSpaceOrEnd());
-	if (FEOF)
-		return 0;
 
 	saveIter();
 
 	// Find open quotes
-	if (current_it != line.end() && *current_it == '\"')
+    if (currentIt != line.end() && *currentIt == '\"')
 	{
 		// Get string
-		qtype = *current_it;
+        qtype = *currentIt;
 		incIter();
-		while (!FEOF && *current_it != qtype)
+        while (!FEOF && *currentIt != qtype)
 		{
 			isEscapeSeq();
-			string_value += *current_it;
+            string_value += *currentIt;
 			incIter(true);
 		}
 
-		if (current_it != line.end() && *current_it == qtype)
+        if (currentIt != line.end() && *currentIt == qtype)
 		{
 			incIter();
-			tok->set_token(STRING, string_value, line_num, current_pos_save);
-			return 1;
+            tok->set_token(STRING, string_value, lineNum, currentPosSave);
+            return true;
 		}
 		else
 		{
 			//LEX_ERROR
-			lex_err->SetError(1113, "Lexer Error", line_num, current_pos);
-			lex_err->AddErrorLine(" Missing end quotes ");
-			lex_err->AddError();
-			enable_generic_error = false;
+            lexErr->SetError(1005, "Lexer Error", lineNum, currentPos);
+            lexErr->AddErrorLine(" Missing end quotes ");
+            lexErr->AddError();
+            enableGenericError = false;
 		}
 	}
 
 	resetIter();
-	return 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Tab/Space/End
-int lexer::isTabOrSpaceOrEnd()
+bool lexer::isTabOrSpaceOrEnd()
 {
 	if (FEOF)
-		return 0;
+        return false;
 
-	if (current_it == line.end())
+    if (currentIt == line.end())
 	{
 		getNewLine();
 		if (FEOF)
-			return 0;
-		return 1;
+            return false;
+        return true;
 	}
 
-	if (*current_it == '\t' || *current_it == ' ')
+    if (*currentIt == '\t' || *currentIt == ' ' || *currentIt == '\r')
 	{
 		incIter();
-		return 1;
+        return true;
 	}
-	return 0;
+    return false;
 }
