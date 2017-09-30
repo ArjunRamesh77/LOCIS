@@ -135,7 +135,7 @@ public:
 
 	//type storage
 	int meType;
-	ModelEntity* me;
+    modelEntity* me;
 
 	// Scalar temporary storage
 	std::string equation_data;		
@@ -283,6 +283,7 @@ public:
         sName(""),
         bIsdt(false),
         bIsArray(false),
+        bHasOptions(false),
         bHasDefault(false),
         tName(),
         astvnOptions(),

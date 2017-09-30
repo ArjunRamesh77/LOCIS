@@ -27,7 +27,7 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 
 // Main construct to match tokens
 #define EXPECT_TOKEN_ELSE(TOK) 		consume(TOK);															\
-									if (SHOW_ERROR)															\
+                                    if (state.error)														\
 									{																		\
 
 // Main construct to end matching tokens
@@ -110,23 +110,25 @@ struct parserState
 {
 	bool error;
 
-	//Initialize state
-	parserState()
+    parserState() :
+    error(false)
 	{
-		// state
-		error = false;
+
 	}
 };
 
 struct parserException
 {
-	int code;
+    std::string message;
+    int code;
 	int type;
 
-	parserException()
+    parserException() :
+        message(""),
+        code(-1),
+        type(-1)
 	{
-		type = -1;
-		code = -1;
+
 	}
 };
 
@@ -153,12 +155,9 @@ private:
     void getNextToken();
     void consume(int type, bool is_terminal = false);
     bool Teq(token *tok, int val);
-    bool CheckStateError();  // to be removed
-    bool CheckEnableError(); // to be removed
     void lookAhead(int num);
     void getActualTokenType(const int type, std::string &out);
     bool isDataType(int type, std::string &val);
-    void PrintAllErrors();  // to be removed
 
 	//Errors
     void syntaxErrorExpectedType(int expected);
@@ -170,7 +169,6 @@ private:
     void syntaxErrorUnexpectedEof();
 
 public:
-    parser();
 	parser(lexer* lex0, cerrors *errorptr);
 	~parser();
 

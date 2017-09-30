@@ -13,31 +13,26 @@ struct error
 {
 	int code;
 	std::string type;
-	long int line_number;
+    long int lineNumber;
 	int position;
-	std::vector<std::string> err_lines;
+    std::vector<std::string> errLines;
+
+    error();
 };
 
 class cerrors
 {
-private:
 	LOCISErrorCallBack errcb;
-	error temp_err;
-	int num_errors;
+    error tempErr;
+    int numErrors;
 
 public:
 	std::vector<error> errors;
 	cerrors(LOCISErrorCallBack cb);
 
-	//Sets the type of error
-	void SetError(const int &code, const std::string type, const long int &line_number, const int &position);
-
-	//Adds a single line of error (can be called multiple times)
-	void AddErrorLine(const std::string &line);
-
-	//Adds the error to the list
-	void AddError();
-
+    void setError(const int &code, const std::string type, const long int &line_number, const int &position);
+    void addErrorLine(const std::string &line);
+    void addError();
 };
 
 #endif // ! LOCIS_ERROR_H

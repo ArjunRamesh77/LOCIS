@@ -248,9 +248,9 @@ start:
 	// If token not reco
     if (enableGenericError)
 	{
-        lexErr->SetError(1113, "Lexer Error", lineNum, currentPos);
-        lexErr->AddErrorLine(" Unidentified token found ");
-        lexErr->AddError();
+        lexErr->setError(1113, "Lexer Error", lineNum, currentPos);
+        lexErr->addErrorLine(" Unidentified token found ");
+        lexErr->addError();
 	}
 
 	// Recover

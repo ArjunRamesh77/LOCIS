@@ -184,13 +184,13 @@ ASTNode* equation::dispatch(ASTif_statmentNode* node)
 // performs the for loop( Exactly the same as Interpreter)
 ASTNode* equation::dispatch(ASTfor_loopNode* node)
 {
-	ModelEntity* iter = NULL;
+    modelEntity* iter = NULL;
 	iter = SEARCH_IN_MODEL(NULL, node->sName);
 
 	if (iter)
 	{
 		//iter has to be an iter type variable
-		if (iter->Type != ITER)
+        if (iter->geType() != ITER)
 		{
 			Ip->semanticErr_OnlyIterAllowedInFor(node);
 			return NULL;
@@ -216,7 +216,7 @@ ASTNode* equation::dispatch(ASTfor_loopNode* node)
 
 		// See if increment present
 		start_val = (int)start->value;
-		iter->SValue = start_val;
+        iter->sValue = start_val;
 		till_val = (int)till->value;
 		if (incr)
 		{
@@ -226,7 +226,7 @@ ASTNode* equation::dispatch(ASTfor_loopNode* node)
 				if (start_val <= till_val)
 				{
 					IS.bInFor = true;
-					for (int i = start_val; i <= till_val; i = i + incr_val, iter->SValue = iter->SValue + incr_val)
+                    for (int i = start_val; i <= till_val; i = i + incr_val, iter->sValue = iter->sValue + incr_val)
 					{
 						VISIT_ALL_NODES(node, astvnfors)
 					}
@@ -243,7 +243,7 @@ ASTNode* equation::dispatch(ASTfor_loopNode* node)
 				if (start_val >= till_val)
 				{
 					IS.bInFor = true;
-					for (int i = start_val; i >= till_val; i = i - incr_val, iter->SValue = iter->SValue - incr_val)
+                    for (int i = start_val; i >= till_val; i = i - incr_val, iter->sValue = iter->sValue - incr_val)
 					{
 						VISIT_ALL_NODES(node, astvnfors)
 					}
@@ -262,7 +262,7 @@ ASTNode* equation::dispatch(ASTfor_loopNode* node)
 			if (start_val <= till_val)
 			{
 				IS.bInFor = true;
-				for (int i = start_val; i <= till_val; ++i, ++iter->SValue)
+                for (int i = start_val; i <= till_val; ++i, ++iter->sValue)
 				{
 					VISIT_ALL_NODES(node, astvnfors)
 				}
@@ -271,7 +271,7 @@ ASTNode* equation::dispatch(ASTfor_loopNode* node)
 			else
 			{
 				IS.bInFor = true;
-				for (int i = start_val; i >= till_val; --i, --iter->SValue)
+                for (int i = start_val; i >= till_val; --i, --iter->sValue)
 				{
 					VISIT_ALL_NODES(node, astvnfors)
 				}
@@ -304,7 +304,7 @@ ASTNode* equation::dispatch(ASTFEMoneDEquation* node)
 	double ddomainLeft = 0.0;
 	double ddomainRight = 0.0;
 
-	ModelEntity* dom = NULL;
+    modelEntity* dom = NULL;
 	if (node->astnDomain->me)
 	{
 		if (node->astnDomain->me->isFEMOneDVariable)

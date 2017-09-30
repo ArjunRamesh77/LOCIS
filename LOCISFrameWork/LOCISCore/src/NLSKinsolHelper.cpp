@@ -45,14 +45,14 @@ void NLSKinsolERRORFUN(int error_code, const char *module,
 
 	data = (NLSKinsolErrorHandler*)user_data;
 
-	data->errVector->SetError(4001, "Kinsol Failed", 0, 0);
+	data->errVector->setError(4001, "Kinsol Failed", 0, 0);
 	errLine = "MODULE: " + smodule;
-	data->errVector->AddErrorLine(errLine);
+	data->errVector->addErrorLine(errLine);
 	errLine = " FUNCTION: " + sfunction;
-	data->errVector->AddErrorLine(errLine);
+	data->errVector->addErrorLine(errLine);
 	errLine = " MESSAGE: " + smsg;
-	data->errVector->AddErrorLine(errLine);
-	data->errVector->AddError();
+	data->errVector->addErrorLine(errLine);
+	data->errVector->addError();
 
 	//data->outPutErrorHandler(ierror, cstr);
 	return;

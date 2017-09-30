@@ -43,7 +43,7 @@ void equation::setInitializationMode(bool val, stateVars* initHelpers_arg)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Given a state of variables (v and dv) retrieve new equation set
-int equation::getEquationsRecursive(Model* mod)
+int equation::getEquationsRecursive(model* mod)
 {
 	// Loop through all Equations
 	Ip->IS.scp = mod;
@@ -52,11 +52,11 @@ int equation::getEquationsRecursive(Model* mod)
 	// set t = t0
 	if (bInitialization)
 	{
-		ModelEntity* t0Val = NULL;
+		modelEntity* t0Val = NULL;
 		std::string sym_t = "_t";
 		t0Val = mod->getModelEntity(NULL, sym_t); //works only for regular models
 		if (t0Val)
-			t0Val->SValue = t0_init_val;
+			t0Val->sValue = t0_init_val;
 	}
 
 	// Equation section
@@ -78,13 +78,13 @@ int equation::getEquationsRecursive(Model* mod)
 		{
 			if (obj->second->getDimType() == SY_SCALAR)
 			{
-				getEquationsRecursive(static_cast<Object*>(obj->second)->SModelObject);
+				getEquationsRecursive(static_cast<object*>(obj->second)->SModelObject);
 			}
 			else
 			{
 				for (int i = 0; i < obj->second->getMaxDims(); i++)
 				{
-					getEquationsRecursive(&static_cast<Object*>(obj->second)->VModelObject[i]);
+					getEquationsRecursive(&static_cast<object*>(obj->second)->VModelObject[i]);
 				}
 			}
 		}
@@ -95,12 +95,12 @@ int equation::getEquationsRecursive(Model* mod)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helper function to Make Variable substitutions(Scalar)
-std::string equation::getSubstitutedEntityNameScalar(ModelEntity* me)
+std::string equation::getSubstitutedEntityNameScalar(modelEntity* me)
 {
 	// build the value based on index
 	if (me->geType() == VARIABLE)
 	{
-		Variable* mev = static_cast<Variable*>(me);
+		variable* mev = static_cast<variable*>(me);
 
 		if (me->checkIsdt())
 		{
@@ -138,7 +138,7 @@ std::string equation::getSubstitutedEntityNameScalar(ModelEntity* me)
 				else
 				{
 					std::stringstream ss;
-					ss << std::scientific << std::setprecision(10) << mev->SValue;
+					ss << std::scientific << std::setprecision(10) << mev->sValue;
 					return ss.str();
 					//return std::to_string(mev->SValue);
 				}
@@ -175,7 +175,7 @@ std::string equation::getSubstitutedEntityNameScalar(ModelEntity* me)
 			else
 			{
 				std::stringstream ss;
-				ss << std::scientific << std::setprecision(10) << mev->SValue;
+				ss << std::scientific << std::setprecision(10) << mev->sValue;
 				return ss.str();
 				//return std::to_string(mev->SValue);
 			}
@@ -184,7 +184,7 @@ std::string equation::getSubstitutedEntityNameScalar(ModelEntity* me)
 	else if (me->geType() == PARAMETER || me->geType() == ITER)
 	{
 		std::stringstream ss;
-		ss << std::scientific << std::setprecision(10) << me->SValue;
+		ss << std::scientific << std::setprecision(10) << me->sValue;
 		return ss.str();
 		//return std::to_string(me->SValue);
 	}
@@ -195,12 +195,12 @@ std::string equation::getSubstitutedEntityNameScalar(ModelEntity* me)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helper function to Make Variable substitutions(vector)
-std::string equation::getSubstitutedEntityNameVector(ModelEntity* me, int &index)
+std::string equation::getSubstitutedEntityNameVector(modelEntity* me, int &index)
 {
 	// build the value based on index
 	if (me->geType() == VARIABLE)
 	{
-		Variable* mev = static_cast<Variable*>(me);
+		variable* mev = static_cast<variable*>(me);
 		if (me->checkIsdt())
 		{
 			if (iSimulationType == EQ_STEADY_STATE)
@@ -213,31 +213,31 @@ std::string equation::getSubstitutedEntityNameVector(ModelEntity* me, int &index
 				{
 					if (bInitialization)
 					{
-						if (initHelpers->initdVindex[me->nVvalue[index]] == -1)
+						if (initHelpers->initdVindex[me->nVValue[index]] == -1)
 						{
 							initHelpers->initIncr++;
-							initHelpers->initdVindex[me->nVvalue[index]] = initHelpers->initIncr;
+							initHelpers->initdVindex[me->nVValue[index]] = initHelpers->initIncr;
 							return "V[" + std::to_string(initHelpers->initIncr) + "]";
 						}
 						else
 						{
-							return "V[" + std::to_string(initHelpers->initdVindex[me->nVvalue[index]]) + "]";
+							return "V[" + std::to_string(initHelpers->initdVindex[me->nVValue[index]]) + "]";
 						}
 					}
 					else
 					{
-						if (occurdV.find(me->nVvalue[index]) == occurdV.end())
+						if (occurdV.find(me->nVValue[index]) == occurdV.end())
 						{
 							numDiffVars++;
-							occurdV[me->nVvalue[index]] = 1;
+							occurdV[me->nVValue[index]] = 1;
 						}
-						return "DV[" + std::to_string(me->nVvalue[index]) + "]";
+						return "DV[" + std::to_string(me->nVValue[index]) + "]";
 					}
 				}
 				else
 				{
 					std::stringstream ss;
-					ss << std::scientific << std::setprecision(10) << mev->Vvalue[index];
+					ss << std::scientific << std::setprecision(10) << mev->vValue[index];
 					return ss.str();
 					//return std::to_string(mev->Vvalue[index]);
 				}
@@ -249,31 +249,31 @@ std::string equation::getSubstitutedEntityNameVector(ModelEntity* me, int &index
 			{
 				if (bInitialization)
 				{
-					if (initHelpers->initVindex[me->nVvalue[index]] == -1)
+					if (initHelpers->initVindex[me->nVValue[index]] == -1)
 					{
 						initHelpers->initIncr++;
-						initHelpers->initVindex[me->nVvalue[index]] = initHelpers->initIncr;
+						initHelpers->initVindex[me->nVValue[index]] = initHelpers->initIncr;
 						return "V[" + std::to_string(initHelpers->initIncr) + "]";
 					}
 					else
 					{
-						return "V[" + std::to_string(initHelpers->initVindex[me->nVvalue[index]]) + "]";
+						return "V[" + std::to_string(initHelpers->initVindex[me->nVValue[index]]) + "]";
 					}
 				}
 				else
 				{
-					if (occurV.find(me->nVvalue[index]) == occurV.end())
+					if (occurV.find(me->nVValue[index]) == occurV.end())
 					{
 						numAlgVars++;
-						occurV[me->nVvalue[index]] = 1;
+						occurV[me->nVValue[index]] = 1;
 					}
-					return "V[" + std::to_string(me->nVvalue[index]) + "]";
+					return "V[" + std::to_string(me->nVValue[index]) + "]";
 				}
 			}
 			else
 			{
 				std::stringstream ss;
-				ss << std::scientific << std::setprecision(10) << mev->Vvalue[index];
+				ss << std::scientific << std::setprecision(10) << mev->vValue[index];
 				return ss.str();
 				//return std::to_string(mev->Vvalue[index]);
 			}
@@ -282,7 +282,7 @@ std::string equation::getSubstitutedEntityNameVector(ModelEntity* me, int &index
 	else if (me->geType() == PARAMETER)
 	{
 		std::stringstream ss;
-		ss << std::scientific << std::setprecision(10) << me->Vvalue[index];
+		ss << std::scientific << std::setprecision(10) << me->vValue[index];
 		return ss.str();
 		//return std::to_string(me->Vvalue[index]);
 	}

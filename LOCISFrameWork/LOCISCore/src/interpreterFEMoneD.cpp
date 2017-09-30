@@ -15,18 +15,18 @@ bool interpreter::initFEMLine(ASTNode* buildNode)
 	lo->setType(MODEL);
 	lo->setSType("MODEL");
 	lo->isFEMOneDLine = true;	  //flag indicating object is a line type
-	lo->build_node = buildNode;   //To find arrays etc
+    lo->setBuildNode(buildNode);   //To find arrays etc
 
 	// Scalar or vector
 	if (node->bIsArray)
 	{
 		lo->setDimType(SY_VECTOR);
-		lo->vset = false;
+        lo->setVectorIsInitialized(false);
 
 		// Add dummy array indices
 		LOOP_OVER_NODES(node, astvnArrayIndices)
 		{
-			lo->Dims.push_back(0);
+            lo->setDummyIndex();
 		}
 	}
 	else

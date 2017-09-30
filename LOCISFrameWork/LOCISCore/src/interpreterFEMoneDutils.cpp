@@ -16,10 +16,10 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 	ASTNamedReferenceNode* item1 = NULL;
 	ASTNamedReferenceNode* item2 = NULL;
 	ASTNamedReferenceNode* item3 = NULL;
-	ModelEntity* FEMvarRef = NULL;
-	Model* search = NULL;
-	ModelEntity* search_res = NULL;
-	Object* next = NULL;
+    modelEntity* FEMvarRef = NULL;
+    model* search = NULL;
+    modelEntity* search_res = NULL;
+    object* next = NULL;
 	bool temp_bInequation = false;
 
 	// First check if line object is a scalar or vector
@@ -61,9 +61,9 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 				assert(eval);
 	
 				ival = (int)eval->value;
-				if ((ival > 0) && (ival <= search_res->Dims.at(c)))
+                if ((ival > 0) && (ival <= search_res->getDimsAt(c)))
 				{
-					fullsum += (ival - 1)*search_res->DimsC.at(c);
+                    fullsum += (ival - 1)*search_res->getDimsCAt(c);
 				}
 				else
 				{
@@ -73,7 +73,7 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 				c++;
 			}
 
-			search = &dynamic_cast<Object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -232,9 +232,9 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 					else
 					{
 						if (item3->iNumDerivs == 0)
-							qRefName->value = search_res->Vvalue[dom->domainSize[stringIndex]];
+                            qRefName->value = search_res->vValue[dom->domainSize[stringIndex]];
 						else
-							qRefName->value = search_res->Vvalue[dom->domainNuemannSize[stringIndex]]; // Reference to Neumann boundary
+                            qRefName->value = search_res->vValue[dom->domainNuemannSize[stringIndex]]; // Reference to Neumann boundary
 						return true;
 					}
 				}
@@ -254,9 +254,9 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 				assert(eval);
 				
 				ival = (int)eval->value;
-				if ((ival > 0) && (ival <= search_res->Dims.at(c)))
+                if ((ival > 0) && (ival <= search_res->getDimsAt(c)))
 				{
-					fullsum += (ival - 1)*search_res->DimsC.at(c);
+                    fullsum += (ival - 1)*search_res->getDimsCAt(c);
 				}
 				else
 				{
@@ -270,7 +270,7 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 		if(bInEquation)
 			qRefName->equation_data = static_cast<equation*>(Eq)->getSubstitutedEntityNameVector(search_res, fullsum);
 		else
-			qRefName->value = search_res->Vvalue[fullsum];
+            qRefName->value = search_res->vValue[fullsum];
 		return true;
 	}
 	else
@@ -301,10 +301,10 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 	ASTNamedReferenceNode* item1 = NULL;
 	ASTNamedReferenceNode* item2 = NULL;
 	ASTNamedReferenceNode* item3 = NULL;
-	ModelEntity* FEMvarRef = NULL;
-	Model* search = NULL;
-	ModelEntity* search_res = NULL;
-	Object* next = NULL;
+    modelEntity* FEMvarRef = NULL;
+    model* search = NULL;
+    modelEntity* search_res = NULL;
+    object* next = NULL;
 
 	item1 = dynamic_cast<ASTNamedReferenceNode*>(*it_in);
 	// Only GUESS section allowed for assignment type operation 
@@ -342,9 +342,9 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 				assert(eval);
 
 				ival = (int)eval->value;
-				if ((ival > 0) && (ival <= search_res->Dims.at(c)))
+                if ((ival > 0) && (ival <= search_res->getDimsAt(c)))
 				{
-					fullsum += (ival - 1)*search_res->DimsC.at(c);
+                    fullsum += (ival - 1)*search_res->getDimsCAt(c);
 				}
 				else
 				{
@@ -354,7 +354,7 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 				c++;
 			}
 
-			search = &dynamic_cast<Object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -489,9 +489,9 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 				if (f != dom->domainSize.end())
 				{
 					if (item3->iNumDerivs == 0)
-						search_res->Vvalue[dom->domainSize[stringIndex]] = val;
+                        search_res->vValue[dom->domainSize[stringIndex]] = val;
 					else
-						search_res->Vvalue[dom->domainNuemannSize[stringIndex]] = val; // Reference to Neumann boundary
+                        search_res->vValue[dom->domainNuemannSize[stringIndex]] = val; // Reference to Neumann boundary
 					return true;
 				}
 				else
@@ -507,9 +507,9 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 				assert(eval);
 
 				ival = (int)eval->value;
-				if ((ival > 0) && (ival <= search_res->Dims.at(c)))
+                if ((ival > 0) && (ival <= search_res->getDimsAt(c)))
 				{
-					fullsum += (ival - 1)*search_res->DimsC.at(c);
+                    fullsum += (ival - 1)*search_res->getDimsCAt(c);
 				}
 				else
 				{
@@ -520,7 +520,7 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 			c++;
 		}
 
-		search_res->Vvalue[fullsum] = val;
+        search_res->vValue[fullsum] = val;
 		return true;
 	}
 	else
@@ -529,14 +529,14 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 		if (bGotVariable)
 		{
 			//Set all the same guess to all nodes
-			for (int i = 0; i < search_res->Maxdim - 2; i++)
-				search_res->Vvalue[i] = val;
+            for (int i = 0; i < search_res->getMaxDims() - 2; i++)
+                search_res->vValue[i] = val;
 		}
 		else if (bGotVariableFromDomain)
 		{
 			//Set guess only in bounding domain
 			for (int i = dom->domainSize["left"]; i <= dom->domainSize["right"]; i++)
-				search_res->Vvalue[i] = val;
+                search_res->vValue[i] = val;
 		}
 		return true;
 	}
@@ -546,7 +546,7 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // utility function to create the FEM oneD line object once encountered
-bool interpreter::createFEMoneDline(Object* FEMobj)
+bool interpreter::createFEMoneDline(object* FEMobj)
 {
 	// First convert to line object
 	FEMOneDLineObject* FEMob = static_cast<FEMOneDLineObject*>(FEMobj);
@@ -591,7 +591,7 @@ bool interpreter::createFEMoneDline(Object* FEMobj)
 		}
 		else
 		{
-			semanticErr_CalculatingBoundaryValues(*FEMobj->tok);
+            semanticErr_CalculatingBoundaryValues(*FEMobj->getTok());
 			return false;
 		}
 
@@ -601,14 +601,14 @@ bool interpreter::createFEMoneDline(Object* FEMobj)
 	// Check if array of lines
 	if (FEMob->getDimType() == SY_SCALAR)
 	{
-		FEMob->SModelObject = new Model;
+        FEMob->SModelObject = new model;
 	}
 	else
 	{
 		// Allocate array of lines
 		ASTNode* eval = NULL;
 		int ret;
-		ASTmodel_entity_declNode* node = static_cast<ASTmodel_entity_declNode*>(FEMob->build_node);
+        ASTmodel_entity_declNode* node = static_cast<ASTmodel_entity_declNode*>(FEMob->getBuildNode());
 		LOOP_OVER_NODES(node, astvnArrayIndices)
 		{
 			eval = VISIT_NODE(*it_astvnArrayIndices);
@@ -616,7 +616,7 @@ bool interpreter::createFEMoneDline(Object* FEMobj)
 			ret = FEMob->setDims(eval->value);
 			if (ret != SY_SUCCESS)
 			{
-				semanticErr_IndexOutOfBounds(*FEMobj->tok);
+                semanticErr_IndexOutOfBounds(*FEMobj->getTok());
 				return false;
 			}
 		}
@@ -682,7 +682,7 @@ start:
 
 		// Create and add the variable
 		// Regular
-		Variable* v = new Variable;
+        variable* v = new variable;
 		v->setNType(REAL);
 		v->setName(var->first);
 		v->setType(VARIABLE);
@@ -690,7 +690,7 @@ start:
 		v->isFEMOneDVariable = true;
 
 		// Time dependent
-		Variable* dv = new Variable;
+        variable* dv = new variable;
 		dv->setNType(REAL);
 		dv->setName("$" + var->first);
 		dv->setType(VARIABLE);
@@ -699,8 +699,8 @@ start:
 		dv->isFEMOneDdVariable = true;
 
 		// Give each others reference to each other
-		dv->other = v;
-		v->other = dv;
+        dv->setOther(v);
+        v->setOther(dv);
 
 		// PDE variables are always vectors
 		v->setDimType(SY_VECTOR);
@@ -713,8 +713,8 @@ start:
 		assert(dv->allocateArray(0.0) == SY_SUCCESS);
 
 		// Set vector flags
-		v->vset = true;
-		dv->vset = true;
+        v->setVectorIsInitialized(true);
+        dv->setVectorIsInitialized(true);
 
 		/* Fix all dt components of Neumann nodes(always fixed, no use)
 		for (auto alldoms = FEMob->domains.begin(); alldoms != FEMob->domains.end(); alldoms++)
@@ -779,7 +779,7 @@ start:
 	}
 
 	// For vectors
-	if ((FEMob->getDimType() == SY_VECTOR) && (c < FEMob->Maxdim))
+    if ((FEMob->getDimType() == SY_VECTOR) && (c < FEMob->getMaxDims()))
 	{
 		c++;
 		goto start;

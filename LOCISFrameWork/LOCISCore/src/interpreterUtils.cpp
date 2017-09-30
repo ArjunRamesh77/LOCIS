@@ -27,9 +27,9 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 {
 	// Resolve Qualified name
 	ASTNamedReferenceNode* item = NULL;
-	Model* search = NULL;
-	ModelEntity* search_res = NULL;
-	Object* next = NULL;
+    model* search = NULL;
+    modelEntity* search_res = NULL;
+    object* next = NULL;
 
 	for (std::vector<ASTNode*>::const_iterator it = qRefName->astvnQualifiedName.begin(); it != qRefName->astvnQualifiedName.end(); ++it)
 	{
@@ -88,9 +88,9 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 				assert(eval);
 
 				ival = (int)eval->value;
-				if ((ival > 0) && (ival <= search_res->Dims.at(c)))
+                if ((ival > 0) && (ival <= search_res->getDimsAt(c)))
 				{
-					fullsum += (ival - 1)*search_res->DimsC.at(c);
+                    fullsum += (ival - 1)*search_res->getDimsCAt(c);
 				}
 				else
 				{
@@ -113,13 +113,13 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 
 				//Set the value
 				//Check if dt term
-				if (search_res->vset)
+                if (search_res->getVectorIsInitialized())
 				{
 					// Call from equation
 					if(bInEquation)
 						qRefName->equation_data = static_cast<equation*>(Eq)->getSubstitutedEntityNameVector(search_res, fullsum);
 					else
-						qRefName->value = search_res->Vvalue[fullsum];
+                        qRefName->value = search_res->vValue[fullsum];
 				}
 				else
 				{
@@ -130,7 +130,7 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 			}
 
 			//Set to next
-			search = &dynamic_cast<Object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -162,7 +162,7 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 						if (static_cast<equation*>(Eq)->isInitialzation())
 						{
 							std::stringstream ss;
-							ss << std::scientific << std::setprecision(10) << search_res->SValue;
+                            ss << std::scientific << std::setprecision(10) << search_res->sValue;
 							qRefName->equation_data = ss.str();
 						}
 						else
@@ -193,14 +193,14 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 						return true;
 					}
 					
-					qRefName->value = search_res->SValue;
+                    qRefName->value = search_res->sValue;
 				}
 
 				return true;
 			}
 
 			//Set to next
-			search = dynamic_cast<Object*>(search_res)->SModelObject;
+            search = dynamic_cast<object*>(search_res)->SModelObject;
 			assert(search);
 		}
 	}
@@ -213,9 +213,9 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 {
 	// Resolve Qualified name
 	ASTNamedReferenceNode* item = NULL;
-	Model* search = NULL;
-	ModelEntity* search_res = NULL;
-	Object* next = NULL;
+    model* search = NULL;
+    modelEntity* search_res = NULL;
+    object* next = NULL;
 	bool set_success_s = false;
 	bool set_success_v = false;
 
@@ -234,7 +234,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 		}
 
 		// Set entity token
-		search_res->tok = &item->tName;
+        search_res->setTok(&item->tName);
 
 		// check if item an FEMoneD reference
 		if (search_res->isFEMOneDLine)
@@ -276,9 +276,9 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 				eval = VISIT_NODE(*it);
 				assert(eval);
 				ival = (int)eval->value;
-				if ((ival > 0) && (ival <= search_res->Dims.at(c)))
+                if ((ival > 0) && (ival <= search_res->getDimsAt(c)))
 				{
-					fullsum += (ival - 1)*search_res->DimsC.at(c);
+                    fullsum += (ival - 1)*search_res->getDimsCAt(c);
 				}
 				else
 				{
@@ -305,7 +305,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 
 			//Set to next
-			search = &dynamic_cast<Object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -336,13 +336,13 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 
 			//Set to next
-			search = dynamic_cast<Object*>(search_res)->SModelObject;
+            search = dynamic_cast<object*>(search_res)->SModelObject;
 			assert(search);
 		}
 	}
 
 	// No direct assignment to iter Parameter
-	if (search_res->Type == ITER)
+    if (search_res->geType() == ITER)
 	{
 		semanticErr_IterCannotBeAssigned(item->tName);
 		return false;
@@ -351,7 +351,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	// Perform checks to see if correct scope
 	if (IS.section_type == SCOPE_SET)
 	{
-		if (search_res->Type != PARAMETER)
+        if (search_res->geType() != PARAMETER)
 		{
 			semanticErr_OnlyParametersSet(item->tName);
 			return false;
@@ -365,7 +365,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	}
 	else if (IS.section_type == SCOPE_FIX)
 	{
-		if (search_res->Type != VARIABLE)
+        if (search_res->geType() != VARIABLE)
 		{
 			semanticErr_OnlyVariablesFix(item->tName);
 			return false;
@@ -382,7 +382,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	}
 	else if (IS.section_type == SCOPE_GUESS)
 	{
-		if (search_res->Type != VARIABLE)
+        if (search_res->geType() != VARIABLE)
 		{
 			semanticErr_OnlyVariablesGuess(item->tName);
 			return false;
@@ -396,34 +396,34 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	}
 
 	// Now set the values
-	Variable* v = NULL;
+    variable* v = NULL;
 	if (set_success_s)
 	{
 		switch (op)
 		{
 		case(EQUALS):
-			search_res->SValue = val;
+            search_res->sValue = val;
 			if (IS.section_type == SCOPE_FIX)
 			{
-				v = static_cast<Variable*>(search_res);
+                v = static_cast<variable*>(search_res);
 				v->SFixValueToggle = SY_FIX;
 
 				//Fix dt component too
-				v = static_cast<Variable*>(search_res->other);
+                v = static_cast<variable*>(search_res->getOther());
 				v->SFixValueToggle = SY_FIX;
 			}
 			break;
 
 		case(GEQUALS):
 		case (GTHAN):
-			v = static_cast<Variable*>(search_res);
+            v = static_cast<variable*>(search_res);
 			v->SLowerType = optochar(op);
 			v->SLower = val;
 			break;
 
 		case(LEQUALS):
 		case (LTHAN):
-			v = static_cast<Variable*>(search_res);
+            v = static_cast<variable*>(search_res);
 			v->SUpperType = optochar(op);
 			v->SUpper = val;
 			break;
@@ -439,14 +439,14 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 		case(EQUALS):
 			if (fullsum != -1)
 			{
-				search_res->Vvalue[fullsum] = val;
+                search_res->vValue[fullsum] = val;
 				if (IS.section_type == SCOPE_FIX)
 				{
-					v = static_cast<Variable*>(search_res);
+                    v = static_cast<variable*>(search_res);
 					v->VFixValueToggle[fullsum] = SY_FIX;
 
 					// Fix dt component too
-					v = static_cast<Variable*>(search_res->other);
+                    v = static_cast<variable*>(search_res->getOther());
 					v->VFixValueToggle[fullsum] = SY_FIX;
 				}
 			}
@@ -455,11 +455,11 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 				search_res->setAllto(val);
 				if (IS.section_type == SCOPE_FIX)
 				{
-					v = static_cast<Variable*>(search_res);
+                    v = static_cast<variable*>(search_res);
 					assert(v->setAlltoB(SY_VARIABLE_FT, SY_FIX, 0.0) == SY_SUCCESS);
 
 					// Fix dt component too
-					v = static_cast<Variable*>(search_res->other);
+                    v = static_cast<variable*>(search_res->getOther());
 					assert(v->setAlltoB(SY_VARIABLE_FT, SY_FIX, 0.0) == SY_SUCCESS);
 				}
 			}
@@ -467,7 +467,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 
 		case(GEQUALS):
 		case (GTHAN):
-			v = static_cast<Variable*>(search_res);
+            v = static_cast<variable*>(search_res);
 			if (fullsum != -1)
 			{
 				v->VLowerType[fullsum] = optochar(op);
@@ -481,7 +481,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 
 		case(LEQUALS):
 		case (LTHAN):
-			v = static_cast<Variable*>(search_res);
+            v = static_cast<variable*>(search_res);
 			if (fullsum != 0)
 			{
 				v->VUpperType[fullsum] = optochar(op);
@@ -501,15 +501,15 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Initialize Vector
-bool interpreter::initVector(ModelEntity* search_res)
+bool interpreter::initVector(modelEntity* search_res)
 {
 	ASTNode* eval = NULL;
 	int ret = 0;
-	assert(search_res->build_node);
-	ASTmodel_entity_declNode* node = static_cast<ASTmodel_entity_declNode*>(search_res->build_node);
+    assert(search_res->getBuildNode());
+    ASTmodel_entity_declNode* node = static_cast<ASTmodel_entity_declNode*>(search_res->getBuildNode());
 
 	// Clear dummy dimensions
-	search_res->Dims.clear();
+    search_res->clearDims();
 
 	LOOP_OVER_NODES(node, astvnArrayIndices)
 	{
@@ -518,7 +518,7 @@ bool interpreter::initVector(ModelEntity* search_res)
 		ret = search_res->setDims(eval->value);
 		if (ret != SY_SUCCESS)
 		{
-			semanticErr_IndexOutOfBounds(*search_res->tok);
+            semanticErr_IndexOutOfBounds(*search_res->getTok());
 			return false;
 		}
 	}
@@ -526,10 +526,10 @@ bool interpreter::initVector(ModelEntity* search_res)
 	// Check if Object
 	if (search_res->geType() == MODEL)
 	{
-		Object* cob = NULL;
-		Model* save = NULL;
+        object* cob = NULL;
+        model* save = NULL;
 		ASTNode* mod = NULL;
-		cob = static_cast<Object*>(search_res);
+        cob = static_cast<object*>(search_res);
 		assert(cob->allocateArray() == SY_SUCCESS);
 
 		std::string cob_getModelName = cob->getModelName();
@@ -537,14 +537,14 @@ bool interpreter::initVector(ModelEntity* search_res)
 		assert(mod);
 
 		SAVE_INTERPRETER_STATE
-		for (int i = 0; i < cob->Maxdim; i++)
+        for (int i = 0; i < cob->getMaxDims(); i++)
 		{
 			IS.scp = &cob->VModelObject[i];
 			mod->visit(this);
 		}
 		RESET_INTERPRETER_STATE
 
-		search_res->vset = true;
+        search_res->setVectorIsInitialized(true);
 		return true;
 	}
 
@@ -568,15 +568,15 @@ bool interpreter::initVector(ModelEntity* search_res)
 		VISIT_ALL_NODES(node, astvnOptions)
 	}
 
-	search_res->vset = true;
+    search_res->setVectorIsInitialized(true);
 	return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Completely initializes a Vector entity
-bool interpreter::initAllVector(ModelEntity* search_res)
+bool interpreter::initAllVector(modelEntity* search_res)
 {
-	if (!search_res->vset)
+    if (!search_res->getVectorIsInitialized())
 	{
 		if (!initVector(search_res))
 		{
@@ -586,9 +586,9 @@ bool interpreter::initAllVector(ModelEntity* search_res)
 		// For Variable initialize each other if uninitialized
 		if (search_res->geType() == VARIABLE)
 		{
-			if (!search_res->other->vset)
+            if (!search_res->getOther()->getVectorIsInitialized())
 			{
-				if (!initVector(search_res->other))
+                if (!initVector(search_res->getOther()))
 				{
 					return false;
 				}
@@ -620,16 +620,16 @@ char interpreter::optochar(int & op)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Get all the unknowns for the specified model
-void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
+void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 {
 	for (auto it = MainObj->getModelEntities()->begin(); it != MainObj->getModelEntities()->end(); ++it)
 	{
 		// Add all free Variables
-		if (it->second->geType() == VARIABLE && it->second->vset && !it->second->checkIsdt())
+        if (it->second->geType() == VARIABLE && it->second->getVectorIsInitialized() && !it->second->checkIsdt())
 		{
 			//Once for normal/once for dt variable
 			bool done = true;
-			ModelEntity* mod = NULL;
+            modelEntity* mod = NULL;
 			mod = it->second;
 			while (done)
 			{
@@ -639,7 +639,7 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 					done = false;
 				}
 
-				Variable* v = static_cast<Variable*>(mod);
+                variable* v = static_cast<variable*>(mod);
 				if (v->getDimType() == SY_SCALAR)
 				{
 					VariableData vd;
@@ -648,7 +648,7 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 					vd.UpType = v->SUpperType;
 					vd.Lo = v->SLower;
 					vd.Up = v->SUpper;
-					vd.val = &v->SValue;
+                    vd.val = &v->sValue;
 
 					if (v->SFixValueToggle == SY_FREE)
 					{
@@ -671,8 +671,8 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 					{
 						if (v->checkIsdt())
 						{
-							v->SValue = 0.0;
-							vd.val = &v->SValue; // Make derivative values to 0 since algebraic part is fixed
+                            v->sValue = 0.0;
+                            vd.val = &v->sValue; // Make derivative values to 0 since algebraic part is fixed
 							numfdVars++;
 							v->nSValue = numfdVars;
 							vd.index = numfdVars;
@@ -697,21 +697,21 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 						vd.UpType = v->VUpperType[i];
 						vd.Lo = v->VLower[i];
 						vd.Up = v->VUpper[i];
-						vd.val = &v->Vvalue[i];
+                        vd.val = &v->vValue[i];
 
 						if (v->VFixValueToggle[i] == SY_FREE)
 						{
 							if (v->checkIsdt())
 							{
 								numdVars++;
-								v->nVvalue[i] = numdVars;
+                                v->nVValue[i] = numdVars;
 								vd.index = numdVars;
 								AlldVars.push_back(vd);
 							}
 							else
 							{
 								numVars++;
-								v->nVvalue[i] = numVars;
+                                v->nVValue[i] = numVars;
 								vd.index = numVars;
 								AllVars.push_back(vd);
 							}
@@ -720,17 +720,17 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 						{
 							if (v->checkIsdt())
 							{
-								v->Vvalue[i] = 0.0;
-								vd.val = &v->Vvalue[i]; // Make derivative values to 0 since algebraic part is fixed
+                                v->vValue[i] = 0.0;
+                                vd.val = &v->vValue[i]; // Make derivative values to 0 since algebraic part is fixed
 								numfdVars++;
-								v->nVvalue[i] = numfdVars;
+                                v->nVValue[i] = numfdVars;
 								vd.index = numfdVars;
 								AllfdVars.push_back(vd);
 							}
 							else
 							{
 								numfVars++;
-								v->nVvalue[i] = numfVars;
+                                v->nVValue[i] = numfVars;
 								vd.index = numfVars;
 								AllfVars.push_back(vd);
 							}
@@ -746,18 +746,18 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 		}
 
 		//Add all Parameters
-		if (it->second->geType() == PARAMETER && it->second->vset)
+        if (it->second->geType() == PARAMETER && it->second->getVectorIsInitialized())
 		{
-			ModelEntity* mod = NULL;
+            modelEntity* mod = NULL;
 			mod = it->second;
 
-			Parameter* p = static_cast<Parameter*>(mod);
+            parameter* p = static_cast<parameter*>(mod);
 			if (p->getDimType() == SY_SCALAR)
 			{
 
 				ParameterData pd;
 				pd.fullname = Name_arg + "." + p->getName();
-				pd.val = &p->SValue;
+                pd.val = &p->sValue;
 
 				numPars++;
 				p->nSValue = numPars;
@@ -771,10 +771,10 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 
 					ParameterData pd;
 					pd.fullname = Name_arg + "." + p->getName() + p->getGetMultiDimsFromSingle(i);
-					pd.val = &p->Vvalue[i];
+                    pd.val = &p->vValue[i];
 
 					numPars++;
-					p->nVvalue[i] = numPars;
+                    p->nVValue[i] = numPars;
 					pd.index = numdVars;
 					AllPars.push_back(pd);
 				}
@@ -787,13 +787,13 @@ void interpreter::getAllVars(Model* MainObj, std::string Name_arg)
 		{
 			if (it->second->getDimType() == SY_SCALAR)
 			{
-				getAllVars(static_cast<Object*>(it->second)->SModelObject, Name_arg + "." + it->second->getName());
+                getAllVars(static_cast<object*>(it->second)->SModelObject, Name_arg + "." + it->second->getName());
 			}
 			else
 			{
 				for (int i = 0; i < it->second->getMaxDims(); ++i)
 				{
-					getAllVars(&static_cast<Object*>(it->second)->VModelObject[i], Name_arg + "." + it->second->getName() + it->second->getGetMultiDimsFromSingle(i));
+                    getAllVars(&static_cast<object*>(it->second)->VModelObject[i], Name_arg + "." + it->second->getName() + it->second->getGetMultiDimsFromSingle(i));
 				}
 			}
 		}
@@ -809,7 +809,7 @@ std::vector<VariableData>* interpreter::getAllVarNames()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Initialize all uninitialized variables
-bool interpreter::InitAll(Model* MainObj)
+bool interpreter::InitAll(model* MainObj)
 {
 	if (!MainObj)
 		return false;
@@ -817,7 +817,7 @@ bool interpreter::InitAll(Model* MainObj)
 	for (auto it = MainObj->getModelEntities()->begin(); it != MainObj->getModelEntities()->end(); ++it)
 	{
 		// Initialize any uninitialized vectors (including objects)
-		if (!it->second->vset)
+        if (!it->second->getVectorIsInitialized())
 		{
 			if (!initVector(it->second))
 			{
@@ -828,8 +828,8 @@ bool interpreter::InitAll(Model* MainObj)
 		// Recursive call to all objects in model
 		if (it->second->geType() == MODEL)
 		{
-			Object* m = NULL;
-			m = static_cast<Object*>(it->second);
+            object* m = NULL;
+            m = static_cast<object*>(it->second);
 			assert(m);
 
 			if (m->getDimType() == SY_SCALAR)
@@ -851,50 +851,50 @@ bool interpreter::InitAll(Model* MainObj)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Return reference to MAster Model
-Model* interpreter::getMasterModel()
+model* interpreter::getMasterModel()
 {
 	return MasterModel->SModelObject;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Add any extra symbols to the model(MUST ADD GLOBAL SYMBOL TABLE IN THE FUTURE)
-bool interpreter::addExtraSymbols(Model* md)
+bool interpreter::addExtraSymbols(model* md)
 {
 	// Add trial functions as parameters
-	Parameter* FEMtrialFunction = new Parameter;
+    parameter* FEMtrialFunction = new parameter;
 	FEMtrialFunction->setName("_v");
 	FEMtrialFunction->setNType(-3);
 	FEMtrialFunction->setType(PARAMETER);
 	FEMtrialFunction->setSType("PARAMETER");
 	FEMtrialFunction->isFEMtrialFunction = true;
 	FEMtrialFunction->setDimType(SY_SCALAR);
-	FEMtrialFunction->SValue = 1.0;
+    FEMtrialFunction->sValue = 1.0;
 	std::string FEMtrialFunction_getName = FEMtrialFunction->getName();
 	md->insertModelEntity(FEMtrialFunction_getName, FEMtrialFunction);
 	assert(md);
 	
 	// Add time t 
-	Parameter* tval = new Parameter;
+    parameter* tval = new parameter;
 	tval->setName("_t");
 	tval->setNType(-3);
 	tval->setType(PARAMETER);
 	tval->setSType("PARAMETER");
 	tval->isTval = true;
 	tval->setDimType(SY_SCALAR);
-	tval->SValue = 1.0;
+    tval->sValue = 1.0;
 	std::string tval_getName = tval->getName();
 	md->insertModelEntity(tval_getName, tval);
 	assert(md);
 
 	// Add spacial x 
-	Parameter* xval = new Parameter;
+    parameter* xval = new parameter;
 	xval->setName("_x");
 	xval->setNType(-3);
 	xval->setType(PARAMETER);
 	xval->setSType("PARAMETER");
 	xval->isFEMxval = true;
 	xval->setDimType(SY_SCALAR);
-	xval->SValue = 1.0;
+    xval->sValue = 1.0;
 	std::string xval_getName = xval->getName();
 	md->insertModelEntity(xval_getName, xval);
 	assert(md);
@@ -924,9 +924,9 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		{
 			//SEMANTIC ERROR::
 			static_cast<ASTNumberNode*>(simulationArgsNode->simAbsTol)->tNumber.getLnAndPos(line, pos);
-			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
-			errptr->AddErrorLine("Absolute tolerance cannot be negative");
-			errptr->AddError();
+            errptr->setError(1003, "SEMANTIC ERROR", line, pos);
+            errptr->addErrorLine("Absolute tolerance cannot be negative");
+            errptr->addError();
 			THROW_INTERPRETER_EX(443, "Interpreter Error")
 			return false;
 		}
@@ -939,9 +939,9 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		{
 			//SEMANTIC ERROR::
 			static_cast<ASTNumberNode*>(simulationArgsNode->simAbsTol)->tNumber.getLnAndPos(line, pos);
-			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
-			errptr->AddErrorLine("Absolute error tolerance cannot be negative");
-			errptr->AddError();
+            errptr->setError(1003, "SEMANTIC ERROR", line, pos);
+            errptr->addErrorLine("Absolute error tolerance cannot be negative");
+            errptr->addError();
 			THROW_INTERPRETER_EX(443, "Interpreter Error")
 			return false;
 		}
@@ -950,9 +950,9 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		{
 			//SEMANTIC ERROR::
 			static_cast<ASTNumberNode*>(simulationArgsNode->simRelTol)->tNumber.getLnAndPos(line, pos);
-			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
-			errptr->AddErrorLine("Relative error tolerance cannot be negative");
-			errptr->AddError();
+            errptr->setError(1003, "SEMANTIC ERROR", line, pos);
+            errptr->addErrorLine("Relative error tolerance cannot be negative");
+            errptr->addError();
 			THROW_INTERPRETER_EX(443, "Interpreter Error")
 			return false;
 		}
@@ -961,9 +961,9 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		{
 			//SEMANTIC ERROR::
 			static_cast<ASTNumberNode*>(simulationArgsNode->simEndt)->tNumber.getLnAndPos(line, pos);
-			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
-			errptr->AddErrorLine("End time must be greater than start time for integration");
-			errptr->AddError();
+            errptr->setError(1003, "SEMANTIC ERROR", line, pos);
+            errptr->addErrorLine("End time must be greater than start time for integration");
+            errptr->addError();
 			THROW_INTERPRETER_EX(443, "Interpreter Error")
 			return false;
 		}
@@ -972,9 +972,9 @@ bool interpreter::setSimulationArgs(ASTNode* node, std::string type, double tSta
 		{
 			//SEMANTIC ERROR::
 			simulationArgsNode->simNumSteps.getLnAndPos(line, pos);
-			errptr->SetError(1003, "SEMANTIC ERROR", line, pos);
-			errptr->AddErrorLine("There must be at least one time step for integration");
-			errptr->AddError();
+            errptr->setError(1003, "SEMANTIC ERROR", line, pos);
+            errptr->addErrorLine("There must be at least one time step for integration");
+            errptr->addError();
 			THROW_INTERPRETER_EX(443, "Interpreter Error")
 			return false;
 		}

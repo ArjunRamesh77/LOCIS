@@ -76,9 +76,9 @@ bool lexer::isExpo(token *tok)
 				else
 				{
 					//LEX_ERROR
-                    lexErr->SetError(1001, "Lexer Error", lineNum, currentPos);
-                    lexErr->AddErrorLine(" Missing exponent ");
-                    lexErr->AddError();
+                    lexErr->setError(1001, "Lexer Error", lineNum, currentPos);
+                    lexErr->addErrorLine(" Missing exponent ");
+                    lexErr->addError();
                     enableGenericError = false;
 				}
 			}
@@ -237,9 +237,9 @@ bool lexer::isMultiLineComment(token *tok)
 				else
 				{
 					//ERROR
-                    lexErr->SetError(1002, "Lexer Error", lineNum, currentPos);
-                    lexErr->AddErrorLine(" Missing * for comment end ");
-                    lexErr->AddError();
+                    lexErr->setError(1002, "Lexer Error", lineNum, currentPos);
+                    lexErr->addErrorLine(" Missing * for comment end ");
+                    lexErr->addError();
                     enableGenericError = false;
                     return false;
 				}
@@ -247,9 +247,9 @@ bool lexer::isMultiLineComment(token *tok)
 			else
 			{
 				//ERROR
-                lexErr->SetError(1003, "Lexer Error", lineNum, currentPos);
-                lexErr->AddErrorLine(" Missing # for comment end ");
-                lexErr->AddError();
+                lexErr->setError(1003, "Lexer Error", lineNum, currentPos);
+                lexErr->addErrorLine(" Missing # for comment end ");
+                lexErr->addError();
                 enableGenericError = false;
                 return false;
 			}
@@ -340,9 +340,9 @@ bool lexer::isReal(token *tok)
 		else
 		{
 			//LEX_ERROR
-            lexErr->SetError(1004, "Lexer Error", lineNum, currentPos);
-            lexErr->AddErrorLine(" Missing decimal point ");
-            lexErr->AddError();
+            lexErr->setError(1004, "Lexer Error", lineNum, currentPos);
+            lexErr->addErrorLine(" Missing decimal point ");
+            lexErr->addError();
             enableGenericError = false;
 		}
 	}
@@ -402,9 +402,9 @@ bool lexer::isString(token *tok)
 		else
 		{
 			//LEX_ERROR
-            lexErr->SetError(1005, "Lexer Error", lineNum, currentPos);
-            lexErr->AddErrorLine(" Missing end quotes ");
-            lexErr->AddError();
+            lexErr->setError(1005, "Lexer Error", lineNum, currentPos);
+            lexErr->addErrorLine(" Missing end quotes ");
+            lexErr->addError();
             enableGenericError = false;
 		}
 	}

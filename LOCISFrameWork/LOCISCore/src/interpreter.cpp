@@ -16,8 +16,8 @@ ASTNode* interpreter::dispatch(ASTmodel_collectionNode* node)
 
 	// Second Pass (create full OOP structure)
 	IS.pass = 2;
-	MasterModel = new Object;
-	MasterModel->SModelObject = new Model;
+    MasterModel = new object;
+    MasterModel->SModelObject = new model;
 	MasterModel->setType(MODEL);
 	MasterModel->setSType("MODEL");
 	MasterModel->setName("Master");
@@ -148,23 +148,23 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_decl_groupNode* node)
 // Process each entity declared
 ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 {
-	ModelEntity* ob = NULL;
-	ModelEntity* ob2 = NULL;
+    modelEntity* ob = NULL;
+    modelEntity* ob2 = NULL;
 	ASTNode* mod = NULL;
-	Model* save = NULL;
+    model* save = NULL;
 
 	// Find type of entity
 	switch (IS.dectype)
 	{
 		// Regular LOCIS objects
 		case IDENT:
-			ob = new Object;
+            ob = new object;
 			mod = SymTab->getModel(IS.modelName);
 			if (!mod)
 			{
 				semanticErr_ModelUndefined(node);
 			}
-			static_cast<Object*>(ob)->setModelName(IS.modelName);
+            static_cast<object*>(ob)->setModelName(IS.modelName);
 			ob->setName(node->sName);
 			ob->setType(MODEL);
 			ob->setSType("MODEL");
@@ -176,7 +176,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 			return node;
 
 		case PARAMETER:
-			ob = new Parameter;
+            ob = new parameter;
 			ob->setName(node->sName);
 			ob->setNType(IS.numtype);
 			ob->setType(PARAMETER);
@@ -186,14 +186,14 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 		case VARIABLE:
 
 			// Regular
-			ob = new Variable;
+            ob = new variable;
 			ob->setNType(IS.numtype);
 			ob->setName(node->sName);
 			ob->setType(VARIABLE);
 			ob->setSType("VARIABLE");
 
 			// Time dependent
-			ob2 = new Variable;
+            ob2 = new variable;
 			ob2->setNType(IS.numtype);
 			ob2->setName("$" + node->sName);
 			ob2->setType(VARIABLE);
@@ -201,12 +201,12 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 			ob2->setIsdt();
 			
 			// Give each others reference to each other
-			ob2->other = ob; 
-			ob->other = ob2; 
+            ob2->setOther(ob);
+            ob->setOther(ob2);
 			break;
 
 		case ITER:
-			ob = new Parameter;
+            ob = new parameter;
 			ob->setName(node->sName);
 			ob->setType(ITER);
 			ob->setSType("ITER");
@@ -214,7 +214,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	}
 
 	// Save the token for the entity
-	ob->tok = &node->tName;
+    ob->setTok(&node->tName);
 	IS.ob_tok = node->tName;
 
 	// Cannot declare dt variables
@@ -264,25 +264,25 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	{	
 		// Vectors of normal entities are built only at first assignment/evaluation
 		ob->setDimType(SY_VECTOR);
-		ob->vset = false;
-		ob->build_node = node;
+        ob->setVectorIsInitialized(false);
+        ob->setBuildNode(node);
 
 		// Has to set dummy values for the array indices for validation during assignment
 		LOOP_OVER_NODES(node, astvnArrayIndices)
 		{
-			ob->Dims.push_back(0);
+            ob->setDummyIndex();
 		}
 
 		// Create dt variable the same way as variable
 		if (ob->geType() == VARIABLE)
 		{
 			ob2->setDimType(SY_VECTOR);
-			ob2->vset = false;
-			ob2->build_node = node;
+            ob2->setVectorIsInitialized(false);
+            ob2->setBuildNode(node);
 
 			LOOP_OVER_NODES(node, astvnArrayIndices)
 			{
-				ob2->Dims.push_back(0);
+                ob2->setDummyIndex();
 			}
 		}
 
@@ -299,9 +299,9 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 		if (IS.dectype == IDENT)
 		{
 			SAVE_INTERPRETER_STATE
-			Object* cob = NULL;
-			cob = static_cast<Object*>(ob);
-			cob->SModelObject = new Model;
+            object* cob = NULL;
+            cob = static_cast<object*>(ob);
+            cob->SModelObject = new model;
 			IS.scp = cob->SModelObject;
 			mod->visit(this);
 			RESET_INTERPRETER_STATE
@@ -314,11 +314,11 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 				eval = NULL;
 				eval = static_cast<ASTdefualtNode*>(node->astnDefault)->astnExpr->visit(this);
 				assert(eval);
-				ob->SValue = eval->value;
+                ob->sValue = eval->value;
 			}
 			else
 			{
-				ob->SValue = SY_DEFAULT_VAL;
+                ob->sValue = SY_DEFAULT_VAL;
 			}
 
 			// Process Options
@@ -400,14 +400,14 @@ ASTNode* interpreter::dispatch(ASTmodel_sectionNode* node)
 ASTNode* interpreter::dispatch(ASTunit_optionNode* node)
 {
 	//Check if Description already given
-	if (IS.ob->bHasUnit)
+    if (IS.ob->getBHasUnit())
 	{
 		semanticErr_optionRedefined("Unit", IS.ob);
 		return NULL;
 	}
 
 	IS.ob->setUnit(node->sValue);
-	IS.ob->bHasUnit = true;
+    IS.ob->setBHasUnit(true);
 
 	return node;
 }
@@ -417,14 +417,14 @@ ASTNode* interpreter::dispatch(ASTunit_optionNode* node)
 ASTNode* interpreter::dispatch(ASTdesc_optionNode* node)
 {
 	//Check if Description already given
-	if (IS.ob->bHasDesc)
+    if (IS.ob->getBHasDesc())
 	{
 		semanticErr_optionRedefined("Description", IS.ob);
 		return NULL;
 	}
 
 	IS.ob->setDesc(node->sValue);
-	IS.ob->bHasDesc = true;
+    IS.ob->setBHasDesc(true);
 
 	return node;
 }
@@ -442,27 +442,27 @@ ASTNode* interpreter::dispatch(ASTbounds_optionNode * node)
 		switch (node->iInequalityOp)
 		{
 		case GTHAN:
-			if (IS.ob->bHasBounds[0]) { semanticErr_optionRedefined(">", IS.ob); return NULL; }
+            if (IS.ob->getBHasBounds(0)) { semanticErr_optionRedefined(">", IS.ob); return NULL; }
 			op = SY_GREATER_THAN;
-			IS.ob->bHasBounds[0] = true;
+            IS.ob->setBHasBounds(0,true);
 			break;
 
 		case LTHAN:
-			if (IS.ob->bHasBounds[1]) { semanticErr_optionRedefined("<", IS.ob); return NULL; }
+            if (IS.ob->getBHasBounds(1)) { semanticErr_optionRedefined("<", IS.ob); return NULL; }
 			op = SY_LESS_THAN;
-			IS.ob->bHasBounds[1] = true;
+            IS.ob->setBHasBounds(1,true);
 			break;
 
 		case GEQUALS:
-			if (IS.ob->bHasBounds[2]) { semanticErr_optionRedefined(">=", IS.ob); return NULL; }
+            if (IS.ob->getBHasBounds(2)) { semanticErr_optionRedefined(">=", IS.ob); return NULL; }
 			op = SY_GREATER_THAN_OR_EQUAL;
-			IS.ob->bHasBounds[2] = true;
+            IS.ob->setBHasBounds(2,true);
 			break;
 
 		case LEQUALS:
-			if (IS.ob->bHasBounds[3]) { semanticErr_optionRedefined("<=", IS.ob); return NULL; }
+            if (IS.ob->getBHasBounds(3)) { semanticErr_optionRedefined("<=", IS.ob); return NULL; }
 			op = SY_LESS_THAN_OR_EQUAL;
-			IS.ob->bHasBounds[3] = true;
+            IS.ob->setBHasBounds(3,true);
 			break;
 		}
 
@@ -471,9 +471,9 @@ ASTNode* interpreter::dispatch(ASTbounds_optionNode * node)
 		bval = node->astnExpr->visit(this);
 		assert(bval);
 
-		Variable* var = NULL;
+        variable* var = NULL;
 		assert(IS.ob);
-		var	= static_cast<Variable*>(IS.ob);
+        var	= static_cast<variable*>(IS.ob);
 
 		//Check if scalar or vector
 		if (IS.ob->getDimType() == SY_SCALAR)
@@ -706,13 +706,13 @@ ASTNode* interpreter::dispatch(ASTif_statmentNode* node)
 // performs the for loop
 ASTNode* interpreter::dispatch(ASTfor_loopNode* node)
 {
-	ModelEntity* iter = NULL;
+    modelEntity* iter = NULL;
 	iter = SEARCH_IN_MODEL(NULL, node->sName);
 
 	if (iter)
 	{
 		//iter has to be an iter type variable
-		if (iter->Type != ITER)
+        if (iter->geType() != ITER)
 		{
 			semanticErr_OnlyIterAllowedInFor(node);
 		}
@@ -738,7 +738,7 @@ ASTNode* interpreter::dispatch(ASTfor_loopNode* node)
 
 		// See if increment present
 		start_val = (int)start->value;
-		iter->SValue = start_val;
+        iter->sValue = start_val;
 		till_val = (int)till->value;
 		if (incr)
 		{
@@ -747,7 +747,7 @@ ASTNode* interpreter::dispatch(ASTfor_loopNode* node)
 			{
 				if (start_val <= till_val)
 				{
-					for (int i = start_val; i <= till_val; i = i + incr_val, iter->SValue = iter->SValue + incr_val)
+                    for (int i = start_val; i <= till_val; i = i + incr_val, iter->sValue = iter->sValue + incr_val)
 					{
 						VISIT_ALL_NODES(node, astvnfors)
 					}
@@ -761,7 +761,7 @@ ASTNode* interpreter::dispatch(ASTfor_loopNode* node)
 			{
 				if (start_val >= till_val)
 				{
-					for (int i = start_val; i >= till_val; i = i - incr_val, iter->SValue = iter->SValue - incr_val)
+                    for (int i = start_val; i >= till_val; i = i - incr_val, iter->sValue = iter->sValue - incr_val)
 					{
 						VISIT_ALL_NODES(node, astvnfors)
 					}
@@ -777,14 +777,14 @@ ASTNode* interpreter::dispatch(ASTfor_loopNode* node)
 			//For no increment case
 			if (start_val <= till_val)
 			{
-				for (int i = start_val; i <= till_val; ++i, ++iter->SValue)
+                for (int i = start_val; i <= till_val; ++i, ++iter->sValue)
 				{
 					VISIT_ALL_NODES(node, astvnfors)
 				}
 			}
 			else
 			{
-				for (int i = start_val; i >= till_val; --i, --iter->SValue)
+                for (int i = start_val; i >= till_val; --i, --iter->sValue)
 				{
 					VISIT_ALL_NODES(node, astvnfors)
 				}
@@ -828,7 +828,7 @@ ASTNode* interpreter::dispatch(ASTFEMoneDEquation* node)
 	evaluate(static_cast<ASTQualifiedNamedReferenceNode*>(node->astnDomain));
 
 	// Fix Neumann nodes as required
-	ModelEntity* dom = NULL;
+    modelEntity* dom = NULL;
 	if (node->astnDomain->me)
 	{
 		if (node->astnDomain->me->isFEMOneDVariable)
@@ -854,13 +854,13 @@ ASTNode* interpreter::dispatch(ASTFEMoneDEquation* node)
 	FEMOneDModelDomainData* dom1 = static_cast<FEMOneDModelDomainData*>(dom);
 	if (node->iLeftBoundaryType == VALUE)
 	{
-		static_cast<Variable*>(node->astnDomain->me)->VFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
-		static_cast<Variable*>(node->astnDomain->me->other)->VFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me)->VFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me->getOther())->VFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
 	}
 	if (node->iRightBoundaryType == VALUE)
 	{
-		static_cast<Variable*>(node->astnDomain->me)->VFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
-		static_cast<Variable*>(node->astnDomain->me->other)->VFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me)->VFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me->getOther())->VFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
 	}
 	
 	// Evaluate the equation

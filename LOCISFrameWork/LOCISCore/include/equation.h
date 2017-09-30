@@ -55,7 +55,7 @@ class equation : public NodeVisitor
 	std::vector<EquationUnit>* Equations;
 	std::vector<EquationUnit>* InitEquations;
 	interpreter *Ip;
-	Model* MasterModel;
+	model* MasterModel;
 
 	//Variable Occurence counter
 	std::map<int, int> occurV, occurdV;
@@ -132,11 +132,11 @@ public:
 	ASTNode* VISIT_NODE(ASTNode* node);
 	void setEquationModeForInterpreter(bool state);
 	void setEquations(std::vector<EquationUnit>* Equations, std::vector<EquationUnit>* InitEquations);
-	int getEquationsRecursive(Model* mod);
+	int getEquationsRecursive(model* mod);
 	bool evaluate(ASTQualifiedNamedReferenceNode* qRefName);
 	bool evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNamedReferenceNode* qRefName, std::vector<ASTNode*>::const_iterator it);
-	std::string getSubstitutedEntityNameScalar(ModelEntity* me);
-	std::string getSubstitutedEntityNameVector(ModelEntity* me, int &index);
+	std::string getSubstitutedEntityNameScalar(modelEntity* me);
+	std::string getSubstitutedEntityNameVector(modelEntity* me, int &index);
 	stateVars* MapToStateVector();
 	bool MapFromStateVector(stateVars* pV);
 	bool getNewEquationsFromState(stateVars* Pv = NULL);

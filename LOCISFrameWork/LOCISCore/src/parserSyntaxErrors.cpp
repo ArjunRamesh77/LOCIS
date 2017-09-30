@@ -8,14 +8,14 @@ void parser::syntaxErrorExpectedType(int expected)
 	if (state.error == false)
 		return;
 
-	token *tok;
+    token *tok(NULL);
 	// Use only valid token for error reporting
 	tok = &errTok;
 
-	int line_num;
-	int pos;
-	std::string sline_num;
-	std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
 	sline_num = std::to_string(line_num);
 	spos = std::to_string(pos);
@@ -37,9 +37,9 @@ void parser::syntaxErrorExpectedType(int expected)
 	}
 
 	// Put error
-	parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Expected to find " + expected_str + ", but found \"" + found_str);
-	parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Expected to find " + expected_str + ", but found \"" + found_str);
+    parseErr->addError();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,14 +49,14 @@ void parser::syntaxErrorExpectedAnyofType(std::vector<int> &expected)
 	if (state.error == false)
 		return;
 
-	token *tok;
+    token *tok(NULL);
 	// Use only valid token for error reporting
 	tok = &errTok;
 
-	int line_num;
-	int pos;
-	std::string sline_num;
-	std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
 	sline_num = std::to_string(line_num);
 	spos = std::to_string(pos);
@@ -95,9 +95,9 @@ void parser::syntaxErrorExpectedAnyofType(std::vector<int> &expected)
 	}
 
 	// Put error
-	parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Expected to find " + full_expected_str + " but found \"" + found_str);
-	parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Expected to find " + full_expected_str + " but found \"" + found_str);
+    parseErr->addError();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,14 +107,14 @@ void parser::syntaxErrorExpectedString(std::string expected_str)
     if (state.error == false)
         return;
 
-    token *tok;
+    token *tok(NULL);
     // Use only valid token for error reporting
     tok = &errTok;
 
-    int line_num;
-    int pos;
-    std::string sline_num;
-    std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
     sline_num = std::to_string(line_num);
     spos = std::to_string(pos);
@@ -129,9 +129,9 @@ void parser::syntaxErrorExpectedString(std::string expected_str)
     }
 
     // Put error
-    parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Expected to find " + expected_str + ", but found \"" + found_str);
-    parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Expected to find " + expected_str + ", but found \"" + found_str);
+    parseErr->addError();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,14 +141,14 @@ void parser::syntaxErrorExpectedAnyofString(std::vector<std::string> &expected)
 	if (state.error == false)
 		return;
 
-	token *tok;
+    token *tok(NULL);
 	// Use only valid token for error reporting
 	tok = &errTok;
 
-	int line_num;
-	int pos;
-	std::string sline_num;
-	std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
 	sline_num = std::to_string(line_num);
 	spos = std::to_string(pos);
@@ -179,9 +179,9 @@ void parser::syntaxErrorExpectedAnyofString(std::vector<std::string> &expected)
 	}
 
 	// Put error
-	parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Expected to find " + full_expected_str + ", but found \"" + found_str);
-	parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Expected to find " + full_expected_str + ", but found \"" + found_str);
+    parseErr->addError();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,22 +191,22 @@ void parser::syntaxErrorUnexpected()
 	if (state.error == false)
 		return;
 
-	token *tok;
+    token *tok(NULL);
 	// Use only valid token for error reporting
 	tok = &errTok;
 
-	int line_num;
-	int pos;
-	std::string sline_num;
-	std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
 	sline_num = std::to_string(line_num);
 	spos = std::to_string(pos);
 
 	// Put error
-	parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Unexpected token \"" + tok->getValue());
-	parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Unexpected token \"" + tok->getValue());
+    parseErr->addError();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,14 +216,14 @@ void parser::syntaxErrorMissing(int expected)
 	if (state.error == false)
 		return;
 
-	token *tok;
+    token *tok(NULL);
 	// Use only valid token for error reporting
 	tok = &errTok;
 
-	int line_num;
-	int pos;
-	std::string sline_num;
-	std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
 	sline_num = std::to_string(line_num);
 	spos = std::to_string(pos);
@@ -233,9 +233,9 @@ void parser::syntaxErrorMissing(int expected)
     getActualTokenType(expected, expected_str);
 
 	// Put error
-	parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Missing token \"" + expected_str);
-	parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Missing token \"" + expected_str);
+    parseErr->addError();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,21 +245,21 @@ void parser::syntaxErrorUnexpectedEof()
 	if (state.error == false)
 		return;
 
-	token *tok;
+    token *tok(NULL);
 	// Use only valid token for error reporting
 	tok = &errTok;
 
-	int line_num;
-	int pos;
-	std::string sline_num;
-	std::string spos;
+    int line_num(0);
+    int pos(0);
+    std::string sline_num("");
+    std::string spos("");
     tok->getLnAndPos(line_num, pos);
 	sline_num = std::to_string(line_num);
 	spos = std::to_string(pos);
 
 	// Put error
-	parseErr->SetError(-1001, SYNTAX_ERROR, line_num, pos);
-    parseErr->AddErrorLine("Unexpected End of File encountered ");
-    parseErr->AddError();
+    parseErr->setError(-1001, SYNTAX_ERROR, line_num, pos);
+    parseErr->addErrorLine("Unexpected End of File encountered ");
+    parseErr->addError();
 }
 

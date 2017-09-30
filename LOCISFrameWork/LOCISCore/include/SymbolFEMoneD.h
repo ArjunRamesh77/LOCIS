@@ -20,7 +20,7 @@ struct variableAndDomain
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // domain is a special type of ModelEntity so that it can be saved with the variables
-class FEMOneDModelDomainData : public ModelEntity
+class FEMOneDModelDomainData : public modelEntity
 {
 public:
 	bool mark;
@@ -61,7 +61,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // defines the Model that defines a line
-class FEMOneDLineObject : public Object
+class FEMOneDLineObject : public object
 {
 public:
 

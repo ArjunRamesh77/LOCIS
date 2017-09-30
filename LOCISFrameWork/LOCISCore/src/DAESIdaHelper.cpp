@@ -20,14 +20,14 @@ void DAESIdaERRORFUN(int error_code, const char *module,
 
 	std::string errLine, smodule(module), sfunction(function), smsg(msg);
 	
-	data->errVector->SetError(5001, "IDA Failed", 0, 0);
+	data->errVector->setError(5001, "IDA Failed", 0, 0);
 	errLine = "MODULE: " + smodule;
-	data->errVector->AddErrorLine(errLine);
+	data->errVector->addErrorLine(errLine);
 	errLine = " FUNCTION: " + sfunction;
-	data->errVector->AddErrorLine(errLine);
+	data->errVector->addErrorLine(errLine);
 	errLine = " MESSAGE: " + smsg;
-	data->errVector->AddErrorLine(errLine);
-	data->errVector->AddError();
+	data->errVector->addErrorLine(errLine);
+	data->errVector->addError();
 
 //	data->outPutErrorHandler(ierror, cstr);
 	return;

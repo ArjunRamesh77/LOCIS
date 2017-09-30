@@ -94,7 +94,7 @@ struct intState
 	bool pass_err;
 
 	// Representative model scope
-	Model* scp;
+    model* scp;
 
 	//for declaration only
 	std::string modelName;
@@ -103,7 +103,7 @@ struct intState
 	ASTNode* node;
 
 	//for setting options
-	ModelEntity* ob;
+    modelEntity* ob;
 
 	//Section signaling
 	int section_type;
@@ -275,7 +275,7 @@ public:
 	std::vector<ParameterData> AllPars;
 	modelCollection* SymTab;
 	ASTNode* AST;
-	Object* MasterModel;
+    object* MasterModel;
 	intState IS;
 	bool bInEquation;
 	NodeVisitor* Eq;
@@ -357,14 +357,14 @@ public:
 	//Helper functions
 	bool evaluate(ASTQualifiedNamedReferenceNode* qRefName);
 	bool assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, int &op);
-	bool initVector(ModelEntity* en);
-	bool initAllVector(ModelEntity* en);
+    bool initVector(modelEntity* en);
+    bool initAllVector(modelEntity* en);
 	char optochar(int & op);
-	void getAllVars(Model* MainObj, std::string Name_arg);
-	bool InitAll(Model* MainObj);
-	Model* getMasterModel();
+    void getAllVars(model* MainObj, std::string Name_arg);
+    bool InitAll(model* MainObj);
+    model* getMasterModel();
 	std::vector<VariableData>* getAllVarNames();
-	bool addExtraSymbols(Model* md);
+    bool addExtraSymbols(model* md);
 	bool setSimulationArgs(ASTNode* node, std::string type, double tStart, double tEnd, int numSteps, double absTol, double relTol);
 	ASTNode* VISIT_NODE(ASTNode* node);
 	void checkSectionConsistency(ASTNode* node);
@@ -374,7 +374,7 @@ public:
 	bool evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNamedReferenceNode* qRefName, std::vector<ASTNode*>::const_iterator it);
 	bool assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNamedReferenceNode* qRefName, std::vector<ASTNode*>::const_iterator it_in,
 		double &val, int &op);
-	bool createFEMoneDline(Object* qRefName);
+    bool createFEMoneDline(object* qRefName);
 	ASTNode* generateOptimizedFEMoneDTree();
 
 	// Semantic Errors
@@ -433,7 +433,7 @@ public:
 	void semanticErr_DirectVarWithoutDomain(ASTNode* node);
 	void semanticErr_OnlyGuessForFEMVars(ASTNode* node);
 	void semanticErr_CalculatingBoundaryValues(token tok);
-	void semanticErr_optionRedefined(const std::string, ModelEntity* me);
+    void semanticErr_optionRedefined(const std::string, modelEntity* me);
 };
 
 #endif // LOCIS_INTERPRETER_H
