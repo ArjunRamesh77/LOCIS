@@ -43,118 +43,174 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define all class types so that can be used in any order
 class modelCollection;
-class ModelEntity;
-class Parameter;
-class Variable;
-class Object;
-class Model;
+class modelEntity;
+class parameter;
+class variable;
+class object;
+class model;
 class interpreter;
 class ASTNode;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FEM oneD context
+class modelEntityFEMoneDContext
+{
+    //FEM one D flags
+    bool isFEMoneDDomain;
+    bool isFEMOneDLine;
+    bool isFEMOneDVariable;
+    bool isFEMOneDdVariable;
+    bool isFEMtrialFunction;
+    bool isTval;
+    bool isFEMxval;
+    modelEntity* currentDomain;
+
+public:
+    modelEntityFEMoneDContext();
+
+    // Set
+    void setIsFEMoneDDomain(bool value);
+    void setIsFEMOneDLine(bool value);
+    void setIsFEMOneDVariable(bool value);
+    void setIsFEMOneDdVariable(bool value);
+    void setIsFEMtrialFunction(bool value);
+    void setIsTval(bool value);
+    void setIsFEMxval(bool value);
+    void setCurrentDomain(modelEntity* currentDomain_arg);
+
+    bool getIsFEMoneDDomain();
+    bool getIsFEMOneDLine();
+    bool getIsFEMOneDVariable();
+    bool getIsFEMOneDdVariable();
+    bool getIsFEMtrialFunction();
+    bool getIsTval();
+    bool getIsFEMxval();
+    modelEntity* getCurrentDomain();
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abstract class types for a basic entity in a simulation
-class ModelEntity
+class modelEntity
 {
 public:
 
+    // Thesee flags are to be removed
+    bool isFEMoneDDomain;
+    bool isFEMOneDLine;
+    bool isFEMOneDVariable;
+    bool isFEMOneDdVariable;
+    bool isFEMtrialFunction;
+    bool isTval;
+    bool isFEMxval;
+    modelEntity* currentDomain;
+
+    // Values (these should be the only public members
+    double sValue;
+    double *vValue;
+
+    //Numbering for Variables
+    int nSValue;
+    int *nVValue;
+
+protected:
 	//Option flags
 	bool bHasDesc;
 	bool bHasUnit;
 	bool bHasBounds[4];
 
-	//FEM one D flags
-	bool isFEMoneDDomain;
-	bool isFEMOneDLine;
-	bool isFEMOneDVariable;
-	bool isFEMOneDdVariable;
-	bool isFEMtrialFunction;
-	bool isTval;
-	bool isFEMxval;
-	ModelEntity* currentDomain;
+    //FEM one D flags
+    modelEntityFEMoneDContext meFEMContext;
 
 	// Primitives
-	ModelEntity* other;
-	ModelEntity* nt;
-	int iter;
+    modelEntity* other;
 	bool isdt;
-	double SValue;
-	double *Vvalue;
 
-	//Numbering for Variables
-	int nSValue;
-	int *nVvalue;
+    //Lazy evaluation for vector initialization
+    bool vectorIsInitialized;
+    ASTNode* buildNode;
 
-	//Late binding support for vectors
-	bool vset;
-	ASTNode* build_node;
-
-	// Generic
+    // Info
 	token* tok;       //Stores the token for the Symbol
-	std::string Name;
-	std::string Desc;
-	std::string Unit;
-	std::string SType;
-	int Type;
-	int NumType;
+    std::string name;
+    std::string desc;
+    std::string unit;
+
+    int type;
+    std::string sType;
+    int nType;
 
 	// Dimensions
-	int DimType;
-	std::vector<int> Dims;
-	std::vector<int> DimsC;
-	long int Maxdim;
+    int dimType;
+    std::vector<int> dims;
+    std::vector<int> dimsC;
+    long int maxdim;
 
 public:
-	ModelEntity();
-	~ModelEntity();
+    modelEntity();
+    virtual ~modelEntity();
 
-	// Set
-	void setName(const std::string &name);
-	void setDesc(const std::string &name);
-	void setUnit(const std::string &name);
-	void setDimType(const int DimType);
-	void setType(const int Type);
-	void setSType(const std::string &Type);
-	void setNType(const int type);
-	void setIsdt();
+    void setBHasDesc(bool value);
+    void setBHasUnit(bool value);
+    void setBHasBounds(int index, bool value);
+    void setOther(modelEntity *value);
+    void setVectorIsInitialized(bool value);
+    void setBuildNode(ASTNode *value);
+    void setTok(token *value);
+    void setIsdt();
+    void setName(const std::string name_arg);
+    void setDesc(const std::string desc_arg);
+    void setUnit(const std::string unit_arg);
+    void setType(const int type_arg);
+    void setSType(const std::string sType_arg);
+    void setNType(const int nType_arg);
+    void setDimType(const int dimType_arg);
 	int setDims(const int dimval);
 
 	// Get
-	std::string getName() const;
-	std::string getSType() const;
-	std::string getDesc() const;
-	std::string getUnit() const;
-	bool checkIsdt();
-	int getDimType() const;
-	int geType() const;
-	int getNumDims() const;
-	int getMaxDims() const;
-	std::string getGetMultiDimsFromSingle(int &index) const;
-	std::vector<int>* getDimAt();
-	ModelEntity* ReturnObject();
-
+    bool getBHasDesc() const;
+    bool getBHasUnit() const;
+    bool getBHasBounds(int index);
+    modelEntity *getOther() const;
+    bool getVectorIsInitialized() const;
+    ASTNode *getBuildNode() const;
+    token *getTok() const;
+    bool checkIsdt();
+    std::string getName();
+    std::string getDesc();
+    std::string getUnit();
+    int geType();
+    std::string getSType();
+    int getNType();
+    int getDimType();
+    int getNumDims();
+    int getMaxDims();
+    void clearDims();
+    std::string getGetMultiDimsFromSingle(int &index);
+    int getDimsAt(int index);
+    int getDimsCAt(int index) const;
+    void setDummyIndex();
+    modelEntity* ReturnObject();
 	int setAllto(const double &val);
 
 	// Virtual
-	virtual int allocateArray(const double &val);
-	virtual void Reset();
+    virtual int allocateArray(const double &val);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter Class
-class Parameter : public ModelEntity
+class parameter : public modelEntity
 {
 public:
-	Parameter();
-	~Parameter();
+    parameter();
+    ~parameter();
 
 	//Set
 	int allocateArray(const double &val);
-	void Reset();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Variable Class 
-class Variable : public ModelEntity
+class variable : public modelEntity
 {
 public:
 
@@ -173,12 +229,11 @@ public:
 	char SFixValueToggle;
 	
 public:
-	Variable();
-	~Variable();
+    variable();
+    ~variable();
 
 	//Vector operations
 	int allocateArray(const double &val);
-	void Reset();
 
 	//Setting allto
 	int setAlltoB(const int &type, const char ctype, const double &dtype);
@@ -187,43 +242,42 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Object 
-class Object : public ModelEntity
+class object : public modelEntity
 {
 public:
 
 	std::string sModelName;
-	Model* SModelObject;
-	Model* VModelObject;
+    model* SModelObject;
+    model* VModelObject;
 
 public:
-	Object();
-	~Object();
+    object();
+    ~object();
 
 	void setModelName(std::string name);
 	std::string getModelName();
-	int setScalarObject(const Model* mod);
-	int allocateArray();
-	void Reset();
+    int setScalarObject(const model* mod);
+    int allocateArray();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model (Class stores the prototype of a model)
-class Model 
+class model
 {
 
-	std::unordered_map<std::string, ModelEntity*> ModelEntities;
+    std::unordered_map<std::string, modelEntity*> ModelEntities;
 	std::vector<ASTNode*> EquationNodes;
 	std::vector<ASTNode*> InitNodes;
 
 public:
-	Model();
-	~Model();
+    model();
+    ~model();
 
-	std::unordered_map<std::string, ModelEntity*>* getModelEntities();
+    std::unordered_map<std::string, modelEntity*>* getModelEntities();
 	std::vector<ASTNode*>* getAllEquationNodes();
 	std::vector<ASTNode *>* getAllInitEquationNodes();
-	bool insertModelEntity(std::string &symbolName, ModelEntity* me);
-	ModelEntity* getModelEntity(Model* first, std::string &symbolName);
+    bool insertModelEntity(std::string &symbolName, modelEntity* me);
+    modelEntity* getModelEntity(model* first, std::string &symbolName);
 	void insertEquationNode(ASTNode* EqNode);
 	void insertInitNode(ASTNode* node);
 };

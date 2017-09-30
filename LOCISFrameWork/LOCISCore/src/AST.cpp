@@ -28,8 +28,8 @@ ASTNode* ASTmodel_entity_decl_groupNode::CreateNode(ASTNode* astnModelEntityType
     astnNumtype = astnNumtype_arg;
     astnModelEntities = astnModelEntities_arg;
 
-    ASTgeneric_tokenNode* g_astnModelEntityType = (ASTgeneric_tokenNode*)astnModelEntityType_arg;
-	iDeclType = g_astnModelEntityType->get_iTokenType();
+    ASTgeneric_tokenNode* g_astnModelEntityType = (ASTgeneric_tokenNode*)astnModelEntityType;
+    iDeclType = g_astnModelEntityType->get_iTokenType();
 
 	if (iDeclType == IDENT)
 	{
@@ -39,9 +39,9 @@ ASTNode* ASTmodel_entity_decl_groupNode::CreateNode(ASTNode* astnModelEntityType
 	else if (iDeclType == VARIABLE || iDeclType == PARAMETER)
 	{
 		// Default is Real
-        if (astnNumtype_arg)
+        if (astnNumtype)
 		{
-            g_astnModelEntityType = (ASTgeneric_tokenNode*)astnNumtype_arg;
+            g_astnModelEntityType = (ASTgeneric_tokenNode*)astnNumtype;
 			iNumType = g_astnModelEntityType->get_iTokenType();
 			tEntityNumberType = g_astnModelEntityType->tok;
 		}
@@ -51,18 +51,18 @@ ASTNode* ASTmodel_entity_decl_groupNode::CreateNode(ASTNode* astnModelEntityType
 		}
 	}
 
-    astvnModelEntities = dynamic_cast<ASTmodel_entities_collectionNode*>(astnModelEntities_arg)->astvnModelEntities;
+    astvnModelEntities = dynamic_cast<ASTmodel_entities_collectionNode*>(astnModelEntities)->astvnModelEntities;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // model entity
-ASTNode* ASTmodel_entity_declNode::CreateNode(ASTNode* astnTypeName, ASTNode* astnOptions, ASTNode* astnDefault)
+ASTNode* ASTmodel_entity_declNode::CreateNode(ASTNode* astnTypeName_arg, ASTNode* astnOptions_arg, ASTNode* astnDefault_arg)
 {
-	this->astnTypeName = astnTypeName;
-	this->astnOptions = astnOptions;
-	this->astnDefault = astnDefault;
+    astnTypeName = astnTypeName_arg;
+    astnOptions = astnOptions_arg;
+    astnDefault = astnDefault_arg;
 
 	if (this->astnOptions)
 		bHasOptions = true;
@@ -70,57 +70,54 @@ ASTNode* ASTmodel_entity_declNode::CreateNode(ASTNode* astnTypeName, ASTNode* as
 	if (this->astnDefault)
 		bHasDefault = true;
 
-	ASTNamedReferenceNode* g_astnTypeName = (ASTNamedReferenceNode*)astnTypeName;
+    ASTNamedReferenceNode* g_astnTypeName = (ASTNamedReferenceNode*)astnTypeName;
 	tName = g_astnTypeName->tName;
 	sName = g_astnTypeName->get_sName();
 	bIsArray = g_astnTypeName->get_IsArray();
 	bIsdt = g_astnTypeName->bIsdt;
 
 	if(bHasOptions)
-		astvnOptions = dynamic_cast<ASToptions_groupNode*>(astnOptions)->astvnOptions;
+        astvnOptions = dynamic_cast<ASToptions_groupNode*>(astnOptions)->astvnOptions;
 
-
-	astvnArrayIndices = dynamic_cast<ASTNamedReferenceNode*>(astnTypeName)->astvnArrayIndices;
+    astvnArrayIndices = dynamic_cast<ASTNamedReferenceNode*>(astnTypeName)->astvnArrayIndices;
 
 	return this;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // model entities
-
-ASTNode* ASTmodel_entities_collectionNode::CreateNode(std::vector<ASTNode*> astvnModelEntities)
+ASTNode* ASTmodel_entities_collectionNode::CreateNode(std::vector<ASTNode*> astvnModelEntities_arg)
 {
-	this->astvnModelEntities = astvnModelEntities;
-
+    astvnModelEntities = astvnModelEntities_arg;
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // model section
-ASTNode* ASTmodel_sectionNode::CreateNode(ASTNode* astnSectionType, ASTNode* astnOptions, ASTNode* astnSectionStatements)
+ASTNode* ASTmodel_sectionNode::CreateNode(ASTNode* astnSectionType_arg, ASTNode* astnOptions_arg, ASTNode* astnSectionStatements_arg)
 {
-	this->astnSectionType = astnSectionType;
-	this->astnOptions = astnOptions;
-	this->astnSectionStatements = astnSectionStatements;
+    astnSectionType = astnSectionType_arg;
+    astnOptions = astnOptions_arg;
+    astnSectionStatements = astnSectionStatements_arg;
 
 	if (this->astnOptions == NULL)
 		bHasOptions = NULL;
 
-	ASTgeneric_tokenNode* g_astnSectionType = (ASTgeneric_tokenNode*)astnSectionType;
+    ASTgeneric_tokenNode* g_astnSectionType = (ASTgeneric_tokenNode*)astnSectionType;
 	sName = g_astnSectionType->get_sTokenValue();
 	tSectionName = g_astnSectionType->tok;
 
-	astvnSectionStatements = dynamic_cast<ASTstatement_blockNode*>(astnSectionStatements)->astvnStatements;
+    astvnSectionStatements = dynamic_cast<ASTstatement_blockNode*>(astnSectionStatements)->astvnStatements;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // generic token only node
-ASTNode* ASTgeneric_tokenNode::CreateNode(token *tok)
+ASTNode* ASTgeneric_tokenNode::CreateNode(token *tok_arg)
 {
-	this->tok = *tok;
-    iTokenType = tok->getType();
-    sTokenValue = tok->getValue();
+    tok = *tok_arg;
+    iTokenType = tok.getType();
+    sTokenValue = tok.getValue();
 
 	return this;
 }
@@ -137,40 +134,39 @@ std::string ASTgeneric_tokenNode::get_sTokenValue()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // options group
-ASTNode* ASToptions_groupNode::CreateNode(std::vector<ASTNode*> &astnOptions)
+ASTNode* ASToptions_groupNode::CreateNode(std::vector<ASTNode*> &astnOptions_arg)
 {
-	this->astvnOptions = astnOptions;
+    astvnOptions = astnOptions_arg;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // option unit
-ASTNode* ASTunit_optionNode::CreateNode(token* tUnitValue)
+ASTNode* ASTunit_optionNode::CreateNode(token* tUnitValue_arg)
 {
-	this->tUnitVal = *tUnitValue;
-    sValue = tUnitValue->getValue();
+    tUnitVal = *tUnitValue_arg;
+    sValue = tUnitVal.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // option desc
-ASTNode* ASTdesc_optionNode::CreateNode(token* tDescValue)
+ASTNode* ASTdesc_optionNode::CreateNode(token* tDescValue_arg)
 {
-	this->tDescValue = *tDescValue;
-
-    sValue = tDescValue->getValue();
+    tDescValue = *tDescValue_arg;
+    sValue = tDescValue.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // option type
-ASTNode* ASTtype_optionNode::CreateNode(ASTNode* astnType)
+ASTNode* ASTtype_optionNode::CreateNode(ASTNode* astnType_arg)
 {
-	this->astnType = astnType;
-	ASTgeneric_tokenNode* g_astnType = (ASTgeneric_tokenNode*)astnType;
+    astnType = astnType_arg;
+    ASTgeneric_tokenNode* g_astnType = (ASTgeneric_tokenNode*)astnType;
 
 	iNumType = g_astnType->get_iTokenType();
 	sNumType = g_astnType->get_sTokenValue();
@@ -180,12 +176,12 @@ ASTNode* ASTtype_optionNode::CreateNode(ASTNode* astnType)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // option bounds
-ASTNode* ASTbounds_optionNode::CreateNode(ASTNode* astnInequality, ASTNode* astnExpr)
+ASTNode* ASTbounds_optionNode::CreateNode(ASTNode* astnInequality_arg, ASTNode* astnExpr_arg)
 {
-	this->astnInequality = astnInequality;
-	this->astnExpr = astnExpr;
+    astnInequality = astnInequality_arg;
+    astnExpr = astnExpr_arg;
 
-	ASTgeneric_tokenNode* g_astnInequality = (ASTgeneric_tokenNode*)astnInequality;
+    ASTgeneric_tokenNode* g_astnInequality = (ASTgeneric_tokenNode*)astnInequality;
 	iInequalityOp = g_astnInequality->get_iTokenType();
 	sInequalityOp = g_astnInequality->get_sTokenValue();
 	tInequalityOp = g_astnInequality->tok;
@@ -195,26 +191,26 @@ ASTNode* ASTbounds_optionNode::CreateNode(ASTNode* astnInequality, ASTNode* astn
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // default value
-ASTNode* ASTdefualtNode::CreateNode(token *tEqualityOp, ASTNode* astnExpr)
+ASTNode* ASTdefualtNode::CreateNode(token *tEqualityOp_arg, ASTNode* astnExpr_arg)
 {
-	this->tEqualityOp = *tEqualityOp;
-	this->astnExpr = astnExpr;
+    tEqualityOp = *tEqualityOp_arg;
+    astnExpr = astnExpr_arg;
 
-    iEqualityOp = tEqualityOp->getType();
-    sEqualityOp = tEqualityOp->getValue();
+    iEqualityOp = tEqualityOp.getType();
+    sEqualityOp = tEqualityOp.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // default value
-ASTNode* ASTequationNode::CreateNode(ASTNode* astnLHS, ASTNode* astnEquationTypeOp, ASTNode* astnRHS)
+ASTNode* ASTequationNode::CreateNode(ASTNode* astnLHS_arg, ASTNode* astnEquationTypeOp_arg, ASTNode* astnRHS_arg)
 {
-	this->astnLHS = astnLHS;
-	this->astnEquationTypeOp = astnEquationTypeOp;
-	this->astnRHS = astnRHS;
+    astnLHS = astnLHS_arg;
+    astnEquationTypeOp = astnEquationTypeOp_arg;
+    astnRHS = astnRHS_arg;
 
-	ASTgeneric_tokenNode* g_astnEquationTypeOp = (ASTgeneric_tokenNode*)astnEquationTypeOp;
+    ASTgeneric_tokenNode* g_astnEquationTypeOp = (ASTgeneric_tokenNode*)astnEquationTypeOp;
 	iEquationTypeOp = g_astnEquationTypeOp->get_iTokenType();
 	sEquationTypeOp = g_astnEquationTypeOp->get_sTokenValue();
 	tEquationTypeOp = g_astnEquationTypeOp->tok;
@@ -224,38 +220,38 @@ ASTNode* ASTequationNode::CreateNode(ASTNode* astnLHS, ASTNode* astnEquationType
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Math Binary op
-ASTNode* ASTMathBinaryOpNode::CreateNode(ASTNode* astnLeft, token *tBinaryOp, ASTNode* astnRight)
+ASTNode* ASTMathBinaryOpNode::CreateNode(ASTNode* astnLeft_arg, token *tBinaryOp_arg, ASTNode* astnRight_arg)
 {
-	this->tBinaryOp = *tBinaryOp;
-	this->astnLeft = astnLeft;
-	this->astnRight = astnRight;
+    tBinaryOp = *tBinaryOp_arg;
+    astnLeft = astnLeft_arg;
+    astnRight = astnRight_arg;
 
-    iBinaryOp = tBinaryOp->getType();
-    sBinaryOp = tBinaryOp->getValue();
+    iBinaryOp = tBinaryOp.getType();
+    sBinaryOp = tBinaryOp.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Math Unary op
-ASTNode* ASTMathUnaryNode::CreateNode(token *tUnaryOp, ASTNode* astnRight)
+ASTNode* ASTMathUnaryNode::CreateNode(token *tUnaryOp_arg, ASTNode* astnRight_arg)
 {
-	this->tUnaryOp = *tUnaryOp;
-	this->astnRight = astnRight;
+    tUnaryOp = *tUnaryOp_arg;
+    astnRight = astnRight_arg;
 
-    iUnaryOp = tUnaryOp->getType();
-    sUnaryOp = tUnaryOp->getValue();
+    iUnaryOp = tUnaryOp.getType();
+    sUnaryOp = tUnaryOp.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Number
-ASTNode* ASTNumberNode::CreateNode(token *tNumber)
+ASTNode* ASTNumberNode::CreateNode(token *tNumber_arg)
 {
-	this->tNumber = *tNumber;
-    iNumber = tNumber->getType();
-    sNumber = tNumber->getValue();
+    tNumber = *tNumber_arg;
+    iNumber = tNumber.getType();
+    sNumber = tNumber.getValue();
 	value = std::stod(sNumber);
 	equation_data = sNumber;
 	return this;
@@ -263,31 +259,31 @@ ASTNode* ASTNumberNode::CreateNode(token *tNumber)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Named Reference
-ASTNode* ASTNamedReferenceNode::CreateNode(token *tdt, token *tName, ASTNode* astnArrayIndices, ASTNode* astnDerivative)
+ASTNode* ASTNamedReferenceNode::CreateNode(token *tdt_arg, token *tName_arg, ASTNode* astnArrayIndices_arg, ASTNode* astnDerivative_arg)
 {
-	this->tdt = *tdt;
-	this->tName = *tName;
-	this->astnArrayIndices = astnArrayIndices;
-	this->astnDerivative = astnDerivative;
+    tdt = *tdt_arg;
+    tName = *tName_arg;
+    astnArrayIndices = astnArrayIndices_arg;
+    astnDerivative = astnDerivative_arg;
 
-    sName = tName->getValue();
+    sName = tName.getValue();
 
 	bIsArray = false;
-	if (astnArrayIndices != NULL)
+    if (astnArrayIndices != NULL)
 		bIsArray = true;
 	
-    if (tdt->getType() == DOLLAR)
+    if (tdt.getType() == DOLLAR)
 	{
 		bIsdt = true;
 		this->sName = "$" + this->sName; // Add dollar for unique identification of dt variable type
 	}
 
 	if(bIsArray)
-		astvnArrayIndices = dynamic_cast<ASTArrayIndicesNode*>(astnArrayIndices)->astvnArrayIndices;
+        astvnArrayIndices = dynamic_cast<ASTArrayIndicesNode*>(astnArrayIndices)->astvnArrayIndices;
 
 	// Derivative info
-	if(astnDerivative)
-		iNumDerivs = dynamic_cast<ASTDerivativeSingleVar*>(astnDerivative)->iNumQuotes;
+    if(astnDerivative)
+        iNumDerivs = dynamic_cast<ASTDerivativeSingleVar*>(astnDerivative)->iNumQuotes;
 
 	return this;
 }
@@ -304,146 +300,148 @@ std::string ASTNamedReferenceNode::get_sName()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Function Call
-ASTNode* ASTfunctionCallNode::CreateNode(token *tFunctionName, std::vector<ASTNode*> &astvnFunctionArgs)
+ASTNode* ASTfunctionCallNode::CreateNode(token *tFunctionName_arg, std::vector<ASTNode*> &astvnFunctionArgs_arg)
 {
-	this->tFunctionName = *tFunctionName;
-    sFunctionName = tFunctionName->getValue();
-    iFuncType = tFunctionName->getType();
-	this->astvnFunctionArgs = astvnFunctionArgs;
+    tFunctionName = *tFunctionName_arg;
+    sFunctionName = tFunctionName.getValue();
+    iFuncType = tFunctionName.getType();
+    astvnFunctionArgs = astvnFunctionArgs_arg;
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Array indices
-ASTNode* ASTArrayIndicesNode::CreateNode(std::vector<ASTNode*> &astvnArrayIndices)
+ASTNode* ASTArrayIndicesNode::CreateNode(std::vector<ASTNode*> &astvnArrayIndices_arg)
 {
-	this->astvnArrayIndices = astvnArrayIndices;
+    astvnArrayIndices = astvnArrayIndices_arg;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Array Index
-ASTNode* ASTarray_indexNode::CreateNode(ASTNode* astnExpr)
+ASTNode* ASTarray_indexNode::CreateNode(ASTNode* astnExpr_arg)
 {
-	this->astnExpr = astnExpr;
+    astnExpr = astnExpr_arg;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Qualified Named Refernce
-ASTNode* ASTQualifiedNamedReferenceNode::CreateNode(std::vector<ASTNode*> astvnQualifiedName)
+ASTNode* ASTQualifiedNamedReferenceNode::CreateNode(std::vector<ASTNode*> astvnQualifiedName_arg)
 {
-	this->astvnQualifiedName = astvnQualifiedName;
+    astvnQualifiedName = astvnQualifiedName_arg;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Logical Binary op
-ASTNode* ASTLogicalBinaryOpNode::CreateNode(ASTNode* astnLeft, token *tBinaryOp, ASTNode* astnRight)
+ASTNode* ASTLogicalBinaryOpNode::CreateNode(ASTNode* astnLeft_arg, token *tBinaryOp_arg, ASTNode* astnRight_arg)
 {
-	this->astnLeft = astnLeft;
-	this->tBinaryOp = *tBinaryOp;
-	this->astnRight = astnRight;
+    astnLeft = astnLeft_arg;
+    tBinaryOp = *tBinaryOp_arg;
+    astnRight = astnRight_arg;
 
-    iBinaryOp = tBinaryOp->getType();
-    sBinaryOp = tBinaryOp->getValue();
+    iBinaryOp = tBinaryOp.getType();
+    sBinaryOp = tBinaryOp.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Logical Unary op
-ASTNode* ASTLogicalUnaryNode::CreateNode(token *tUnaryOp, ASTNode* astnRight)
+ASTNode* ASTLogicalUnaryNode::CreateNode(token *tUnaryOp_arg, ASTNode* astnRight_arg)
 {
-	this->tUnaryOp = *tUnaryOp;
-	this->astnRight = astnRight;
+    tUnaryOp = *tUnaryOp_arg;
+    astnRight = astnRight_arg;
 
-    iUnaryOp = tUnaryOp->getType();
-    sUnaryOp = tUnaryOp->getValue();
+    iUnaryOp = tUnaryOp.getType();
+    sUnaryOp = tUnaryOp.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // For loop
-ASTNode* ASTfor_loopNode::CreateNode(token *tName, ASTNode* astnStartExpr, ASTNode* astnTillExpr, ASTNode* astnIncrExpr, ASTNode* astnStatementBlock)
+ASTNode* ASTfor_loopNode::CreateNode(token *tName_arg, ASTNode* astnStartExpr_arg, ASTNode* astnTillExpr_arg, ASTNode* astnIncrExpr_arg,
+                                     ASTNode* astnStatementBlock_arg)
 {
-	this->tName = *tName;
-	this->astnStartExpr = astnStartExpr;
-	this->astnTillExpr = astnTillExpr;
-	this->astnIncrExpr = astnIncrExpr;
-	this->astnStatementBlock = astnStatementBlock;
+    tName = *tName_arg;
+    astnStartExpr = astnStartExpr_arg;
+    astnTillExpr = astnTillExpr_arg;
+    astnIncrExpr = astnIncrExpr_arg;
+    astnStatementBlock = astnStatementBlock_arg;
 
-    sName = tName->getValue();
+    sName = tName.getValue();
 
-	astvnfors = dynamic_cast<ASTstatement_blockNode*>(astnStatementBlock)->astvnStatements;
+    astvnfors = dynamic_cast<ASTstatement_blockNode*>(astnStatementBlock)->astvnStatements;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // if statement
-ASTNode* ASTif_statmentNode::CreateNode(ASTNode* astnCondition, ASTNode* astnThen, ASTNode* astnElse)
+ASTNode* ASTif_statmentNode::CreateNode(ASTNode* astnCondition_arg, ASTNode* astnThen_arg, ASTNode* astnElse_arg)
 {
-	this->astnCondition = astnCondition;
-	this->astnThen = astnThen;
-	this->astnElse = astnElse;
+    astnCondition = astnCondition_arg;
+    astnThen = astnThen_arg;
+    astnElse = astnElse_arg;
 
-	if (astnElse != NULL)
+    if (astnElse != NULL)
 		bHasElse = true;
 
-	astvnifs = dynamic_cast<ASTstatement_blockNode*>(astnThen)->astvnStatements;
-	if(astnElse)
-		astvnelses = dynamic_cast<ASTstatement_blockNode*>(astnElse)->astvnStatements;
+    astvnifs = dynamic_cast<ASTstatement_blockNode*>(astnThen)->astvnStatements;
+    if(astnElse)
+        astvnelses = dynamic_cast<ASTstatement_blockNode*>(astnElse)->astvnStatements;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // statement block
-ASTNode* ASTstatement_blockNode::CreateNode(std::vector<ASTNode*> &astvnStatements)
+ASTNode* ASTstatement_blockNode::CreateNode(std::vector<ASTNode*> &astvnStatements_arg)
 {
-	this->astvnStatements = astvnStatements;
+    astvnStatements = astvnStatements_arg;
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // assignment
-ASTNode* ASTassignmentNode::CreateNode(ASTNode* astnLHS, token *tEquationTypeOp, ASTNode* astnRHS)
+ASTNode* ASTassignmentNode::CreateNode(ASTNode* astnLHS_arg, token *tEquationTypeOp_arg, ASTNode* astnRHS_arg)
 {
-	this->astnLHS = astnLHS;
-	this->tEquationTypeOp = *tEquationTypeOp;
-	this->astnRHS = astnRHS;
+    astnLHS = astnLHS_arg;
+    tEquationTypeOp = *tEquationTypeOp_arg;
+    astnRHS = astnRHS_arg;
 
-    iEquationTypeOp = tEquationTypeOp->getType();
-    sEquationTypeOp = tEquationTypeOp->getValue();
+    iEquationTypeOp = tEquationTypeOp.getType();
+    sEquationTypeOp = tEquationTypeOp.getValue();
 
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // create the derivative for a single variable
-ASTNode* ASTDerivativeSingleVar::CreateNode(std::vector<token>& astvtnSingleQuotes)
+ASTNode* ASTDerivativeSingleVar::CreateNode(std::vector<token>& astvtnSingleQuotes_arg)
 {
-	this->astvtnSingleQuotes = astvtnSingleQuotes;
-	iNumQuotes = astvtnSingleQuotes.size();
+    astvtnSingleQuotes = astvtnSingleQuotes_arg;
+    iNumQuotes = astvtnSingleQuotes.size();
 	return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Container for Simulation Arguments
-ASTNode* ASTSimulationArgs::CreateNode(token* simType, ASTNode* simStartt, ASTNode* simEndt, token* simNumSteps, ASTNode* simAbsTol, ASTNode* simRelTol)
+ASTNode* ASTSimulationArgs::CreateNode(token* simType_arg, ASTNode* simStartt_arg, ASTNode* simEndt_arg,
+                                       token* simNumSteps_arg, ASTNode* simAbsTol_arg, ASTNode* simRelTol_arg)
 {
-	this->simType = *simType;
-	this->simStartt = simStartt;
-	this->simEndt = simEndt;
-	this->simNumSteps = *simNumSteps;
-	this->simAbsTol = simAbsTol;
-	this->simRelTol = simRelTol;
+    simType = *simType_arg;
+    simStartt = simStartt_arg;
+    simEndt = simEndt_arg;
+    simNumSteps = *simNumSteps_arg;
+    simAbsTol = simAbsTol_arg;
+    simRelTol = simRelTol_arg;
 
 	// Get the numbers
     dsimStartt = std::stod(static_cast<ASTNumberNode*>(simStartt)->tNumber.getValue());

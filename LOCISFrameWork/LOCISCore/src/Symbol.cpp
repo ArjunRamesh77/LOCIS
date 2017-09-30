@@ -3,101 +3,140 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ModelEntity
-int ModelEntity::allocateArray(const double &val) { return 0; };
+modelEntity::modelEntity() :
+    bHasDesc(false),
+    bHasUnit(false),
+    bHasBounds{false, false, false, false},
 
-// Set >>>>>>>>>>>>
-ModelEntity::ModelEntity()
+    meFEMContext(),
+    isFEMoneDDomain(false),
+    isFEMOneDLine(false),
+    isFEMOneDVariable(false),
+    isFEMOneDdVariable(false),
+    isFEMtrialFunction(false),
+    isTval(false),
+    isFEMxval(false),
+    currentDomain(NULL),
+
+    other(NULL),
+    isdt(false),
+
+    sValue(SY_DEFAULT_VAL),
+    vValue(NULL),
+
+    nSValue(0),
+    nVValue(NULL),
+
+    vectorIsInitialized(true),
+    buildNode(NULL),
+
+    tok(NULL),
+    name(""),
+    desc(""),
+    unit(""),
+
+    type(SY_VAL_NOT_SET),
+    sType(""),
+    nType(SY_VAL_NOT_SET),
+
+    dimType(SY_VAL_NOT_SET),
+    dims(),
+    dimsC(),
+    maxdim(0)
 {
-	//Options
-	bHasDesc = false;
-	bHasUnit = false;
-	bHasBounds[0] = bHasBounds[1] = bHasBounds[2] = bHasBounds[3] = false;
 
-	//FEM one D flags
-	isFEMoneDDomain = false;
-	isFEMOneDdVariable = false;
-	isFEMOneDLine = false;
-	isFEMOneDVariable = false;
-	isFEMtrialFunction = false;
-	isTval = false;
-	isFEMxval = false;
-	currentDomain = NULL; // Stores the domain pertaining to the variable referenced
-
-	//Assign all defaults
-	other = NULL;
-	nt = NULL;
-	isdt = false;
-	nSValue = 0; 
-	nVvalue = NULL;
-	iter = 0;
-	vset = true;
-	build_node = NULL;
-	SValue = SY_DEFAULT_VAL;
-	Vvalue = NULL;
-	Name.assign("");
-	Desc.assign("");
-	SType.assign("");
-	Type = SY_VAL_NOT_SET;
-	NumType = SY_VAL_NOT_SET;
-	DimType = SY_VAL_NOT_SET;
-	Maxdim = SY_VAL_NOT_SET;
 }
 
-ModelEntity::~ModelEntity()
+modelEntity::~modelEntity()
 {
-	if (Vvalue)
-		delete Vvalue;
+    if (vValue)
+        delete vValue;
 }
 
-void ModelEntity::setName(const std::string &name_arg)
+void modelEntity::setBHasDesc(bool value)
 {
-	Name.assign(name_arg);
+    bHasDesc = value;
 }
 
-void ModelEntity::setDesc(const std::string &desc_arg)
+void modelEntity::setBHasUnit(bool value)
 {
-	Desc.assign(desc_arg);
+    bHasUnit = value;
 }
 
-void ModelEntity::setUnit(const std::string &unit_arg)
+void modelEntity::setBHasBounds(int index, bool value)
 {
-	Unit.assign(unit_arg);
+    bHasBounds[index] = value;
 }
 
-void ModelEntity::setDimType(const int DimType_arg)
+void modelEntity::setOther(modelEntity *value)
 {
-	DimType = DimType_arg;
+    other = value;
 }
 
-void ModelEntity::setType(const int Type_arg)
+void modelEntity::setVectorIsInitialized(bool value)
 {
-	Type = Type_arg;
+    vectorIsInitialized = value;
 }
 
-void ModelEntity::setIsdt()
+void modelEntity::setBuildNode(ASTNode *value)
+{
+    buildNode = value;
+}
+
+void modelEntity::setTok(token *value)
+{
+    tok = value;
+}
+
+void modelEntity::setName(const std::string value)
+{
+    name.assign(value);
+}
+
+void modelEntity::setDesc(const std::string value)
+{
+    desc.assign(value);
+}
+
+void modelEntity::setUnit(const std::string value)
+{
+    unit.assign(value);
+}
+
+void modelEntity::setDimType(const int value)
+{
+    dimType = value;
+}
+
+void modelEntity::setType(const int value)
+{
+    type = value;
+}
+
+void modelEntity::setIsdt()
 {
 	isdt = true;
 }
 
-void ModelEntity::setNType(const int type)
+void modelEntity::setNType(const int value)
 {
-	NumType = type;
+    nType = value;
 }
 
-void ModelEntity::setSType(const std::string &Type)
+void modelEntity::setSType(const std::string value)
 {
-	SType = Type;
+    sType = value;
 }
 
-int ModelEntity::setDims(const int dimval_arg)
+int modelEntity::setDims(const int value)
 {
 	// Make sure its a vector
-	if (DimType == SY_VECTOR)
+    if (dimType == SY_VECTOR)
 	{
 		// size specification of the dimension must be greater than 1
-		if (dimval_arg > 1)
+        if (value > 1)
 		{
-			Dims.push_back(dimval_arg);
+            dims.push_back(value);
 		}
 		else
 		{
@@ -106,96 +145,144 @@ int ModelEntity::setDims(const int dimval_arg)
 	}
 
 	// Get Multipliers
-	DimsC.clear();
-	for (int i = 0; i < Dims.size(); i++)
+    dimsC.clear();
+    for (int i = 0; i < dims.size(); i++)
 	{
 		int mult = 1;
-		for (auto it = Dims.rbegin() + i; it != (Dims.rend() - 1); it++)
+        for (auto it = dims.rbegin() + i; it != (dims.rend() - 1); it++)
 		{
 			mult *= *it;
 		}
-		DimsC.push_back(mult);
+        dimsC.push_back(mult);
 	}
 
-	return SY_SUCCESS;
-}
-
-void ModelEntity::Reset()
-{
-	//Assign all defaults
-	Name.assign("");
-	Desc.assign("");
-	Type = SY_VAL_NOT_SET;
-	DimType = SY_VAL_NOT_SET;
-	Maxdim = SY_VAL_NOT_SET;
+    return SY_SUCCESS;
 }
 
 // Get >>>>>>>>>>>>
-std::string ModelEntity::getName() const
+bool modelEntity::getBHasDesc() const
 {
-	return Name;
+    return bHasDesc;
 }
 
-std::string ModelEntity::getDesc() const
+bool modelEntity::getBHasUnit() const
 {
-	return Desc;
+    return bHasUnit;
 }
 
-std::string ModelEntity::getUnit() const
+bool modelEntity::getBHasBounds(int index)
 {
-	return Unit;
+    return bHasBounds[index];
 }
 
-int ModelEntity::getDimType() const
+modelEntity *modelEntity::getOther() const
 {
-	return DimType;
+    return other;
 }
 
-bool ModelEntity::checkIsdt()
+bool modelEntity::getVectorIsInitialized() const
+{
+    return vectorIsInitialized;
+}
+
+ASTNode *modelEntity::getBuildNode() const
+{
+    return buildNode;
+}
+
+token *modelEntity::getTok() const
+{
+    return tok;
+}
+
+std::string modelEntity::getName()
+{
+    return name;
+}
+
+std::string modelEntity::getDesc()
+{
+    return desc;
+}
+
+std::string modelEntity::getUnit()
+{
+    return unit;
+}
+
+int modelEntity::getDimType()
+{
+    return dimType;
+}
+
+bool modelEntity::checkIsdt()
 {
 	return isdt;
 }
 
-int ModelEntity::geType() const
+int modelEntity::geType()
 {
-	return Type;
+    return type;
 }
 
-std::string ModelEntity::getSType() const
+std::string modelEntity::getSType()
 {
-	return SType;
+    return sType;
 }
 
-int ModelEntity::getNumDims() const
+int modelEntity::getNType()
 {
-	return Dims.size();
+    return nType;
 }
 
-int ModelEntity::getMaxDims() const
+int modelEntity::getNumDims()
 {
-	return Maxdim;
+    return dims.size();
 }
 
-std::vector<int>* ModelEntity::getDimAt()
+int modelEntity::getMaxDims()
 {
-	if (Dims.size() > 0)
-		return &Dims;
+    return maxdim;
+}
+
+void modelEntity::clearDims()
+{
+    dims.clear();
+}
+
+int modelEntity::getDimsAt(int index)
+{
+    if (dims.size() > 0)
+        return dims.at(index);
 	else
-		return NULL;
+        return 0;
 }
 
-ModelEntity* ModelEntity::ReturnObject()
+int modelEntity::getDimsCAt(int index) const
+{
+    if (dimsC.size() > 0)
+        return dimsC.at(index);
+    else
+        return 0;
+}
+
+void modelEntity::setDummyIndex()
+{
+    dims.push_back(0);
+}
+
+modelEntity* modelEntity::ReturnObject()
 {
 	return this;
 }
 
-int ModelEntity::setAllto(const double &val)
+int modelEntity::setAllto(const double &val)
 {
-	if (Vvalue)
+    if (vValue)
 	{
-		for (int i = 0; i < Maxdim; i++)
+        for (int i = 0; i < maxdim; i++)
 		{
-			Vvalue[i] = val;
+            vValue[i] = val;
 		}
 		return SY_SUCCESS;
 	}
@@ -204,19 +291,24 @@ int ModelEntity::setAllto(const double &val)
 		return SY_NOT_INITIALIZED
 	}
 
-	return SY_FAIL;
+    return SY_FAIL;
 }
 
-std::string ModelEntity::getGetMultiDimsFromSingle(int &index) const
+int modelEntity::allocateArray(const double &val)
+{
+    return 0;
+}
+
+std::string modelEntity::getGetMultiDimsFromSingle(int &index)
 {
 	std::string stempval("");
 	int tempval = index;
-	if (DimType == SY_VECTOR)
+    if (dimType == SY_VECTOR)
 	{
 		
-		for (std::vector<int>::const_reverse_iterator it = Dims.rbegin(); it != Dims.rend(); it++)
+        for (std::vector<int>::const_reverse_iterator it = dims.rbegin(); it != dims.rend(); it++)
 		{	
-			if (it == Dims.rend() - 1)
+            if (it == dims.rend() - 1)
 				stempval += std::to_string((tempval%*it) + 1);
 			else
 				stempval += std::to_string((tempval%*it) + 1) + ",";
@@ -231,45 +323,45 @@ std::string ModelEntity::getGetMultiDimsFromSingle(int &index) const
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter
-Parameter::Parameter() :
-	ModelEntity()
+parameter::parameter() :
+	modelEntity()
 {
-	Vvalue = NULL;
+    vValue = NULL;
 }
 
-Parameter::~Parameter()
+parameter::~parameter()
 {
 	
 }
 
-int Parameter::allocateArray(const double &val)
+int parameter::allocateArray(const double &val)
 {
 	// Valid only for vectors
-	if (DimType == SY_VECTOR)
+    if (getDimType() == SY_VECTOR)
 	{
 		// A size has been specified
-		if (Dims.size() > 0)
+        if (dims.size() > 0)
 		{
 			// It has not been assigned before
-			if (Vvalue == NULL)
+            if (vValue == NULL)
 			{
 				int fullprod = 1;
-				for (std::vector<int>::iterator it = Dims.begin(); it != Dims.end(); it++)
+                for (std::vector<int>::iterator it = dims.begin(); it != dims.end(); it++)
 					fullprod *= *it;
 
-				Maxdim = fullprod;
+                maxdim = fullprod;
 
-				nVvalue = new int[fullprod];
-				Vvalue = new double[fullprod];
-				if (Vvalue == NULL)
+                nVValue = new int[fullprod];
+                vValue = new double[fullprod];
+                if (vValue == NULL)
 				{
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 				}
 
 				for (int i = 0; i < fullprod; i++)
 				{
-					nVvalue[i] = 0;
-					Vvalue[i] = val;
+                    nVValue[i] = 0;
+                    vValue[i] = val;
 				}
 
 				return SY_SUCCESS;
@@ -287,25 +379,13 @@ int Parameter::allocateArray(const double &val)
 	return SY_FAIL;
 }
 
-void Parameter::Reset()
-{
-	//Assign all defaults
-	ModelEntity::Reset();
-	if (Vvalue != NULL)
-	{
-		delete Vvalue;
-		Vvalue = NULL;
-	}
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Variable
-Variable::Variable() :
-	ModelEntity()
+variable::variable() :
+	modelEntity()
 {
 	//Initialize
-	Vvalue = NULL;
+    vValue = NULL;
 	VLowerType = NULL;
 	VUpperType = NULL;
 	VUpper = NULL;
@@ -320,7 +400,7 @@ Variable::Variable() :
 	SFixValueToggle = SY_FREE;
 }
 
-Variable::~Variable()
+variable::~variable()
 {
 	if (VLowerType != NULL)
 		delete VLowerType;
@@ -339,37 +419,37 @@ Variable::~Variable()
 
 }
 
-int Variable::allocateArray(const double &val)
+int variable::allocateArray(const double &val)
 {
 
 	// Valid only for vectors
-	if (DimType == SY_VECTOR)
+    if (dimType == SY_VECTOR)
 	{
 		// A size has been specified
-		if (Dims.size() > 0)
+        if (dims.size() > 0)
 		{
 			// It has not been assigned before
-			if (Vvalue == NULL && VUpper == NULL && VLower == NULL && VUpperType == NULL && VLowerType == NULL && VFixValueToggle == NULL)
+            if (vValue == NULL && VUpper == NULL && VLower == NULL && VUpperType == NULL && VLowerType == NULL && VFixValueToggle == NULL)
 			{
 				int fullprod = 1;
-				for (std::vector<int>::iterator it = Dims.begin(); it != Dims.end(); it++)
+                for (std::vector<int>::iterator it = dims.begin(); it != dims.end(); it++)
 					fullprod *= *it;
 
-				Maxdim = fullprod;
+                maxdim = fullprod;
 
 				// Allocate all arrays for variable
-				nVvalue = new int[fullprod];
-				Vvalue = new double[fullprod];
+                nVValue = new int[fullprod];
+                vValue = new double[fullprod];
 				VUpper = new double[fullprod];
 				VLower = new double[fullprod];
 				VUpperType = new char[fullprod];
 				VLowerType = new char[fullprod];
 				VFixValueToggle = new char[fullprod];
 
-				if (nVvalue == NULL)
+                if (nVValue == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
-				if (Vvalue == NULL)
+                if (vValue == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
 				if (VUpper == NULL)
@@ -389,8 +469,8 @@ int Variable::allocateArray(const double &val)
 
 				for (int i = 0; i < fullprod; i++)
 				{
-					nVvalue[i] = 0;
-					Vvalue[i] = val;
+                    nVValue[i] = 0;
+                    vValue[i] = val;
 					VUpper[i] = SY_LARGE_POSITIVE;
 					VLower[i] = SY_LARGE_NEGATIVE;
 					VUpperType[i] = SY_LESS_THAN_OR_EQUAL;
@@ -413,14 +493,14 @@ int Variable::allocateArray(const double &val)
 	return SY_FAIL;
 }
 
-int Variable::setAlltoB(const int &type, const char ctype, const double &dtype)
+int variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 {
 	switch (type)
 	{
 	case SY_VARIABLE_UBT:
 		if (VUpperType && VUpper)
 		{
-			for (int i = 0; i < Maxdim; i++)
+            for (int i = 0; i < maxdim; i++)
 			{
 				VUpperType[i] = ctype;
 				VUpper[i] = dtype;
@@ -436,7 +516,7 @@ int Variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 	case SY_VARIABLE_LBT:
 		if (VLowerType && VLower)
 		{
-			for (int i = 0; i < Maxdim; i++)
+            for (int i = 0; i < maxdim; i++)
 			{
 				VLowerType[i] = ctype;
 				VLower[i] = dtype;
@@ -452,7 +532,7 @@ int Variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 	case SY_VARIABLE_FT:
 		if (VFixValueToggle)
 		{
-			for (int i = 0; i < Maxdim; i++)
+            for (int i = 0; i < maxdim; i++)
 			{
 				VFixValueToggle[i] = ctype;
 			}
@@ -468,51 +548,17 @@ int Variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 	return SY_FAIL;
 }
 
-void Variable::Reset()
-{
-	ModelEntity::Reset();
-
-	//Initialize
-	VLowerType = NULL;
-	VUpperType = NULL;
-	VUpper = NULL;
-	VLower = NULL;
-	VFixValueToggle = NULL;
-
-	// Scalar
-	SUpperType = SY_VAL_NOT_SETC;
-	SLowerType = SY_VAL_NOT_SETC;
-	SUpper = SY_LARGE_POSITIVE;
-	SLower = SY_LARGE_NEGATIVE;
-	SFixValueToggle = SY_VAL_NOT_SETC;
-
-	if (VLowerType != NULL)
-		delete VLowerType;
-
-	if (VUpperType != NULL)
-		delete VUpperType;
-
-	if (VUpper != NULL)
-		delete VUpper;
-
-	if (VLower != NULL)
-		delete VLower;
-
-	if (VFixValueToggle != NULL)
-		delete VFixValueToggle;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Object
-Object::Object():
-ModelEntity()
+object::object():
+modelEntity()
 {
 	sModelName = "";
 	SModelObject = NULL;
 	VModelObject = NULL;
 }
 
-Object::~Object()
+object::~object()
 {
 	if (SModelObject != NULL)
 		delete SModelObject;
@@ -521,23 +567,23 @@ Object::~Object()
 		delete VModelObject;
 }
 
-void Object::setModelName(std::string name)
+void object::setModelName(std::string name)
 {
 	sModelName.assign(name);
 }
 
-std::string Object::getModelName()
+std::string object::getModelName()
 {
 	return sModelName;
 }
 
-int Object::setScalarObject(const Model* mod)
+int object::setScalarObject(const model* mod)
 {
-	if (DimType == SY_SCALAR)
+    if (dimType == SY_SCALAR)
 	{
 		if (mod)
 		{
-			SModelObject = new Model(*mod);
+			SModelObject = new model(*mod);
 			return SY_SUCCESS;
 		}
 		else
@@ -548,24 +594,24 @@ int Object::setScalarObject(const Model* mod)
 	return SY_FAIL;
 }
 
-int Object::allocateArray()
+int object::allocateArray()
 {
 	// Valid only for vectors
-	if (DimType == SY_VECTOR)
+    if (dimType == SY_VECTOR)
 	{
 		// A size has been specified
-		if (Dims.size() > 0)
+        if (dims.size() > 0)
 		{
 			// It has not been assigned before
 			if (VModelObject == NULL)
 			{
 				int fullprod = 1;
-				for (std::vector<int>::iterator it = Dims.begin(); it != Dims.end(); it++)
+                for (std::vector<int>::iterator it = dims.begin(); it != dims.end(); it++)
 					fullprod *= *it;
 
-				Maxdim = fullprod;
+                maxdim = fullprod;
 
-				VModelObject = new Model[fullprod];
+				VModelObject = new model[fullprod];
 				if (VModelObject == NULL)
 				{
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
@@ -586,20 +632,14 @@ int Object::allocateArray()
 	return SY_FAIL;
 }
 
-void Object::Reset()
-{
-	SModelObject = NULL;
-	VModelObject = NULL;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model
-Model::Model()
+model::model()
 {
 
 }
 
-Model::~Model()
+model::~model()
 {
 	for (auto it = ModelEntities.begin(); it != ModelEntities.end(); ++it)
 	{
@@ -608,7 +648,7 @@ Model::~Model()
 	}
 }
 
-bool Model::insertModelEntity(std::string &symbolName, ModelEntity* me)
+bool model::insertModelEntity(std::string &symbolName, modelEntity* me)
 {
 	if (ModelEntities[symbolName] == NULL)
 	{
@@ -619,24 +659,24 @@ bool Model::insertModelEntity(std::string &symbolName, ModelEntity* me)
 	return false; //entity with same name already exists
 }
 
-std::unordered_map<std::string, ModelEntity*>* Model::getModelEntities()
+std::unordered_map<std::string, modelEntity*>* model::getModelEntities()
 {
 	return &ModelEntities;
 }
 
-std::vector<ASTNode*>* Model::getAllEquationNodes()
+std::vector<ASTNode*>* model::getAllEquationNodes()
 {
 	return &EquationNodes;
 }
 
-std::vector<ASTNode *>* Model::getAllInitEquationNodes()
+std::vector<ASTNode *>* model::getAllInitEquationNodes()
 {
 	return &InitNodes;
 }
 
-ModelEntity* Model::getModelEntity(Model* first, std::string &symbolName)
+modelEntity* model::getModelEntity(model* first, std::string &symbolName)
 {
-	ModelEntity* ret = NULL;
+	modelEntity* ret = NULL;
 
 	// if first is NULL this means there this is the first search with symbol Name
 	if (first == NULL)
@@ -661,12 +701,13 @@ ModelEntity* Model::getModelEntity(Model* first, std::string &symbolName)
 	return ret;
 }
 
-void Model::insertEquationNode(ASTNode* EqNode)
+void model::insertEquationNode(ASTNode* EqNode)
 {
 	EquationNodes.push_back(EqNode);
 }
 
-void Model::insertInitNode(ASTNode* InNode)
+void model::insertInitNode(ASTNode* InNode)
 {
 	InitNodes.push_back(InNode);
 }
+
