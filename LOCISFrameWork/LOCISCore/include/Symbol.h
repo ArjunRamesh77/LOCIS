@@ -157,14 +157,14 @@ public:
     void setBuildNode(ASTNode *value);
     void setTok(token *value);
     void setIsdt();
-    void setName(const std::string name_arg);
-    void setDesc(const std::string desc_arg);
-    void setUnit(const std::string unit_arg);
-    void setType(const int type_arg);
-    void setSType(const std::string sType_arg);
-    void setNType(const int nType_arg);
-    void setDimType(const int dimType_arg);
-	int setDims(const int dimval);
+    void setName(const std::string value);
+    void setDesc(const std::string value);
+    void setUnit(const std::string value);
+    void setType(const int value);
+    void setSType(const std::string value);
+    void setNType(const int value);
+    void setDimType(const int value);
+    int setDims(const int value);
 
 	// Get
     bool getBHasDesc() const;
