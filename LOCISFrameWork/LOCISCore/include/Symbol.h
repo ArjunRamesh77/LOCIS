@@ -1,22 +1,38 @@
 #pragma once
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <vector>
 #include "lexer.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // All defines
-#define SY_SCALAR			 0
-#define SY_VECTOR			 1
-#define SY_TYPE_REAL		 0
-#define SY_TYPE_INT		 1
-#define SY_TYPE_OBJECT		 2
-#define SY_TYPE_MODEL		 3
-#define SY_VAL_NOT_SET	     -1
-#define SY_VAL_NOT_SETC	 'N'
-#define SY_LARGE_NEGATIVE   1.0e-300
-#define SY_LARGE_POSITIVE   1.0e300
-#define SY_DEFAULT_VAL		 0.0
+#define SY_SCALAR               0
+#define SY_VECTOR               1
+#define SY_TYPE_REAL            0
+#define SY_TYPE_INT             1
+#define SY_TYPE_OBJECT          2
+#define SY_TYPE_MODEL           3
+#define SY_VAL_NOT_SET          -1
+#define SY_VAL_NOT_SETC         'N'
+#define SY_LARGE_NEGATIVE       1.0e-300
+#define SY_LARGE_POSITIVE       1.0e300
+#define SY_DEFAULT_VAL          0.0
+#define SY_PARAMETER_TYPE       1
+#define SY_VARIABLE_TYPE        2
+#define SY_OBJECT_TYPE          3
+#define SY_FIX                  1
+#define SY_FREE                   2
+#define SY_LESS_THAN_OR_EQUAL    'A'
+#define SY_GREATER_THAN_OR_EQUAL 'B'
+#define SY_LESS_THAN             'C'
+#define SY_GREATER_THAN          'D'
+#define SY_VARIABLE_UBT           0
+#define SY_VARIABLE_LBT           1
+#define SY_VARIABLE_FT            2
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Return codes
 #define SY_INDEX_OUT_OF_RANGE -1
 #define SY_INVALID_INDEX_POSITION -2;
 #define SY_DIMS_ZERO -3;
@@ -27,18 +43,6 @@
 #define SY_NOT_INITIALIZED -8;
 #define SY_FAIL 0;
 #define SY_SUCCESS 1
-#define SY_PARAMETER_TYPE 1
-#define SY_VARIABLE_TYPE 2
-#define SY_OBJECT_TYPE 3
-#define SY_FIX		1
-#define SY_FREE    2
-#define SY_LESS_THAN_OR_EQUAL 'A'
-#define SY_GREATER_THAN_OR_EQUAL 'B'
-#define SY_LESS_THAN 'C'
-#define SY_GREATER_THAN 'D'
-#define SY_VARIABLE_UBT 0
-#define SY_VARIABLE_LBT 1
-#define SY_VARIABLE_FT 2
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define all class types so that can be used in any order
@@ -50,6 +54,7 @@ class object;
 class model;
 class interpreter;
 class ASTNode;
+class globalSymbolTable;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FEM oneD context
@@ -146,7 +151,7 @@ protected:
     long int maxdim;
 
 public:
-    modelEntity();
+    modelEntity(int type_arg);
     virtual ~modelEntity();
 
     void setBHasDesc(bool value);
@@ -190,9 +195,8 @@ public:
     int getDimsCAt(int index) const;
     void setDummyIndex();
     modelEntity* ReturnObject();
-	int setAllto(const double &val);
+    int setAllto(const double &val);
 
-	// Virtual
     virtual int allocateArray(const double &val);
 };
 
@@ -204,8 +208,7 @@ public:
     parameter();
     ~parameter();
 
-	//Set
-	int allocateArray(const double &val);
+    int allocateArray(const double &val);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,29 +218,25 @@ class variable : public modelEntity
 public:
 
 	// Vector
-	char* VLowerType;
-	char* VUpperType;
-	double* VUpper;
-	double* VLower;
-	char* VFixValueToggle;
+    char* vLowerType;
+    char* vUpperType;
+    double* vUpperValue;
+    double* vLowerValue;
+    char* vFixValueToggle;
 
 	// Scalar
-	char SUpperType;
-	char SLowerType;
-	double SUpper;
-	double SLower;
-	char SFixValueToggle;
+    char sUpperType;
+    char sLowerType;
+    double sUpperValue;
+    double sLowerValue;
+    char sFixValueToggle;
 	
 public:
     variable();
     ~variable();
 
-	//Vector operations
-	int allocateArray(const double &val);
-
-	//Setting allto
-	int setAlltoB(const int &type, const char ctype, const double &dtype);
-
+    int allocateArray(const double &val);
+    int setAlltoB(const int &type, const char ctype, const double &dtype);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,10 +244,11 @@ public:
 class object : public modelEntity
 {
 public:
+    model* sModelObject;
+    model* vModelObject;
 
-	std::string sModelName;
-    model* SModelObject;
-    model* VModelObject;
+private:
+    std::string sModelName;
 
 public:
     object();
@@ -256,7 +256,6 @@ public:
 
 	void setModelName(std::string name);
 	std::string getModelName();
-    int setScalarObject(const model* mod);
     int allocateArray();
 };
 
@@ -264,20 +263,60 @@ public:
 // Model (Class stores the prototype of a model)
 class model
 {
-
-    std::unordered_map<std::string, modelEntity*> ModelEntities;
-	std::vector<ASTNode*> EquationNodes;
-	std::vector<ASTNode*> InitNodes;
+    globalSymbolTable* gst;
+    std::unordered_map<std::string, modelEntity*> allModelEntities;
+    std::vector<ASTNode*> allEquationNodes;
+    std::vector<ASTNode*> allInitNodes;
 
 public:
     model();
+    model(globalSymbolTable* gstPtr);
     ~model();
 
-    std::unordered_map<std::string, modelEntity*>* getModelEntities();
+    std::unordered_map<std::string, modelEntity*>* getAllModelEntities();
 	std::vector<ASTNode*>* getAllEquationNodes();
-	std::vector<ASTNode *>* getAllInitEquationNodes();
+    std::vector<ASTNode*>* getAllInitEquationNodes();
     bool insertModelEntity(std::string &symbolName, modelEntity* me);
     modelEntity* getModelEntity(model* first, std::string &symbolName);
 	void insertEquationNode(ASTNode* EqNode);
 	void insertInitNode(ASTNode* node);
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Function (Type 1) (built in)
+typedef double (*functionSignatureType1)(double value);
+
+class functionType1 : public modelEntity
+{
+    functionSignatureType1 fptr;
+
+public:
+    function();
+
+    void loadFunction(functionSignatureType1* value);
+    double run(double value);
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Model Prototype (saves the prototype in member buildNode of modelEntity)
+class ModelPrototype : public modelEntity
+{
+
+public:
+    void runBuildTree(model* scope);
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// global symbol table (Stores the Symbols available to the simulation)
+class globalSymbolTable
+{
+    std::map<std::string,modelEntity*> gst;
+
+public:
+    globalSymbolTable();
+
+    void clearAll();
+    modelEntity* getSymbol(std::string value);
+    bool addSymbol(std::string name, modelEntity* value);
+    bool deleteSymbol(std::string value);
 };

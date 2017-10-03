@@ -72,19 +72,19 @@ int equation::getEquationsRecursive(model* mod)
 	}
 
 	// Loop through all objects in this object (Recursive call)
-	for (auto obj = mod->getModelEntities()->begin(); obj != mod->getModelEntities()->end(); ++obj)
+	for (auto obj = mod->getAllModelEntities()->begin(); obj != mod->getAllModelEntities()->end(); ++obj)
 	{
 		if (obj->second->geType() == MODEL)
 		{
 			if (obj->second->getDimType() == SY_SCALAR)
 			{
-				getEquationsRecursive(static_cast<object*>(obj->second)->SModelObject);
+				getEquationsRecursive(static_cast<object*>(obj->second)->sModelObject);
 			}
 			else
 			{
 				for (int i = 0; i < obj->second->getMaxDims(); i++)
 				{
-					getEquationsRecursive(&static_cast<object*>(obj->second)->VModelObject[i]);
+					getEquationsRecursive(&static_cast<object*>(obj->second)->vModelObject[i]);
 				}
 			}
 		}
@@ -110,7 +110,7 @@ std::string equation::getSubstitutedEntityNameScalar(modelEntity* me)
 			}
 			else
 			{
-				if (mev->SFixValueToggle == SY_FREE)
+				if (mev->sFixValueToggle == SY_FREE)
 				{
 					if (bInitialization)
 					{
@@ -146,7 +146,7 @@ std::string equation::getSubstitutedEntityNameScalar(modelEntity* me)
 		}
 		else
 		{
-			if (mev->SFixValueToggle == SY_FREE)
+			if (mev->sFixValueToggle == SY_FREE)
 			{
 				if (bInitialization)
 				{
@@ -209,7 +209,7 @@ std::string equation::getSubstitutedEntityNameVector(modelEntity* me, int &index
 			}
 			else
 			{
-				if (mev->VFixValueToggle[index] == SY_FREE)
+				if (mev->vFixValueToggle[index] == SY_FREE)
 				{
 					if (bInitialization)
 					{
@@ -245,7 +245,7 @@ std::string equation::getSubstitutedEntityNameVector(modelEntity* me, int &index
 		}
 		else
 		{
-			if (mev->VFixValueToggle[index] == SY_FREE)
+			if (mev->vFixValueToggle[index] == SY_FREE)
 			{
 				if (bInitialization)
 				{

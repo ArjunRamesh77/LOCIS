@@ -13,7 +13,6 @@ parser::parser(lexer* lex_arg, cerrors *errorptr) :
     LAtoks(),
     FEOF(false),
     tokenTypeBeforeEOF(-1),
-    enable_error_write(true),
     context(-1)
 {
 

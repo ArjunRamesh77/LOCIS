@@ -103,7 +103,6 @@ enum parserExecptions { FILE_ENDs, TERMINAL_ERR };
 
 #define AST_RETURN_NO_CREATE return ASTtempNode;
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOCIS Parser Structures
 struct parserState
@@ -147,7 +146,6 @@ private:
 
 	bool FEOF;
 	int tokenTypeBeforeEOF;
-	bool enable_error_write;
 	int context;
 
 private:

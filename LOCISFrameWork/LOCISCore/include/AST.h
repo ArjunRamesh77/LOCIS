@@ -139,7 +139,7 @@ public:
 
 	// Scalar temporary storage
 	std::string equation_data;		
-	double value;
+    double value;
 	bool lvalue;
 
 	ASTNode* node;

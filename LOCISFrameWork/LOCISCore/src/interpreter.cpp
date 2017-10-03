@@ -17,21 +17,21 @@ ASTNode* interpreter::dispatch(ASTmodel_collectionNode* node)
 	// Second Pass (create full OOP structure)
 	IS.pass = 2;
     MasterModel = new object;
-    MasterModel->SModelObject = new model;
+    MasterModel->sModelObject = new model;
 	MasterModel->setType(MODEL);
 	MasterModel->setSType("MODEL");
 	MasterModel->setName("Master");
 	MasterModel->setDimType(SY_SCALAR);
-	IS.scp = MasterModel->SModelObject;
+    IS.scp = MasterModel->sModelObject;
 
 	// Pass master to the last model in list(only way to currently identify master model)
 	(*(node->astvnModelCollection.end() - 1))->visit(this);
 
 	// Initialized any initialized Vectors
-	if (InitAll(MasterModel->SModelObject))
+    if (InitAll(MasterModel->sModelObject))
 	{
 		// Get all the Variables (should always work)
-		getAllVars(MasterModel->SModelObject, MasterModel->getName());
+        getAllVars(MasterModel->sModelObject, MasterModel->getName());
 	}
 	else
 	{
@@ -301,8 +301,8 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 			SAVE_INTERPRETER_STATE
             object* cob = NULL;
             cob = static_cast<object*>(ob);
-            cob->SModelObject = new model;
-			IS.scp = cob->SModelObject;
+            cob->sModelObject = new model;
+            IS.scp = cob->sModelObject;
 			mod->visit(this);
 			RESET_INTERPRETER_STATE
 		}
@@ -480,13 +480,13 @@ ASTNode* interpreter::dispatch(ASTbounds_optionNode * node)
 		{
 			if (op == SY_GREATER_THAN || op == SY_GREATER_THAN_OR_EQUAL)
 			{
-				var->SLowerType = op;
-				var->SLower = bval->value;
+                var->sLowerType = op;
+                var->sLowerValue = bval->value;
 			}
 			else
 			{
-				var->SUpperType = op;
-				var->SUpper = bval->value;
+                var->sUpperType = op;
+                var->sUpperValue = bval->value;
 			}
 			return node;
 		}
@@ -854,13 +854,13 @@ ASTNode* interpreter::dispatch(ASTFEMoneDEquation* node)
 	FEMOneDModelDomainData* dom1 = static_cast<FEMOneDModelDomainData*>(dom);
 	if (node->iLeftBoundaryType == VALUE)
 	{
-        static_cast<variable*>(node->astnDomain->me)->VFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
-        static_cast<variable*>(node->astnDomain->me->getOther())->VFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me)->vFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me->getOther())->vFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
 	}
 	if (node->iRightBoundaryType == VALUE)
 	{
-        static_cast<variable*>(node->astnDomain->me)->VFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
-        static_cast<variable*>(node->astnDomain->me->getOther())->VFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me)->vFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
+        static_cast<variable*>(node->astnDomain->me->getOther())->vFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
 	}
 	
 	// Evaluate the equation

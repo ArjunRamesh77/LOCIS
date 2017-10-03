@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ModelEntity
-modelEntity::modelEntity() :
+modelEntity::modelEntity(int type_arg) :
     bHasDesc(false),
     bHasUnit(false),
     bHasBounds{false, false, false, false},
@@ -35,7 +35,7 @@ modelEntity::modelEntity() :
     desc(""),
     unit(""),
 
-    type(SY_VAL_NOT_SET),
+    type(type_arg),
     sType(""),
     nType(SY_VAL_NOT_SET),
 
@@ -280,7 +280,7 @@ int modelEntity::setAllto(const double &val)
 {
     if (vValue)
 	{
-        for (int i = 0; i < maxdim; i++)
+        for (unsigned int i = 0; i < maxdim; i++)
 		{
             vValue[i] = val;
 		}
@@ -324,7 +324,7 @@ std::string modelEntity::getGetMultiDimsFromSingle(int &index)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter
 parameter::parameter() :
-	modelEntity()
+    modelEntity(PARAMETER)
 {
     vValue = NULL;
 }
@@ -345,7 +345,7 @@ int parameter::allocateArray(const double &val)
 			// It has not been assigned before
             if (vValue == NULL)
 			{
-				int fullprod = 1;
+                unsigned int fullprod = 1;
                 for (std::vector<int>::iterator it = dims.begin(); it != dims.end(); it++)
 					fullprod *= *it;
 
@@ -381,47 +381,42 @@ int parameter::allocateArray(const double &val)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Variable
-variable::variable() :
-	modelEntity()
+variable::variable() : modelEntity(VARIABLE),
+    vLowerType(NULL),
+    vUpperType(NULL),
+    vUpperValue(NULL),
+    vLowerValue(NULL),
+    vFixValueToggle(NULL),
+    sUpperType(SY_VAL_NOT_SETC),
+    sLowerType(SY_VAL_NOT_SETC),
+    sUpperValue(SY_LARGE_POSITIVE),
+    sLowerValue(SY_LARGE_NEGATIVE),
+    sFixValueToggle(SY_FREE)
 {
-	//Initialize
-    vValue = NULL;
-	VLowerType = NULL;
-	VUpperType = NULL;
-	VUpper = NULL;
-	VLower = NULL;
-	VFixValueToggle = NULL;
 
-	// Scalar
-	SUpperType = SY_VAL_NOT_SETC;
-	SLowerType = SY_VAL_NOT_SETC;
-	SUpper = SY_LARGE_POSITIVE;
-	SLower = SY_LARGE_NEGATIVE;
-	SFixValueToggle = SY_FREE;
 }
 
 variable::~variable()
 {
-	if (VLowerType != NULL)
-		delete VLowerType;
+    if (vLowerType)
+        delete vLowerType;
 
-	if (VUpperType != NULL)
-		delete VUpperType;
+    if (vUpperType)
+        delete vUpperType;
 
-	if (VUpper != NULL)
-		delete VUpper;
+    if (vUpperValue)
+        delete vUpperValue;
 
-	if (VLower != NULL)
-		delete VLower;
+    if (vLowerValue)
+        delete vLowerValue;
 
-	if (VFixValueToggle != NULL)
-		delete VFixValueToggle;
+    if (vFixValueToggle)
+        delete vFixValueToggle;
 
 }
 
 int variable::allocateArray(const double &val)
 {
-
 	// Valid only for vectors
     if (dimType == SY_VECTOR)
 	{
@@ -429,7 +424,7 @@ int variable::allocateArray(const double &val)
         if (dims.size() > 0)
 		{
 			// It has not been assigned before
-            if (vValue == NULL && VUpper == NULL && VLower == NULL && VUpperType == NULL && VLowerType == NULL && VFixValueToggle == NULL)
+            if (vValue == NULL && vUpperValue == NULL && vLowerValue == NULL && vUpperType == NULL && vLowerType == NULL && vFixValueToggle == NULL)
 			{
 				int fullprod = 1;
                 for (std::vector<int>::iterator it = dims.begin(); it != dims.end(); it++)
@@ -440,11 +435,11 @@ int variable::allocateArray(const double &val)
 				// Allocate all arrays for variable
                 nVValue = new int[fullprod];
                 vValue = new double[fullprod];
-				VUpper = new double[fullprod];
-				VLower = new double[fullprod];
-				VUpperType = new char[fullprod];
-				VLowerType = new char[fullprod];
-				VFixValueToggle = new char[fullprod];
+                vUpperValue = new double[fullprod];
+                vLowerValue = new double[fullprod];
+                vUpperType = new char[fullprod];
+                vLowerType = new char[fullprod];
+                vFixValueToggle = new char[fullprod];
 
                 if (nVValue == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
@@ -452,30 +447,30 @@ int variable::allocateArray(const double &val)
                 if (vValue == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
-				if (VUpper == NULL)
+                if (vUpperValue == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
-				if (VLower == NULL)
+                if (vLowerValue == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
-				if (VUpperType == NULL)
+                if (vUpperType == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
-				if (VLowerType == NULL)
+                if (vLowerType == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
-				if (VFixValueToggle == NULL)
+                if (vFixValueToggle == NULL)
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 
 				for (int i = 0; i < fullprod; i++)
 				{
                     nVValue[i] = 0;
                     vValue[i] = val;
-					VUpper[i] = SY_LARGE_POSITIVE;
-					VLower[i] = SY_LARGE_NEGATIVE;
-					VUpperType[i] = SY_LESS_THAN_OR_EQUAL;
-					VLowerType[i] = SY_GREATER_THAN_OR_EQUAL;
-					VFixValueToggle[i] = SY_FREE;
+                    vUpperValue[i] = SY_LARGE_POSITIVE;
+                    vLowerValue[i] = SY_LARGE_NEGATIVE;
+                    vUpperType[i] = SY_LESS_THAN_OR_EQUAL;
+                    vLowerType[i] = SY_GREATER_THAN_OR_EQUAL;
+                    vFixValueToggle[i] = SY_FREE;
 				}
 
 				return SY_SUCCESS;
@@ -498,12 +493,12 @@ int variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 	switch (type)
 	{
 	case SY_VARIABLE_UBT:
-		if (VUpperType && VUpper)
+        if (vUpperType && vUpperValue)
 		{
             for (int i = 0; i < maxdim; i++)
 			{
-				VUpperType[i] = ctype;
-				VUpper[i] = dtype;
+                vUpperType[i] = ctype;
+                vUpperValue[i] = dtype;
 			}
 			return SY_SUCCESS;
 		}
@@ -514,12 +509,12 @@ int variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 		break;
 
 	case SY_VARIABLE_LBT:
-		if (VLowerType && VLower)
+        if (vLowerType && vLowerValue)
 		{
             for (int i = 0; i < maxdim; i++)
 			{
-				VLowerType[i] = ctype;
-				VLower[i] = dtype;
+                vLowerType[i] = ctype;
+                vLowerValue[i] = dtype;
 			}
 			return SY_SUCCESS;
 		}
@@ -530,11 +525,11 @@ int variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 		break;
 
 	case SY_VARIABLE_FT:
-		if (VFixValueToggle)
+        if (vFixValueToggle)
 		{
             for (int i = 0; i < maxdim; i++)
 			{
-				VFixValueToggle[i] = ctype;
+                vFixValueToggle[i] = ctype;
 			}
 			return SY_SUCCESS;
 		}
@@ -550,21 +545,21 @@ int variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Object
-object::object():
-modelEntity()
+object::object(): modelEntity(MODEL),
+  sModelObject(NULL),
+  vModelObject(NULL),
+  sModelName("")
 {
-	sModelName = "";
-	SModelObject = NULL;
-	VModelObject = NULL;
+
 }
 
 object::~object()
 {
-	if (SModelObject != NULL)
-		delete SModelObject;
+    if (sModelObject)
+        delete sModelObject;
 
-	if (VModelObject != NULL)
-		delete VModelObject;
+    if (vModelObject)
+        delete vModelObject;
 }
 
 void object::setModelName(std::string name)
@@ -577,23 +572,6 @@ std::string object::getModelName()
 	return sModelName;
 }
 
-int object::setScalarObject(const model* mod)
-{
-    if (dimType == SY_SCALAR)
-	{
-		if (mod)
-		{
-			SModelObject = new model(*mod);
-			return SY_SUCCESS;
-		}
-		else
-		{
-			return SY_FAIL;
-		}
-	}
-	return SY_FAIL;
-}
-
 int object::allocateArray()
 {
 	// Valid only for vectors
@@ -603,7 +581,7 @@ int object::allocateArray()
         if (dims.size() > 0)
 		{
 			// It has not been assigned before
-			if (VModelObject == NULL)
+            if (vModelObject == NULL)
 			{
 				int fullprod = 1;
                 for (std::vector<int>::iterator it = dims.begin(); it != dims.end(); it++)
@@ -611,8 +589,8 @@ int object::allocateArray()
 
                 maxdim = fullprod;
 
-				VModelObject = new model[fullprod];
-				if (VModelObject == NULL)
+                vModelObject = new model[fullprod];
+                if (vModelObject == NULL)
 				{
 					return SY_VECTOR_FAILED_TO_ALLOCATE;
 				}
@@ -634,14 +612,24 @@ int object::allocateArray()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model
-model::model()
+model::model() :
+    model(NULL)
+{
+
+}
+
+model::model(globalSymbolTable *gstPtr) :
+    gst(gstPtr),
+    allModelEntities(),
+    allEquationNodes(),
+    allInitNodes()
 {
 
 }
 
 model::~model()
 {
-	for (auto it = ModelEntities.begin(); it != ModelEntities.end(); ++it)
+    for (auto it = allModelEntities.begin(); it != allModelEntities.end(); ++it)
 	{
 		if (it->second != NULL)
 			delete it->second;
@@ -650,28 +638,28 @@ model::~model()
 
 bool model::insertModelEntity(std::string &symbolName, modelEntity* me)
 {
-	if (ModelEntities[symbolName] == NULL)
+    auto find = allModelEntities.find(symbolName);
+    if (find == allModelEntities.end())
 	{
-		//ModelEntities.insert({ symbolName, me });
-		ModelEntities[symbolName] = me;
+        allModelEntities[symbolName] = me;
 		return true;
 	}
 	return false; //entity with same name already exists
 }
 
-std::unordered_map<std::string, modelEntity*>* model::getModelEntities()
+std::unordered_map<std::string, modelEntity*>* model::getAllModelEntities()
 {
-	return &ModelEntities;
+    return &allModelEntities;
 }
 
 std::vector<ASTNode*>* model::getAllEquationNodes()
 {
-	return &EquationNodes;
+    return &allEquationNodes;
 }
 
 std::vector<ASTNode *>* model::getAllInitEquationNodes()
 {
-	return &InitNodes;
+    return &allInitNodes;
 }
 
 modelEntity* model::getModelEntity(model* first, std::string &symbolName)
@@ -681,21 +669,35 @@ modelEntity* model::getModelEntity(model* first, std::string &symbolName)
 	// if first is NULL this means there this is the first search with symbol Name
 	if (first == NULL)
 	{
-		auto find = this->ModelEntities.find(symbolName);
+        auto find = this->allModelEntities.find(symbolName);
 
-		if (find != this->ModelEntities.end())
+        if (find != this->allModelEntities.end())
+        {
 			ret = find->second;
+        }
 		else
-			return NULL;
+        {
+            // Search in gst second
+            if(gst)
+                ret = gst->getSymbol(symbolName);
+            return ret;
+        }
 	}
 	else
 	{
-		auto find = first->ModelEntities.find(symbolName);
+        auto find = first->allModelEntities.find(symbolName);
 
-		if (find != first->ModelEntities.end())
+        if (find != first->allModelEntities.end())
+        {
 			ret = find->second;
+        }
 		else
-			return NULL;
+        {
+            // Search in gst second
+            if(gst)
+                ret = gst->getSymbol(symbolName);
+            return ret;
+        }
 	}
 
 	return ret;
@@ -703,11 +705,56 @@ modelEntity* model::getModelEntity(model* first, std::string &symbolName)
 
 void model::insertEquationNode(ASTNode* EqNode)
 {
-	EquationNodes.push_back(EqNode);
+    allEquationNodes.push_back(EqNode);
 }
 
 void model::insertInitNode(ASTNode* InNode)
 {
-	InitNodes.push_back(InNode);
+    allInitNodes.push_back(InNode);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Global Symbol Tree
+globalSymbolTable::globalSymbolTable() :
+    gst()
+{
+
+}
+
+void globalSymbolTable::clearAll()
+{
+    gst.clear();
+}
+
+modelEntity *globalSymbolTable::getSymbol(std::string value)
+{
+    gst["std"] = NULL;
+    auto find = gst.find(value);
+    if(find != gst.end())
+    {
+        return find->second;
+    }
+    return NULL;
+}
+
+bool globalSymbolTable::addSymbol(std::string name, modelEntity *value)
+{
+    auto find = gst.find(name);
+    if(find == gst.end())
+    {
+        gst[name] = value;
+        return true;
+    }
+    return false;
+}
+
+bool globalSymbolTable::deleteSymbol(std::string value)
+{
+    auto find = gst.find(value);
+    if(find != gst.end())
+    {
+        gst.erase(find);
+        return true;
+    }
+    return false;
+}

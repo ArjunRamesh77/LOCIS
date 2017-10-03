@@ -26,7 +26,7 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 	item1 = dynamic_cast<ASTNamedReferenceNode*>(*it_in);
 	if (FEMobj->getDimType() == SY_SCALAR)
 	{
-		search = FEMobj->SModelObject;
+        search = FEMobj->sModelObject;
 		assert(search);
 
 		if (item1->bIsArray)
@@ -73,7 +73,7 @@ bool interpreter::evaluateFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedN
 				c++;
 			}
 
-            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->vModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -317,7 +317,7 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 	// First check if line object is a scalar or vector
 	if (FEMobj->getDimType() == SY_SCALAR)
 	{
-		search = FEMobj->SModelObject;
+        search = FEMobj->sModelObject;
 	}
 	else
 	{
@@ -354,7 +354,7 @@ bool interpreter::assignFEMoneDObject(FEMOneDLineObject* FEMobj, ASTQualifiedNam
 				c++;
 			}
 
-            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->vModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -601,7 +601,7 @@ bool interpreter::createFEMoneDline(object* FEMobj)
 	// Check if array of lines
 	if (FEMob->getDimType() == SY_SCALAR)
 	{
-        FEMob->SModelObject = new model;
+        FEMob->sModelObject = new model;
 	}
 	else
 	{
@@ -649,7 +649,7 @@ start:
 		// Add to line
 		if (FEMob->getDimType() == SY_SCALAR)
 		{
-			if (!FEMob->SModelObject->insertModelEntity(domname, dom_actual))
+            if (!FEMob->sModelObject->insertModelEntity(domname, dom_actual))
 			{
 				delete dom_actual;
 				assert(false);
@@ -659,7 +659,7 @@ start:
 		else
 		{
 			// For vectors do the above operation again and again
-			if (!FEMob->VModelObject[c].insertModelEntity(domname, dom_actual))
+            if (!FEMob->vModelObject[c].insertModelEntity(domname, dom_actual))
 			{
 				delete dom_actual;
 				assert(false);
@@ -745,8 +745,8 @@ start:
 				{
 					for (int i = alldoms->second->domainSize["left"]; i <= alldoms->second->domainSize["right"]; i++)
 					{
-						v->VFixValueToggle[i] = SY_FIX;
-						dv->VFixValueToggle[i] = SY_FIX;
+                        v->vFixValueToggle[i] = SY_FIX;
+                        dv->vFixValueToggle[i] = SY_FIX;
 					}
 				}
 			}
@@ -756,7 +756,7 @@ start:
 		if (FEMob->getDimType() == SY_SCALAR)
 		{
 			std::string dollar_varname = "$" + varname;
-			if (!(FEMob->SModelObject->insertModelEntity(varname, v) && FEMob->SModelObject->insertModelEntity(dollar_varname, dv)))
+            if (!(FEMob->sModelObject->insertModelEntity(varname, v) && FEMob->sModelObject->insertModelEntity(dollar_varname, dv)))
 			{
 				delete v;
 				delete dv;
@@ -768,7 +768,7 @@ start:
 		{
 			// For vectors do the above operation again and again
 			std::string dollar_varname = "$" + varname;
-			if (!(FEMob->VModelObject[c].insertModelEntity(varname, v) && FEMob->VModelObject[c].insertModelEntity(dollar_varname, dv)))
+            if (!(FEMob->vModelObject[c].insertModelEntity(varname, v) && FEMob->vModelObject[c].insertModelEntity(dollar_varname, dv)))
 			{
 				delete v;
 				delete dv;

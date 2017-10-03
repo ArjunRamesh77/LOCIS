@@ -130,7 +130,7 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 			}
 
 			//Set to next
-            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->vModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -200,7 +200,7 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 			}
 
 			//Set to next
-            search = dynamic_cast<object*>(search_res)->SModelObject;
+            search = dynamic_cast<object*>(search_res)->sModelObject;
 			assert(search);
 		}
 	}
@@ -305,7 +305,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 
 			//Set to next
-            search = &dynamic_cast<object*>(search_res)->VModelObject[fullsum];
+            search = &dynamic_cast<object*>(search_res)->vModelObject[fullsum];
 			assert(search);
 		}
 		else
@@ -336,7 +336,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 
 			//Set to next
-            search = dynamic_cast<object*>(search_res)->SModelObject;
+            search = dynamic_cast<object*>(search_res)->sModelObject;
 			assert(search);
 		}
 	}
@@ -406,26 +406,26 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			if (IS.section_type == SCOPE_FIX)
 			{
                 v = static_cast<variable*>(search_res);
-				v->SFixValueToggle = SY_FIX;
+                v->sFixValueToggle = SY_FIX;
 
 				//Fix dt component too
                 v = static_cast<variable*>(search_res->getOther());
-				v->SFixValueToggle = SY_FIX;
+                v->sFixValueToggle = SY_FIX;
 			}
 			break;
 
 		case(GEQUALS):
 		case (GTHAN):
             v = static_cast<variable*>(search_res);
-			v->SLowerType = optochar(op);
-			v->SLower = val;
+            v->sLowerType = optochar(op);
+            v->sLowerValue = val;
 			break;
 
 		case(LEQUALS):
 		case (LTHAN):
             v = static_cast<variable*>(search_res);
-			v->SUpperType = optochar(op);
-			v->SUpper = val;
+            v->sUpperType = optochar(op);
+            v->sUpperValue = val;
 			break;
 		}
 		return true;
@@ -443,11 +443,11 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 				if (IS.section_type == SCOPE_FIX)
 				{
                     v = static_cast<variable*>(search_res);
-					v->VFixValueToggle[fullsum] = SY_FIX;
+                    v->vFixValueToggle[fullsum] = SY_FIX;
 
 					// Fix dt component too
                     v = static_cast<variable*>(search_res->getOther());
-					v->VFixValueToggle[fullsum] = SY_FIX;
+                    v->vFixValueToggle[fullsum] = SY_FIX;
 				}
 			}
 			else
@@ -470,8 +470,8 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
             v = static_cast<variable*>(search_res);
 			if (fullsum != -1)
 			{
-				v->VLowerType[fullsum] = optochar(op);
-				v->VLower[fullsum] = val;
+                v->vLowerType[fullsum] = optochar(op);
+                v->vLowerValue[fullsum] = val;
 			}
 			else
 			{
@@ -484,8 +484,8 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
             v = static_cast<variable*>(search_res);
 			if (fullsum != 0)
 			{
-				v->VUpperType[fullsum] = optochar(op);
-				v->VUpper[fullsum] = val;
+                v->vUpperType[fullsum] = optochar(op);
+                v->vUpperValue[fullsum] = val;
 			}
 			else
 			{
@@ -539,7 +539,7 @@ bool interpreter::initVector(modelEntity* search_res)
 		SAVE_INTERPRETER_STATE
         for (int i = 0; i < cob->getMaxDims(); i++)
 		{
-			IS.scp = &cob->VModelObject[i];
+            IS.scp = &cob->vModelObject[i];
 			mod->visit(this);
 		}
 		RESET_INTERPRETER_STATE
@@ -622,7 +622,7 @@ char interpreter::optochar(int & op)
 // Get all the unknowns for the specified model
 void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 {
-	for (auto it = MainObj->getModelEntities()->begin(); it != MainObj->getModelEntities()->end(); ++it)
+    for (auto it = MainObj->getAllModelEntities()->begin(); it != MainObj->getAllModelEntities()->end(); ++it)
 	{
 		// Add all free Variables
         if (it->second->geType() == VARIABLE && it->second->getVectorIsInitialized() && !it->second->checkIsdt())
@@ -644,13 +644,13 @@ void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 				{
 					VariableData vd;
 					vd.fullname = Name_arg + "." + v->getName();
-					vd.LoType = v->SLowerType;
-					vd.UpType = v->SUpperType;
-					vd.Lo = v->SLower;
-					vd.Up = v->SUpper;
+                    vd.LoType = v->sLowerType;
+                    vd.UpType = v->sUpperType;
+                    vd.Lo = v->sLowerValue;
+                    vd.Up = v->sUpperValue;
                     vd.val = &v->sValue;
 
-					if (v->SFixValueToggle == SY_FREE)
+                    if (v->sFixValueToggle == SY_FREE)
 					{
 						if (v->checkIsdt())
 						{
@@ -693,13 +693,13 @@ void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 					{
 						VariableData vd;
 						vd.fullname = Name_arg + "." + v->getName() + v->getGetMultiDimsFromSingle(i);
-						vd.LoType = v->VLowerType[i];
-						vd.UpType = v->VUpperType[i];
-						vd.Lo = v->VLower[i];
-						vd.Up = v->VUpper[i];
+                        vd.LoType = v->vLowerType[i];
+                        vd.UpType = v->vUpperType[i];
+                        vd.Lo = v->vLowerValue[i];
+                        vd.Up = v->vUpperValue[i];
                         vd.val = &v->vValue[i];
 
-						if (v->VFixValueToggle[i] == SY_FREE)
+                        if (v->vFixValueToggle[i] == SY_FREE)
 						{
 							if (v->checkIsdt())
 							{
@@ -787,13 +787,13 @@ void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 		{
 			if (it->second->getDimType() == SY_SCALAR)
 			{
-                getAllVars(static_cast<object*>(it->second)->SModelObject, Name_arg + "." + it->second->getName());
+                getAllVars(static_cast<object*>(it->second)->sModelObject, Name_arg + "." + it->second->getName());
 			}
 			else
 			{
 				for (int i = 0; i < it->second->getMaxDims(); ++i)
 				{
-                    getAllVars(&static_cast<object*>(it->second)->VModelObject[i], Name_arg + "." + it->second->getName() + it->second->getGetMultiDimsFromSingle(i));
+                    getAllVars(&static_cast<object*>(it->second)->vModelObject[i], Name_arg + "." + it->second->getName() + it->second->getGetMultiDimsFromSingle(i));
 				}
 			}
 		}
@@ -814,7 +814,7 @@ bool interpreter::InitAll(model* MainObj)
 	if (!MainObj)
 		return false;
 	
-	for (auto it = MainObj->getModelEntities()->begin(); it != MainObj->getModelEntities()->end(); ++it)
+    for (auto it = MainObj->getAllModelEntities()->begin(); it != MainObj->getAllModelEntities()->end(); ++it)
 	{
 		// Initialize any uninitialized vectors (including objects)
         if (!it->second->getVectorIsInitialized())
@@ -834,13 +834,13 @@ bool interpreter::InitAll(model* MainObj)
 
 			if (m->getDimType() == SY_SCALAR)
 			{
-				return InitAll(m->SModelObject);
+                return InitAll(m->sModelObject);
 			}
 			else
 			{
 				for (int i = 0; i < m->getMaxDims(); ++i)
 				{
-					return InitAll(&m->VModelObject[i]);
+                    return InitAll(&m->vModelObject[i]);
 				}
 			}
 		}
@@ -853,7 +853,7 @@ bool interpreter::InitAll(model* MainObj)
 // Return reference to MAster Model
 model* interpreter::getMasterModel()
 {
-	return MasterModel->SModelObject;
+    return MasterModel->sModelObject;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

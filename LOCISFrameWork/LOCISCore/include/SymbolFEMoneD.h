@@ -36,7 +36,7 @@ public:
 	std::map<std::string, int> domainNuemannSize;  // To find the extremities of a variable in a domain
 
 public:
-	FEMOneDModelDomainData()
+    FEMOneDModelDomainData() : modelEntity(-1)
 	{
 		iBasis = 0;
 		mark = false;
