@@ -82,8 +82,8 @@ void NLSKinsolOutputInfoHandler(void *s, int type)
 	std::string print_str, temp_str;
 
 	bool print_this, enter_first, correct_str, is_pnorm;
-	double temp;
-	is_pnorm = false;
+    double temp;
+    is_pnorm = false;
 	enter_first = true;
 	correct_str = false;
 

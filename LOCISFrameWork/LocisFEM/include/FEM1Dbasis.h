@@ -7,21 +7,17 @@
 // all functions that are 'same' for all inherited classes are public functions in base class
 // all functions that are in every inherited class but are different for each one are virtual
 // functions that are specific to one class are public in that particular class
-
+namespace FEM1D
+{
 class basis1D
 {
 protected:
 	int numNodes;
 
 public:
-	int getnumNodes()
+    int getnumNodes()
 	{
 		return numNodes;
-	};
-
-	void setBasis(std::string name, int nNodes)
-	{
-		numNodes = nNodes;
 	};
 
 	virtual std::string get_phi(int n, int i, double length) // n  is basis function number, i is the node number
@@ -78,3 +74,4 @@ public:
 		numNodes = 4;
 	};
 };
+}

@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Process Node that holds all the models
-
+using namespace FEM1D;
 class Equation;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,11 +42,6 @@ void FEM::SetExpressionTree()
 
 	}
 
-
-
-//	std::cout << ret->equation_data << "\n";
-	int a;
-	a = 1;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void FEM::setData(FEMUserData *userData, equation* equationptr, ASTNode* expressionTree, ASTNode* leftBoundarylocal,
@@ -184,8 +179,8 @@ void FEM::solve()
 	// our approach in this will be exactly opposite!
 	int i, j, k, diffNodes;
 	bool enter_first_time;
-	int enter_count;
-	std::string allNodesSum;
+
+//	std::string allNodesSum;
 	EquationUnit equationElem;
 
 	// allocate vectors
@@ -268,7 +263,7 @@ void FEM::solve()
 					// at this point all conversions should be ready 
 					// everything should be a function of x
 					// get diffnodes;
-					enter_count = 0;
+
 
 					global_state.integNodeNo = k;
 
@@ -376,7 +371,7 @@ ASTNode* FEM::dispatch(ASTQualifiedNamedReferenceNode* node)
 	enter_first_time_ud = true;
 	numNodes = global_state.element_info.basis->getnumNodes();
 	diffNodes = global_state.eqNo - global_state.element_info.globalNodeNo;
-	ASTNamedReferenceNode* name = static_cast<ASTNamedReferenceNode*>(node->astvnQualifiedName.at(0));
+//	ASTNamedReferenceNode* name = static_cast<ASTNamedReferenceNode*>(node->astvnQualifiedName.at(0));
 	
 
 	// check if fem variable

@@ -2,6 +2,8 @@
 #include <vector>
 #include<iomanip>
 #include<sstream>
+namespace FEM1D
+{
 class integration1D
 {
 protected:
@@ -11,7 +13,7 @@ protected:
 
 public:
 
-	int getNumPoints()
+    int getNumPoints()
 	{
 		return npts;
 	};
@@ -46,3 +48,4 @@ public:
 	std::string compositeIntegral(std::vector<std::string> integrationStrings, double length);
 
 };
+}
