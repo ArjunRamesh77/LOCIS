@@ -1,7 +1,7 @@
 #include "FEM1D.h"
 //#include "Operators.h"
 #include <iostream>
-
+using namespace FEM1D;
 ASTNode* FEM::dispatch(ASTmodel_collectionNode* node)
 {
 	return node;

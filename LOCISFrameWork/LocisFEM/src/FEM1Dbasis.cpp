@@ -1,7 +1,7 @@
 //#include "linearBasis1D.h"
 #include "FEM1Dbasis.h"
 #include <iostream>
-
+using namespace FEM1D;
 std::string linearBasis1D::get_phi(int n, int i, double length)// n  is basis function number, i is the node number
 {
 	if ((n == i))

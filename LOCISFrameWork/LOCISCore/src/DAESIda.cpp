@@ -223,7 +223,7 @@ std::string DAESIda::center(const std::string s, const int w)
 
 void  DAESIda::printFinalStats(double t)
 {
-	int retval, kused, flag;
+    int retval, kused, flag;
 	long int nst;
 	realtype hused;
 	std::string print_string;

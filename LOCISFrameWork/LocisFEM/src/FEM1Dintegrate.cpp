@@ -2,13 +2,11 @@
 #include <string>
 #include "FEM1Dintegrate.h"
 
-
+using namespace FEM1D;
 std::string trapezoid::compositeIntegral(std::vector<std::string> integrationStrings, double length)
 {
 	// add strings in vector using composite rule
-	std::string integratedString, tempstr;
-	std::vector<std::string> tempvec;
-
+    std::string integratedString;
 	std::stringstream ss;
 	ss << std::scientific << std::setprecision(10) << length;
 
@@ -39,9 +37,7 @@ std::string trapezoid::compositeIntegral(std::vector<std::string> integrationStr
 std::string simpson13::compositeIntegral(std::vector<std::string> integrationStrings, double length)
 {
 	// add strings in vector using composite rule
-	std::string integratedString, tempstr;
-	std::vector<std::string> tempvec;
-
+    std::string integratedString;
 	std::stringstream ss;
 	ss << std::scientific << std::setprecision(10) << length;
 
@@ -79,8 +75,7 @@ std::string simpson13::compositeIntegral(std::vector<std::string> integrationStr
 std::string simpson38::compositeIntegral(std::vector<std::string> integrationStrings, double length)
 {
 	// add strings in vector using composite rule
-	std::string integratedString, tempstr;
-	std::vector<std::string> tempvec;
+    std::string integratedString;
 
 	std::stringstream ss;
 	ss << std::scientific << std::setprecision(10) << length;

@@ -5,18 +5,19 @@
 bool equation::getFEMoneDEquations(ASTNode* optimizedTree, ASTNode* leftBoundary, ASTNode* rightBoundary, int leftBoundaryType,
 	int rightBoundaryType, int domainLeft, int domainRight, double startLength, double endLength, int nElements, int basisType)
 {
-	FEM FEM1Dobj;
-	FEMUserData userdata;
-	elementUserData elemdata;
+    using namespace FEM1D;
+    FEM FEM1DObj;
+    FEMUserData userData;
+    elementUserData elemData;
 	std::vector<elementUserData> allelemdata;
-	int numnodes, numElems;
+    int numNodes, numElems;
 	double length;
 
 	// preprocessing needs to be discussed and finalized
 	// find number of nodes
-	numnodes = domainRight - domainLeft + 1;
+    numNodes = domainRight - domainLeft + 1;
 
-	elemdata.basisFunctionType = basisType;
+    elemData.basisFunctionType = basisType;
 
 	// populate number of elements
 	numElems = nElements;
@@ -25,55 +26,55 @@ bool equation::getFEMoneDEquations(ASTNode* optimizedTree, ASTNode* leftBoundary
 	// get number of elements
 	if (basisType == BASIS_LINEAR)
 	{
-		elemdata.integrationRule = INTEGRATION_TRAPEZOID;
+        elemData.integrationRule = INTEGRATION_TRAPEZOID;
 	}
 	else if (basisType == BASIS_QUADRATIC)
 	{
-		elemdata.integrationRule = INTEGRATION_SIMPSON13;
+        elemData.integrationRule = INTEGRATION_SIMPSON13;
 	}
 	else if (basisType == BASIS_CUBIC)
 	{
-		elemdata.integrationRule = INTEGRATION_SIMPSON38;
+        elemData.integrationRule = INTEGRATION_SIMPSON38;
 	}
 	// get length of each element
 	length = (endLength - startLength) / double(numElems);
 
 	// populate elemdata
-	elemdata.len = length;
+    elemData.len = length;
 	
 
 	for (int i = 0; i < numElems; i++)
 	{
-		allelemdata.push_back(elemdata);
+        allelemdata.push_back(elemData);
 	}
 
 
-	userdata.allElementData = allelemdata;
-	userdata.numElements = numElems;
-	userdata.startNode = domainLeft;
-	userdata.totalNumNodes = numnodes;
+    userData.allElementData = allelemdata;
+    userData.numElements = numElems;
+    userData.startNode = domainLeft;
+    userData.totalNumNodes = numNodes;
 
 	// Getting boundary conditions
 	if (leftBoundaryType == KW_VALUE && rightBoundaryType == KW_VALUE)
 	{
 		// dirichlet-dirichlet
-		userdata.boundaryTypes = DD;
+        userData.boundaryTypes = DD;
 
 	}
 	else if (leftBoundaryType == KW_FLUX && rightBoundaryType == KW_VALUE)
 	{
 		// neumann-dirichlet
-		userdata.boundaryTypes = ND;
+        userData.boundaryTypes = ND;
 	}
 	else if (leftBoundaryType == KW_VALUE && rightBoundaryType == KW_FLUX)
 	{
 		// dirichlet-neumann
-		userdata.boundaryTypes = DN;
+        userData.boundaryTypes = DN;
 	}
 	else if (leftBoundaryType == KW_FLUX && rightBoundaryType == KW_FLUX)
 	{
 		// neumann-neumann
-		userdata.boundaryTypes = NN;
+        userData.boundaryTypes = NN;
 	}
 
 	
@@ -81,14 +82,14 @@ bool equation::getFEMoneDEquations(ASTNode* optimizedTree, ASTNode* leftBoundary
 	
 
 	// set data
-	FEM1Dobj.setData(&userdata, this, optimizedTree, leftBoundary, rightBoundary, Equations, Ip);
+    FEM1DObj.setData(&userData, this, optimizedTree, leftBoundary, rightBoundary, Equations, Ip);
 	
 //	FEM1Dobj.preProcess();
 
-	FEM1Dobj.build();
+    FEM1DObj.build();
 	
 
-	FEM1Dobj.solve();
+    FEM1DObj.solve();
 
 
 	return true;

@@ -3,21 +3,25 @@
 #include<string>
 #include "FEM1Dbasis.h"
 #include "FEM1Dintegrate.h"
+namespace FEM1D
+{
 
 struct elementInfo
 {
-	int globalNodeNo, elementType;
-	double globalNodeLocation;
-	basis1D *basis;
-	integration1D  *integration;
-	double length;
+    int globalNodeNo, elementType;
+    double globalNodeLocation;
+    basis1D *basis;
+    integration1D  *integration;
+    double length;
 };
+
+
 
 class genericElement1D
 {
 	elementInfo element_info;
 
-	int globalNodeNumber; //global node number of starting element
+    int globalNodeNumber; //global node number of starting node
 
 	double globalNodeLocation;
 
@@ -42,28 +46,47 @@ class genericElement1D
 
 public:
 	
-//	void weaktobasis(int eqNumber);
-
-//	void weaktobasisAllEq();
-
-//	void integrateLinear(int eqNumber);
-
-//	void integrateLinearAllEq(); // populates afterIntegration vector
 	
 	void setElem(int globalNo, double nodeLocation, int elemType, double len, int nEq,
 		std::string weakformstr, genericElement1D* rightElem, genericElement1D* leftElem,
 		basis1D *basis, integration1D *integration);
 
-	elementInfo getElementInfo() 
-	{
-		return element_info;
-	};
+    elementInfo getElementInfo()
+    {
+        return element_info;
+    };
 
-//	std::vector<std::string> getString()
-//	{
-//		return afterIntegrationVec;
-//	}
+    int getGlobalNodeNo()
+    {
+        return globalNodeNumber;
+    }
+
+    int getElementType()
+    {
+        return elementType;
+    }
+
+    double getGlobalNodeLocation()
+    {
+        return globalNodeLocation;
+    }
+
+    basis1D* getBasis1D()
+    {
+        return basis;
+    }
+
+    integration1D* getIntegration()
+    {
+        return integration;
+    }
+
+    double getElementLength()
+    {
+        return length;
+    }
 
 	genericElement1D();
 	
 };
+}

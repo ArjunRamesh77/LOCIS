@@ -1,6 +1,6 @@
 #include "FEM1DgenericElement.h"
 
-
+using namespace FEM1D;
 void genericElement1D::setElem(int globalNo, double nodeLocation, int elemType, double len, int numEq,
 	std::string weakformstr, genericElement1D* rightElem, genericElement1D* leftElem,
 	basis1D *basisptr, integration1D *integrationptr)
