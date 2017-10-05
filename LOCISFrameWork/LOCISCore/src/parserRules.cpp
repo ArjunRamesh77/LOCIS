@@ -8,7 +8,7 @@ ASTNode* parser::P_model_collection()
     START_RULE
 
 	FOR_ALL_WHILE
-		ITEM_E(MODEL)
+        ITEM_E(KW_MODEL)
 			DO_RULE(model) AST_SAV_VEC(all_models) 
 	END_WHILE
 	
@@ -24,31 +24,31 @@ ASTNode* parser::P_model()
 	
     START_RULE
 
-	EXPECT_TOKEN_ELSE(MODEL)
-        syntaxErrorExpectedType(MODEL);
+    EXPECT_TOKEN_ELSE(KW_MODEL)
+        syntaxErrorExpectedType(KW_MODEL);
 	END_EXPECT
 
 	AST_SAV_TOK(model_name)
 
-	EXPECT_TOKEN_ELSE(IDENT)
+    EXPECT_TOKEN_ELSE(DT_IDENT)
         syntaxErrorExpectedString("Indetifier");
 	END_EXPECT
 
-	IF(LTHAN)
+    IF(OP_LTHAN)
 		DO_RULE(simulation_args) AST_SAV_NODE(simArgs)
 	END_IF
 
-	EXPECT_TOKEN_ELSE(LCURLY)
-        syntaxErrorExpectedType(LCURLY);
+    EXPECT_TOKEN_ELSE(OP_LCURLY)
+        syntaxErrorExpectedType(OP_LCURLY);
 	END_EXPECT
 
 	FOR_ALL_WHILE
-		!ITEM_E(RCURLY)
+        !ITEM_E(OP_RCURLY)
 			DO_RULE(model_statement) AST_SAV_VEC(all_model_statements) 
 	END_WHILE
 		
-	EXPECT_TOKEN_ELSE(RCURLY)
-        syntaxErrorMissing(RCURLY);
+    EXPECT_TOKEN_ELSE(OP_RCURLY)
+        syntaxErrorMissing(OP_RCURLY);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTmodelNode)(&t_model_name, astvn_all_model_statements, astn_simArgs);
@@ -60,19 +60,19 @@ ASTNode* parser::P_model_statement()
     START_RULE
 
 	FOR_ALL_IF
-		ITEM_S(PARAMETER)
-		ITEM_S(VARIABLE)
-		ITEM_S(ITER)
-		ITEM_S(IDENT)
-		ITEM_E(LINE)
+        ITEM_S(KW_PARAMETER)
+        ITEM_S(KW_VARIABLE)
+        ITEM_S(KW_ITER)
+        ITEM_S(DT_IDENT)
+        ITEM_E(KW_LINE)
 			DO_RULE(model_entity_decl)
 	ELSE
 		FOR_ALL_IF
-			ITEM_S(SET)
-			ITEM_S(FIX)
-			ITEM_S(INIT)
-			ITEM_S(GUESS)
-			ITEM_E(EQUATION)
+            ITEM_S(KW_SET)
+            ITEM_S(KW_FIX)
+            ITEM_S(KW_INIT)
+            ITEM_S(KW_GUESS)
+            ITEM_E(KW_EQUATION)
 				DO_RULE(model_section)
 		ELSE
             syntaxErrorUnexpected();
@@ -95,15 +95,15 @@ ASTNode* parser::P_model_entity_decl()
 	DO_RULE(model_entity_type) AST_SAV_NODE(model_entity_type) 
 
 	FOR_ALL_IF
-		ITEM_S(REAL)
-		ITEM_E(INTEGER)
+        ITEM_S(KW_REAL)
+        ITEM_E(KW_INTEGER)
 			DO_RULE(numtype) AST_SAV_NODE(numtype) 
 	END_IF
 
 	DO_RULE(model_entities) AST_SAV_NODE(model_entities) 
 
-	EXPECT_TOKEN_ELSE(SEMICOLON)
-        syntaxErrorMissing(SEMICOLON);
+    EXPECT_TOKEN_ELSE(OP_SEMICOLON)
+        syntaxErrorMissing(OP_SEMICOLON);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTmodel_entity_decl_groupNode)(astn_model_entity_type, astn_numtype, astn_model_entities);
@@ -121,14 +121,14 @@ ASTNode* parser::P_model_section()
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTEXT FIND
     context = CONTEXT_NONE;
 	FOR_ALL_IF
-		ITEM_S(SET)
-		ITEM_S(FIX)
-		ITEM_E(GUESS)
+        ITEM_S(KW_SET)
+        ITEM_S(KW_FIX)
+        ITEM_E(KW_GUESS)
             context = CONTEXT_NONEQ_TYPE;
 	ELSE
 		FOR_ALL_IF
-			ITEM_S(INIT)
-			ITEM_E(EQUATION)
+            ITEM_S(KW_INIT)
+            ITEM_E(KW_EQUATION)
                 context = CONTEXT_EQ_TYPE;
 		END_IF
 	END_IF
@@ -136,7 +136,7 @@ ASTNode* parser::P_model_section()
 
 	DO_RULE(section_type) AST_SAV_NODE(section_name) 
 
-	IF(DCOLON)
+    IF(OP_DCOLON)
 		DO_RULE(options) AST_SAV_NODE(options) 
 	END_IF
 
@@ -154,19 +154,19 @@ ASTNode* parser::P_section_type()
     START_RULE
 
 	SWITCH
-		CASE(SET)
-		CASE(FIX)
-		CASE(GUESS)
-		CASE(INIT)
-		CASE(EQUATION)
+        CASE(KW_SET)
+        CASE(KW_FIX)
+        CASE(KW_GUESS)
+        CASE(KW_INIT)
+        CASE(KW_EQUATION)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(SET);
-				possible_states.push_back(FIX);
-				possible_states.push_back(GUESS);
-				possible_states.push_back(INIT);
-				possible_states.push_back(EQUATION);
+                possible_states.push_back(KW_SET);
+                possible_states.push_back(KW_FIX);
+                possible_states.push_back(KW_GUESS);
+                possible_states.push_back(KW_INIT);
+                possible_states.push_back(KW_EQUATION);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -179,18 +179,18 @@ ASTNode* parser::P_options()
 {
     START_RULE
 
-	EXPECT_TOKEN_ELSE(DCOLON)
-        syntaxErrorExpectedType(DCOLON);
+    EXPECT_TOKEN_ELSE(OP_DCOLON)
+        syntaxErrorExpectedType(OP_DCOLON);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(LCIRCLE)
-        syntaxErrorExpectedType(LCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_LCIRCLE)
+        syntaxErrorExpectedType(OP_LCIRCLE);
 	END_EXPECT
 
 	DO_RULE(options_space)
 
-	EXPECT_TOKEN_ELSE(RCIRCLE)
-        syntaxErrorMissing(RCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_RCIRCLE)
+        syntaxErrorMissing(OP_RCIRCLE);
 	END_EXPECT
 
 	AST_RETURN_NO_CREATE
@@ -206,7 +206,7 @@ ASTNode* parser::P_options_space()
 	DO_RULE(option) AST_SAV_VEC(all_options) 
 
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
             EAT
 			DO_RULE(option) AST_SAV_VEC(all_options) 
 	END_WHILE
@@ -220,27 +220,27 @@ ASTNode* parser::P_option()
     START_RULE
 
 	SWITCH
-		CASE_RULE(UNIT, unit)
-		CASE_RULE(DESC, desc)
-		CASE_RULE(GTHAN, bounds)
-		CASE_RULE(LTHAN, bounds)
-		CASE_RULE(GEQUALS, bounds)
-		CASE_RULE(LEQUALS, bounds)
-		CASE_RULE(BASIS, basis_type)
-		CASE_RULE(SEGMENT, segment_def)
-		CASE_RULE(PDEVAR, pdevar_def)
+        CASE_RULE(KW_UNIT, unit)
+        CASE_RULE(KW_DESC, desc)
+        CASE_RULE(OP_GTHAN, bounds)
+        CASE_RULE(OP_LTHAN, bounds)
+        CASE_RULE(OP_GEQUALS, bounds)
+        CASE_RULE(OP_LEQUALS, bounds)
+        CASE_RULE(KW_BASIS, basis_type)
+        CASE_RULE(KW_SEGMENT, segment_def)
+        CASE_RULE(KW_PDEVAR, pdevar_def)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(UNIT);
-				possible_states.push_back(DESC);
-				possible_states.push_back(GTHAN);
-				possible_states.push_back(LTHAN);
-				possible_states.push_back(GEQUALS);
-				possible_states.push_back(LEQUALS);
-				possible_states.push_back(BASIS);
-				possible_states.push_back(SEGMENT);
-				possible_states.push_back(PDEVAR);
+                possible_states.push_back(KW_UNIT);
+                possible_states.push_back(KW_DESC);
+                possible_states.push_back(OP_GTHAN);
+                possible_states.push_back(OP_LTHAN);
+                possible_states.push_back(OP_GEQUALS);
+                possible_states.push_back(OP_LEQUALS);
+                possible_states.push_back(KW_BASIS);
+                possible_states.push_back(KW_SEGMENT);
+                possible_states.push_back(KW_PDEVAR);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -255,17 +255,17 @@ ASTNode* parser::P_unit()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(UNIT)
-        syntaxErrorExpectedType(UNIT);
+    EXPECT_TOKEN_ELSE(KW_UNIT)
+        syntaxErrorExpectedType(KW_UNIT);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	AST_SAV_TOK(value)
-	EXPECT_TOKEN_ELSE(STRING)
-        syntaxErrorExpectedType(STRING);
+    EXPECT_TOKEN_ELSE(DT_STRING)
+        syntaxErrorExpectedType(DT_STRING);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTunit_optionNode)(&t_value);
@@ -278,17 +278,17 @@ ASTNode* parser::P_desc()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(DESC)
-        syntaxErrorExpectedType(DESC);
+    EXPECT_TOKEN_ELSE(KW_DESC)
+        syntaxErrorExpectedType(KW_DESC);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	AST_SAV_TOK(value)
-	EXPECT_TOKEN_ELSE(STRING)
-        syntaxErrorExpectedType(STRING);
+    EXPECT_TOKEN_ELSE(DT_STRING)
+        syntaxErrorExpectedType(DT_STRING);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTdesc_optionNode)(&t_value);
@@ -303,13 +303,13 @@ ASTNode* parser::P_numtype()
     START_RULE
 
 	SWITCH
-		CASE(REAL)
-		CASE(INTEGER)
+        CASE(KW_REAL)
+        CASE(KW_INTEGER)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(REAL);
-				possible_states.push_back(INTEGER);
+                possible_states.push_back(KW_REAL);
+                possible_states.push_back(KW_INTEGER);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -341,17 +341,17 @@ ASTNode* parser::P_inequality()
     START_RULE
 
 	SWITCH
-		CASE(GTHAN)
-		CASE(LTHAN)
-		CASE(GEQUALS)
-		CASE(LEQUALS)
+        CASE(OP_GTHAN)
+        CASE(OP_LTHAN)
+        CASE(OP_GEQUALS)
+        CASE(OP_LEQUALS)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(GTHAN);
-				possible_states.push_back(LTHAN);
-				possible_states.push_back(GEQUALS);
-				possible_states.push_back(LEQUALS);
+                possible_states.push_back(OP_GTHAN);
+                possible_states.push_back(OP_LTHAN);
+                possible_states.push_back(OP_GEQUALS);
+                possible_states.push_back(OP_LEQUALS);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -365,15 +365,15 @@ ASTNode* parser::P_noneq_statement()
 {
     START_RULE
 
-	IF(FOR)
+    IF(KW_FOR)
 		DO_RULE(for_loop)
-	ELIF(pIF)
+    ELIF(KW_pIF)
 		DO_RULE(if_statement)
 	ELSE
 		DO_RULE(assignment)
 
-		EXPECT_TOKEN_ELSE(SEMICOLON)
-            syntaxErrorExpectedType(SEMICOLON);
+        EXPECT_TOKEN_ELSE(OP_SEMICOLON)
+            syntaxErrorExpectedType(OP_SEMICOLON);
 		END_EXPECT
 	END_IF
 
@@ -385,17 +385,17 @@ ASTNode* parser::P_eq_statement()
 {
     START_RULE
 
-	IF(FOR)
+    IF(KW_FOR)
 		DO_RULE(for_loop)
-	ELIF(pIF)
+    ELIF(KW_pIF)
 		DO_RULE(if_statement)
-	ELIF(PDE)
+    ELIF(KW_PDE)
 		DO_RULE(fem1d_equation)
 	ELSE
 		DO_RULE(equation)
 
-		EXPECT_TOKEN_ELSE(SEMICOLON)
-            syntaxErrorExpectedType(SEMICOLON);
+        EXPECT_TOKEN_ELSE(OP_SEMICOLON)
+            syntaxErrorExpectedType(OP_SEMICOLON);
 		END_EXPECT
 	END_IF
 
@@ -411,19 +411,19 @@ ASTNode* parser::P_model_entity_type()
     START_RULE
 
 	SWITCH
-		CASE(PARAMETER)
-		CASE(VARIABLE)
-		CASE(ITER)
-		CASE(IDENT)
-		CASE(LINE)
+        CASE(KW_PARAMETER)
+        CASE(KW_VARIABLE)
+        CASE(KW_ITER)
+        CASE(DT_IDENT)
+        CASE(KW_LINE)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(PARAMETER);
-				possible_states.push_back(VARIABLE);
-				possible_states.push_back(ITER);
-				possible_states.push_back(IDENT);
-				possible_states.push_back(LINE);
+                possible_states.push_back(KW_PARAMETER);
+                possible_states.push_back(KW_VARIABLE);
+                possible_states.push_back(KW_ITER);
+                possible_states.push_back(DT_IDENT);
+                possible_states.push_back(KW_LINE);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -441,7 +441,7 @@ ASTNode* parser::P_model_entities()
 	DO_RULE(model_entity) AST_SAV_VEC(all_model_entities) 
 
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
             EAT
 			DO_RULE(model_entity) AST_SAV_VEC(all_model_entities) 
 	END_WHILE
@@ -461,11 +461,11 @@ ASTNode* parser::P_model_entity()
 	DO_RULE(type_name) AST_SAV_NODE(type_name) 
 
 	FOR_ALL_IF
-		ITEM_E(EQUALS)
+        ITEM_E(OP_EQUALS)
 			DO_RULE(default) AST_SAV_NODE(pdefault) 
 	END_IF
 
-	IF(DCOLON)
+    IF(OP_DCOLON)
 		DO_RULE(options) AST_SAV_NODE(options) 
 	END_IF
 
@@ -481,13 +481,13 @@ ASTNode* parser::P_default()
     START_RULE
 
 	FOR_ALL_IF
-		ITEM_E(EQUALS)
+        ITEM_E(OP_EQUALS)
 			AST_SAV_TOK(equal_type_op)
             EAT
 	ELSE
 		FORCE_ERROR
 			std::vector<int> possible_states;
-			possible_states.push_back(EQUALS);
+            possible_states.push_back(OP_EQUALS);
             syntaxErrorExpectedAnyofType(possible_states);
 		UNFORCE_ERROR
 	END_IF
@@ -531,8 +531,8 @@ ASTNode* parser::P_expression()
 	node1 = astn_term1;
 
 	FOR_ALL_WHILE
-		ITEM_S(PLUS)
-		ITEM_E(MINUS)		
+        ITEM_S(OP_PLUS)
+        ITEM_E(OP_MINUS)
 			AST_SAV_TOK(bin_op)
             EAT
 
@@ -561,8 +561,8 @@ ASTNode* parser::P_term()
 	node1 = astn_factor1;
 
 	FOR_ALL_WHILE
-		ITEM_S(MULT)
-		ITEM_E(DIV)
+        ITEM_S(OP_MULT)
+        ITEM_E(OP_DIV)
 			AST_SAV_TOK(bin_op)
             EAT
 				
@@ -587,7 +587,7 @@ ASTNode* parser::P_factor()
 
 	DO_RULE(primary) AST_SAV_NODE(primary1) 
 
-	IF(RAISE)
+    IF(OP_RAISE)
 		AST_SAV_TOK(raise_to)
         EAT
 
@@ -608,27 +608,27 @@ ASTNode* parser::P_primary()
     START_RULE
 
 	FOR_ALL_IF
-		ITEM_S(PLUS)
-		ITEM_E(MINUS)
+        ITEM_S(OP_PLUS)
+        ITEM_E(OP_MINUS)
 			AST_SAV_TOK(un_op)
             EAT
 			unary_op_enabled = true;
 	END_IF
 
 	FOR_ALL_IF
-		ITEM_S(REAL_VALUE)
-		ITEM_S(INTEGER_VALUE)
-		ITEM_E(EXPO_VALUE)
+        ITEM_S(DT_REAL_VALUE)
+        ITEM_S(DT_INTEGER_VALUE)
+        ITEM_E(DT_EXPO_VALUE)
 			DO_RULE(real_number)
-		ELIF(LCIRCLE)
+        ELIF(OP_LCIRCLE)
             EAT
 			DO_RULE(logical_expression)
-			EXPECT_TOKEN_ELSE(RCIRCLE)
-                syntaxErrorExpectedType(RCIRCLE);
+            EXPECT_TOKEN_ELSE(OP_RCIRCLE)
+                syntaxErrorExpectedType(OP_RCIRCLE);
 			END_EXPECT
-	ELIF(IDENT)
+    ELIF(DT_IDENT)
         lookAhead(1);
-        if (LAtoks.at(0).getType() == LCIRCLE)
+        if (LAtoks.at(0).getType() == OP_LCIRCLE)
 		{
 			DO_RULE(function_name)
 		}
@@ -636,7 +636,7 @@ ASTNode* parser::P_primary()
 		{
 			DO_RULE(full_type_name)
 		}
-	ELIF(DOLLAR)
+    ELIF(OP_DOLLAR)
 		DO_RULE(full_type_name)
 	ELSE
 		FORCE_ERROR
@@ -666,9 +666,9 @@ ASTNode* parser::P_real_number()
     START_RULE
 
 	SWITCH
-		CASE(REAL_VALUE)
-		CASE(INTEGER_VALUE)
-		CASE(EXPO_VALUE)
+        CASE(DT_REAL_VALUE)
+        CASE(DT_INTEGER_VALUE)
+        CASE(DT_EXPO_VALUE)
 		LAST
 			FORCE_ERROR
 				std::vector<std::string> possible_states;
@@ -690,19 +690,19 @@ ASTNode* parser::P_equation_type_operator()
     START_RULE
 
 	SWITCH
-		CASE(EQUALS)
-		CASE(GTHAN)
-		CASE(LTHAN)
-		CASE(GEQUALS)
-		CASE(LEQUALS)
+        CASE(OP_EQUALS)
+        CASE(OP_GTHAN)
+        CASE(OP_LTHAN)
+        CASE(OP_GEQUALS)
+        CASE(OP_LEQUALS)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(EQUALS);
-				possible_states.push_back(GTHAN);
-				possible_states.push_back(LTHAN);
-				possible_states.push_back(GEQUALS);
-				possible_states.push_back(LEQUALS);
+                possible_states.push_back(OP_EQUALS);
+                possible_states.push_back(OP_GTHAN);
+                possible_states.push_back(OP_LTHAN);
+                possible_states.push_back(OP_GEQUALS);
+                possible_states.push_back(OP_LEQUALS);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -719,19 +719,19 @@ ASTNode* parser::P_comparison_type_operator()
     START_RULE
 
 	SWITCH
-		CASE(DEQUALS)
-		CASE(GTHAN)
-		CASE(LTHAN)
-		CASE(GEQUALS)
-		CASE(LEQUALS)
+        CASE(OP_DEQUALS)
+        CASE(OP_GTHAN)
+        CASE(OP_LTHAN)
+        CASE(OP_GEQUALS)
+        CASE(OP_LEQUALS)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(DEQUALS);
-				possible_states.push_back(GTHAN);
-				possible_states.push_back(LTHAN);
-				possible_states.push_back(GEQUALS);
-				possible_states.push_back(LEQUALS);
+                possible_states.push_back(OP_DEQUALS);
+                possible_states.push_back(OP_GTHAN);
+                possible_states.push_back(OP_LTHAN);
+                possible_states.push_back(OP_GEQUALS);
+                possible_states.push_back(OP_LEQUALS);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -749,26 +749,26 @@ ASTNode* parser::P_type_name()
 
     START_RULE
 
-	IF(DOLLAR)
+    IF(OP_DOLLAR)
 		AST_SAV_TOK(dt)
         EAT
 	END_IF
 
 	AST_SAV_TOK(type_name)
-	EXPECT_TOKEN_ELSE(IDENT)
+    EXPECT_TOKEN_ELSE(DT_IDENT)
         syntaxErrorExpectedString("Identifier");
 	END_EXPECT
 
 	FOR_ALL_IF
-		ITEM_E(LSQUARE)
+        ITEM_E(OP_LSQUARE)
             EAT
 			DO_RULE(array_indices) AST_SAV_NODE(array_indices) 
-			EXPECT_TOKEN_ELSE(RSQUARE)
-                syntaxErrorMissing(RSQUARE);
+            EXPECT_TOKEN_ELSE(OP_RSQUARE)
+                syntaxErrorMissing(OP_RSQUARE);
 			END_EXPECT
 	END_IF
 
-	IF(APOS)
+    IF(OP_APOS)
 		DO_RULE(derivative_sigle_var) AST_SAV_NODE(deriv)
 	END_IF
 
@@ -785,7 +785,7 @@ ASTNode* parser::P_array_indices()
 	DO_RULE(array_index) AST_SAV_VEC(all_array_indices) 
 
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
             EAT
 			DO_RULE(array_index) AST_SAV_VEC(all_array_indices) 
 	END_WHILE
@@ -798,7 +798,7 @@ ASTNode* parser::P_array_index()
 {
     START_RULE
 
-	IF(STRING)
+    IF(DT_STRING)
 		DO_RULE(string_index)
 	ELSE
 		DO_RULE(expression)
@@ -818,7 +818,7 @@ ASTNode* parser::P_full_type_name()
 	DO_RULE(type_name) AST_SAV_VEC(full_type_name) 
 
 	FOR_ALL_WHILE
-		ITEM_E(DOT)
+        ITEM_E(OP_DOT)
             EAT
 			DO_RULE(type_name) AST_SAV_VEC(full_type_name) 
 	END_WHILE
@@ -836,20 +836,20 @@ ASTNode* parser::P_function_name()
     START_RULE
 
     EAT
-	EXPECT_TOKEN_ELSE(LCIRCLE)
-        syntaxErrorExpectedType(LCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_LCIRCLE)
+        syntaxErrorExpectedType(OP_LCIRCLE);
 	END_EXPECT
 		
 	DO_RULE(expression) AST_SAV_VEC(functionArgs) 
 
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
             EAT
 			DO_RULE(expression) AST_SAV_VEC(functionArgs) 
 	END_WHILE
 
-	EXPECT_TOKEN_ELSE(RCIRCLE)
-        syntaxErrorExpectedType(RCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_RCIRCLE)
+        syntaxErrorExpectedType(OP_RCIRCLE);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTfunctionCallNode)(&t_functionName, astvn_functionArgs);
@@ -871,8 +871,8 @@ ASTNode* parser::P_logical_expression()
 	node1 = astn_lterm1;
 
 	FOR_ALL_WHILE
-		ITEM_S(AND)
-		ITEM_E(OR)
+        ITEM_S(OP_AND)
+        ITEM_E(OP_OR)
 			AST_SAV_TOK(lbin_op)
             EAT
 
@@ -893,7 +893,7 @@ ASTNode* parser::P_lterm()
 
     START_RULE
 
-	IF(NOT)
+    IF(OP_NOT)
 		unary_enabled = true;
 	AST_SAV_TOK(not)
         EAT
@@ -925,11 +925,11 @@ ASTNode* parser::P_lfactor()
 	node1 = astn_expression1;
 
 	FOR_ALL_WHILE
-		ITEM_S(DEQUALS)
-		ITEM_S(GTHAN)
-		ITEM_S(LTHAN)
-		ITEM_S(GEQUALS)
-		ITEM_E(LEQUALS)
+        ITEM_S(OP_DEQUALS)
+        ITEM_S(OP_GTHAN)
+        ITEM_S(OP_LTHAN)
+        ITEM_S(OP_GEQUALS)
+        ITEM_E(OP_LEQUALS)
 			AST_SAV_TOK(lrel_op)
 			DO_RULE(comparison_type_operator)
 
@@ -954,38 +954,38 @@ ASTNode* parser::P_for_loop()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(FOR)
-        syntaxErrorExpectedType(FOR);
+    EXPECT_TOKEN_ELSE(KW_FOR)
+        syntaxErrorExpectedType(KW_FOR);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(LCIRCLE)
-        syntaxErrorExpectedType(LCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_LCIRCLE)
+        syntaxErrorExpectedType(OP_LCIRCLE);
 	END_EXPECT
 
 	AST_SAV_TOK(iter_name)
-	EXPECT_TOKEN_ELSE(IDENT)
+    EXPECT_TOKEN_ELSE(DT_IDENT)
         syntaxErrorExpectedString("Identifier");
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	DO_RULE(expression) AST_SAV_NODE(start_expr) 
 		 
-	EXPECT_TOKEN_ELSE(COMMA)
-        syntaxErrorExpectedType(COMMA);
+    EXPECT_TOKEN_ELSE(OP_COMMA)
+        syntaxErrorExpectedType(OP_COMMA);
 	END_EXPECT
 
 	DO_RULE(expression) AST_SAV_NODE(till_expr) 
 
-	IF(COMMA)
+    IF(OP_COMMA)
         EAT
 		DO_RULE(expression) AST_SAV_NODE(incr_expr) 
 	END_IF
 
-	EXPECT_TOKEN_ELSE(RCIRCLE)
-        syntaxErrorMissing(RCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_RCIRCLE)
+        syntaxErrorMissing(OP_RCIRCLE);
 	END_EXPECT
 
 	DO_RULE(single_or_compound_statement) AST_SAV_NODE(for_body) 
@@ -1000,12 +1000,12 @@ ASTNode* parser::P_single_or_compound_statement()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(LCURLY)
-        syntaxErrorExpectedType(LCURLY);
+    EXPECT_TOKEN_ELSE(OP_LCURLY)
+        syntaxErrorExpectedType(OP_LCURLY);
 	END_EXPECT
 
 	FOR_ALL_WHILE
-		!ITEM_E(RCURLY)
+        !ITEM_E(OP_RCURLY)
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONTEXT FIND
             if (context == CONTEXT_EQ_TYPE)
 			{ 
@@ -1023,8 +1023,8 @@ ASTNode* parser::P_single_or_compound_statement()
 				
 	END_WHILE
 
-	EXPECT_TOKEN_ELSE(RCURLY)
-        syntaxErrorMissing(RCURLY);
+    EXPECT_TOKEN_ELSE(OP_RCURLY)
+        syntaxErrorMissing(OP_RCURLY);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTstatement_blockNode)(astvn_all_statements);
@@ -1039,23 +1039,23 @@ ASTNode* parser::P_if_statement()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(pIF)
-        syntaxErrorExpectedType(FOR);
+    EXPECT_TOKEN_ELSE(KW_pIF)
+        syntaxErrorExpectedType(KW_FOR);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(LCIRCLE)
-        syntaxErrorExpectedType(LCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_LCIRCLE)
+        syntaxErrorExpectedType(OP_LCIRCLE);
 	END_EXPECT
 
 	DO_RULE(logical_expression) AST_SAV_NODE(condition) 
 
-	EXPECT_TOKEN_ELSE(RCIRCLE)
-        syntaxErrorMissing(RCIRCLE);
+    EXPECT_TOKEN_ELSE(OP_RCIRCLE)
+        syntaxErrorMissing(OP_RCIRCLE);
 	END_EXPECT
 
 	DO_RULE(single_or_compound_statement) AST_SAV_NODE(then_body) 
 
-	IF(pELSE)
+    IF(KW_pELSE)
         EAT
 		DO_RULE(single_or_compound_statement) AST_SAV_NODE(else_body) 
 	END_IF
@@ -1094,14 +1094,14 @@ ASTNode* parser::P_simulation_args()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(LTHAN)
-        syntaxErrorMissing(LTHAN);
+    EXPECT_TOKEN_ELSE(OP_LTHAN)
+        syntaxErrorMissing(OP_LTHAN);
 	END_EXPECT
 
 	AST_SAV_TOK(simType)
 
-	EXPECT_TOKEN_ELSE(IDENT)
-        syntaxErrorMissing(IDENT);
+    EXPECT_TOKEN_ELSE(DT_IDENT)
+        syntaxErrorMissing(DT_IDENT);
 	END_EXPECT
 
 	DO_RULE(real_number) AST_SAV_NODE(simStartt)
@@ -1110,16 +1110,16 @@ ASTNode* parser::P_simulation_args()
 
 	AST_SAV_TOK(simNumSteps)
 
-	EXPECT_TOKEN_ELSE(INTEGER_VALUE)
-        syntaxErrorMissing(INTEGER_VALUE);
+    EXPECT_TOKEN_ELSE(DT_INTEGER_VALUE)
+        syntaxErrorMissing(DT_INTEGER_VALUE);
 	END_EXPECT
 
 	DO_RULE(real_number) AST_SAV_NODE(simAbsTol)
 
 	DO_RULE(real_number) AST_SAV_NODE(simRelTol)
 
-	EXPECT_TOKEN_ELSE(GTHAN)
-        syntaxErrorMissing(GTHAN);
+    EXPECT_TOKEN_ELSE(OP_GTHAN)
+        syntaxErrorMissing(OP_GTHAN);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTSimulationArgs)(&t_simType, astn_simStartt, astn_simEndt, &t_simNumSteps, astn_simAbsTol, astn_simRelTol);

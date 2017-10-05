@@ -74,7 +74,7 @@ int equation::getEquationsRecursive(model* mod)
 	// Loop through all objects in this object (Recursive call)
 	for (auto obj = mod->getAllModelEntities()->begin(); obj != mod->getAllModelEntities()->end(); ++obj)
 	{
-		if (obj->second->geType() == MODEL)
+		if (obj->second->geType() == KW_MODEL)
 		{
 			if (obj->second->getDimType() == SY_SCALAR)
 			{
@@ -98,7 +98,7 @@ int equation::getEquationsRecursive(model* mod)
 std::string equation::getSubstitutedEntityNameScalar(modelEntity* me)
 {
 	// build the value based on index
-	if (me->geType() == VARIABLE)
+	if (me->geType() == KW_VARIABLE)
 	{
 		variable* mev = static_cast<variable*>(me);
 
@@ -181,7 +181,7 @@ std::string equation::getSubstitutedEntityNameScalar(modelEntity* me)
 			}
 		}
 	}
-	else if (me->geType() == PARAMETER || me->geType() == ITER)
+	else if (me->geType() == KW_PARAMETER || me->geType() == KW_ITER)
 	{
 		std::stringstream ss;
 		ss << std::scientific << std::setprecision(10) << me->sValue;
@@ -198,7 +198,7 @@ std::string equation::getSubstitutedEntityNameScalar(modelEntity* me)
 std::string equation::getSubstitutedEntityNameVector(modelEntity* me, int &index)
 {
 	// build the value based on index
-	if (me->geType() == VARIABLE)
+	if (me->geType() == KW_VARIABLE)
 	{
 		variable* mev = static_cast<variable*>(me);
 		if (me->checkIsdt())
@@ -279,7 +279,7 @@ std::string equation::getSubstitutedEntityNameVector(modelEntity* me, int &index
 			}
 		}
 	}
-	else if (me->geType() == PARAMETER)
+	else if (me->geType() == KW_PARAMETER)
 	{
 		std::stringstream ss;
 		ss << std::scientific << std::setprecision(10) << me->vValue[index];

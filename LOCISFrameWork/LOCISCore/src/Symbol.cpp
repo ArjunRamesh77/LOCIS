@@ -324,7 +324,7 @@ std::string modelEntity::getGetMultiDimsFromSingle(int &index)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter
 parameter::parameter() :
-    modelEntity(PARAMETER)
+    modelEntity(KW_PARAMETER)
 {
     vValue = NULL;
 }
@@ -381,7 +381,7 @@ int parameter::allocateArray(const double &val)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Variable
-variable::variable() : modelEntity(VARIABLE),
+variable::variable() : modelEntity(KW_VARIABLE),
     vLowerType(NULL),
     vUpperType(NULL),
     vUpperValue(NULL),
@@ -545,7 +545,7 @@ int variable::setAlltoB(const int &type, const char ctype, const double &dtype)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Object
-object::object(): modelEntity(MODEL),
+object::object(): modelEntity(KW_MODEL),
   sModelObject(NULL),
   vModelObject(NULL),
   sModelName("")

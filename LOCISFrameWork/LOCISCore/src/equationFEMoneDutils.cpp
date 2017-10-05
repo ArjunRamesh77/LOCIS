@@ -54,23 +54,23 @@ bool equation::getFEMoneDEquations(ASTNode* optimizedTree, ASTNode* leftBoundary
 	userdata.totalNumNodes = numnodes;
 
 	// Getting boundary conditions
-	if (leftBoundaryType == VALUE && rightBoundaryType == VALUE)
+	if (leftBoundaryType == KW_VALUE && rightBoundaryType == KW_VALUE)
 	{
 		// dirichlet-dirichlet
 		userdata.boundaryTypes = DD;
 
 	}
-	else if (leftBoundaryType == FLUX && rightBoundaryType == VALUE)
+	else if (leftBoundaryType == KW_FLUX && rightBoundaryType == KW_VALUE)
 	{
 		// neumann-dirichlet
 		userdata.boundaryTypes = ND;
 	}
-	else if (leftBoundaryType == VALUE && rightBoundaryType == FLUX)
+	else if (leftBoundaryType == KW_VALUE && rightBoundaryType == KW_FLUX)
 	{
 		// dirichlet-neumann
 		userdata.boundaryTypes = DN;
 	}
-	else if (leftBoundaryType == FLUX && rightBoundaryType == FLUX)
+	else if (leftBoundaryType == KW_FLUX && rightBoundaryType == KW_FLUX)
 	{
 		// neumann-neumann
 		userdata.boundaryTypes = NN;

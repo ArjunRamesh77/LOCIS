@@ -31,12 +31,12 @@ ASTNode* ASTmodel_entity_decl_groupNode::CreateNode(ASTNode* astnModelEntityType
     ASTgeneric_tokenNode* g_astnModelEntityType = (ASTgeneric_tokenNode*)astnModelEntityType;
     iDeclType = g_astnModelEntityType->get_iTokenType();
 
-	if (iDeclType == IDENT)
+    if (iDeclType == DT_IDENT)
 	{
         sModelBaseName = g_astnModelEntityType->get_sTokenValue();
 		tEntityType = g_astnModelEntityType->tok;
 	}
-	else if (iDeclType == VARIABLE || iDeclType == PARAMETER)
+    else if (iDeclType == KW_VARIABLE || iDeclType == KW_PARAMETER)
 	{
 		// Default is Real
         if (astnNumtype)
@@ -47,7 +47,7 @@ ASTNode* ASTmodel_entity_decl_groupNode::CreateNode(ASTNode* astnModelEntityType
 		}
 		else
 		{
-			iNumType = REAL;
+            iNumType = KW_REAL;
 		}
 	}
 
@@ -272,7 +272,7 @@ ASTNode* ASTNamedReferenceNode::CreateNode(token *tdt_arg, token *tName_arg, AST
     if (astnArrayIndices != NULL)
 		bIsArray = true;
 	
-    if (tdt.getType() == DOLLAR)
+    if (tdt.getType() == OP_DOLLAR)
 	{
 		bIsdt = true;
 		this->sName = "$" + this->sName; // Add dollar for unique identification of dt variable type

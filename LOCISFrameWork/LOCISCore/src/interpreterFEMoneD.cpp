@@ -12,7 +12,7 @@ bool interpreter::initFEMLine(ASTNode* buildNode)
 	// Create line object
 	FEMOneDLineObject* lo = new FEMOneDLineObject;
 	lo->setName(node->sName);
-	lo->setType(MODEL);
+    lo->setType(KW_MODEL);
 	lo->setSType("MODEL");
 	lo->isFEMOneDLine = true;	  //flag indicating object is a line type
     lo->setBuildNode(buildNode);   //To find arrays etc

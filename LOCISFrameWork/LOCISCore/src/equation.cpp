@@ -78,23 +78,23 @@ ASTNode* equation::dispatch(ASTMathBinaryOpNode* node)
 
 	switch (node->iBinaryOp)
 	{
-	case PLUS:
+    case OP_PLUS:
 		node->equation_data = "(" + left_eval->equation_data + "+" + right_eval->equation_data + ")";
 		break;
 
-	case MINUS:
+    case OP_MINUS:
 		node->equation_data = "(" + left_eval->equation_data + "-" + right_eval->equation_data + ")";
 		break;
 
-	case MULT:
+    case OP_MULT:
 		node->equation_data = "(" + left_eval->equation_data + "*" + right_eval->equation_data + ")";
 		break;
 
-	case DIV:
+    case OP_DIV:
 		node->equation_data = "(" + left_eval->equation_data + "/" + right_eval->equation_data + ")";
 		break;
 
-	case RAISE:
+    case OP_RAISE:
 		node->equation_data = "(" + left_eval->equation_data + "**" + right_eval->equation_data + ")";
 	}
 
@@ -110,11 +110,11 @@ ASTNode* equation::dispatch(ASTMathUnaryNode* node)
 
 	switch (node->iUnaryOp)
 	{
-	case PLUS:
+    case OP_PLUS:
 		node->equation_data = "( +" + right_eval->equation_data + ")";
 		break;
 
-	case MINUS:
+    case OP_MINUS:
 		node->equation_data = "( -" + right_eval->equation_data + ")";
 		break;
 	}
@@ -190,7 +190,7 @@ ASTNode* equation::dispatch(ASTfor_loopNode* node)
 	if (iter)
 	{
 		//iter has to be an iter type variable
-        if (iter->geType() != ITER)
+        if (iter->geType() != KW_ITER)
 		{
 			Ip->semanticErr_OnlyIterAllowedInFor(node);
 			return NULL;

@@ -70,7 +70,7 @@ bool lexer::isExpo(token *tok)
 				}
 				if (inloop)
 				{
-                    tok->setToken(EXPO_VALUE, real_value, lineNum, currentPosSave);
+                    tok->setToken(DT_EXPO_VALUE, real_value, lineNum, currentPosSave);
                     return true;
 				}
 				else
@@ -118,7 +118,7 @@ bool lexer::isIdentifier(token *tok)
 			incIter();
 		}
 
-        tok->setToken(IDENT, identifier, lineNum, currentPosSave);
+        tok->setToken(DT_IDENT, identifier, lineNum, currentPosSave);
         return true;
 	}
 
@@ -152,7 +152,7 @@ bool lexer::isInteger(token *tok)
 	}
 	if (inloop)
 	{
-        tok->setToken(INTEGER_VALUE, integer_value, lineNum, currentPosSave);
+        tok->setToken(DT_INTEGER_VALUE, integer_value, lineNum, currentPosSave);
         return true;
 	}
 
@@ -334,7 +334,7 @@ bool lexer::isReal(token *tok)
 		}
 		if (inloop)
 		{
-            tok->setToken(REAL_VALUE, real_value, lineNum, currentPosSave);
+            tok->setToken(DT_REAL_VALUE, real_value, lineNum, currentPosSave);
             return true;
 		}
 		else
@@ -396,7 +396,7 @@ bool lexer::isString(token *tok)
         if (currentIt != line.end() && *currentIt == qtype)
 		{
 			incIter();
-            tok->setToken(STRING, string_value, lineNum, currentPosSave);
+            tok->setToken(DT_STRING, string_value, lineNum, currentPosSave);
             return true;
 		}
 		else

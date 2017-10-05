@@ -320,21 +320,21 @@ ASTNode* FEM::dispatch(ASTMathBinaryOpNode* node)
 
 	switch (node->iBinaryOp)
 	{
-	case(PLUS):
+	case(OP_PLUS):
 		node->equation_data = left_eval->equation_data + "+" + right_eval->equation_data;
 		break;
 
-	case(MULT):
+	case(OP_MULT):
 		node->equation_data = left_eval->equation_data + "*" + right_eval->equation_data;
 		break;
 
-	case (MINUS):
+	case (OP_MINUS):
 		node->equation_data = left_eval->equation_data + "-" + right_eval->equation_data;
 
-	case DIV:
+	case OP_DIV:
 		node->equation_data = left_eval->equation_data + "/" + right_eval->equation_data;
 		
-	case RAISE:
+	case OP_RAISE:
 		node->equation_data = left_eval->equation_data + "**" + right_eval->equation_data;
 	}
 
@@ -352,11 +352,11 @@ ASTNode* FEM::dispatch(ASTMathUnaryNode* node)
 
 	switch (node->iUnaryOp)
 	{
-	case PLUS:
+	case OP_PLUS:
 		node->equation_data = "( +" + right_eval->equation_data + ")";
 		break;
 
-	case MINUS:
+	case OP_MINUS:
 		node->equation_data = "( -" + right_eval->equation_data + ")";
 		break;
 	}

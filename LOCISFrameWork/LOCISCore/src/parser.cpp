@@ -98,23 +98,23 @@ bool parser::isDataType(int type, std::string &val)
 {
 	switch (type)
 	{
-	case REAL_VALUE:
-	case EXPO_VALUE:
+    case DT_REAL_VALUE:
+    case DT_EXPO_VALUE:
 		val.assign("Real");
 		return true;
 		break;
 
-	case INTEGER_VALUE:
+    case DT_INTEGER_VALUE:
 		val.assign("Integer");
 		return true;
 		break;
 
-	case IDENT:
+    case DT_IDENT:
 		val.assign("Identifier");
 		return true;
 		break;
 
-	case STRING:
+    case DT_STRING:
 		val.assign("String");
 		return true;
 		break;

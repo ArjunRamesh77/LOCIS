@@ -8,18 +8,18 @@ ASTNode* parser::P_basis_type()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(BASIS)
-        syntaxErrorExpectedType(BASIS);
+	EXPECT_TOKEN_ELSE(KW_BASIS)
+        syntaxErrorExpectedType(KW_BASIS);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	AST_SAV_TOK(basis_type)
 
-	EXPECT_TOKEN_ELSE(STRING)
-        syntaxErrorExpectedType(STRING);
+    EXPECT_TOKEN_ELSE(DT_STRING)
+        syntaxErrorExpectedType(DT_STRING);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTBasisTypeNode)(&t_basis_type);
@@ -31,12 +31,12 @@ ASTNode* parser::P_segment_def()
 {
     START_RULE
 
-	EXPECT_TOKEN_ELSE(SEGMENT)
-        syntaxErrorExpectedType(SEGMENT);
+	EXPECT_TOKEN_ELSE(KW_SEGMENT)
+        syntaxErrorExpectedType(KW_SEGMENT);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	DO_RULE(segment_attributes)
@@ -52,20 +52,20 @@ ASTNode* parser::P_segment_attributes()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(LCURLY)
-        syntaxErrorExpectedType(LCURLY);
+    EXPECT_TOKEN_ELSE(OP_LCURLY)
+        syntaxErrorExpectedType(OP_LCURLY);
 	END_EXPECT
 
 	DO_RULE(segment_attribute) AST_SAV_VEC(all_segment_attributes)
 
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
             EAT
 			DO_RULE(segment_attribute) AST_SAV_VEC(all_segment_attributes)		
 	END_WHILE
 
-	EXPECT_TOKEN_ELSE(RCURLY)
-        syntaxErrorExpectedType(RCURLY);
+    EXPECT_TOKEN_ELSE(OP_RCURLY)
+        syntaxErrorExpectedType(OP_RCURLY);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTSegmentAttributesNode)(astvn_all_segment_attributes);
@@ -78,17 +78,17 @@ ASTNode* parser::P_segment_attribute()
     START_RULE
 
 	SWITCH
-		CASE_RULE(ID, segment_id_type)
-		CASE_RULE(NUMEL, segment_numel)
-		CASE_RULE(LENGTH, segment_length)
-		CASE_RULE(pDOMAIN, domain_option)
+		CASE_RULE(KW_ID, segment_id_type)
+		CASE_RULE(KW_NUMEL, segment_numel)
+		CASE_RULE(KW_LENGTH, segment_length)
+		CASE_RULE(KW_pDOMAIN, domain_option)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(ID);
-				possible_states.push_back(NUMEL);
-				possible_states.push_back(LENGTH);
-				possible_states.push_back(pDOMAIN);
+				possible_states.push_back(KW_ID);
+				possible_states.push_back(KW_NUMEL);
+				possible_states.push_back(KW_LENGTH);
+				possible_states.push_back(KW_pDOMAIN);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH
@@ -104,18 +104,18 @@ ASTNode* parser::P_segment_id_type()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(ID)
-        syntaxErrorExpectedType(ID);
+	EXPECT_TOKEN_ELSE(KW_ID)
+        syntaxErrorExpectedType(KW_ID);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	AST_SAV_TOK(id)
 
-	EXPECT_TOKEN_ELSE(STRING)
-        syntaxErrorExpectedType(STRING);
+    EXPECT_TOKEN_ELSE(DT_STRING)
+        syntaxErrorExpectedType(DT_STRING);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTSegmentIdTypeNode)(&t_id);
@@ -129,12 +129,12 @@ ASTNode* parser::P_segment_numel()
     START_RULE
 
 	AST_SAV_TOK(Tag)
-	EXPECT_TOKEN_ELSE(NUMEL)
-        syntaxErrorExpectedType(NUMEL);
+	EXPECT_TOKEN_ELSE(KW_NUMEL)
+        syntaxErrorExpectedType(KW_NUMEL);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	DO_RULE(expression)
@@ -150,12 +150,12 @@ ASTNode* parser::P_segment_length()
     START_RULE
 
 	AST_SAV_TOK(SegLen)
-	EXPECT_TOKEN_ELSE(LENGTH)
-        syntaxErrorExpectedType(LENGTH);
+	EXPECT_TOKEN_ELSE(KW_LENGTH)
+        syntaxErrorExpectedType(KW_LENGTH);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	DO_RULE(expression)
@@ -173,28 +173,28 @@ ASTNode* parser::P_domain_option()
     START_RULE
 
 	AST_SAV_TOK(Tag)
-	EXPECT_TOKEN_ELSE(pDOMAIN)
-        syntaxErrorExpectedType(pDOMAIN);
+	EXPECT_TOKEN_ELSE(KW_pDOMAIN)
+        syntaxErrorExpectedType(KW_pDOMAIN);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(LCURLY)
-        syntaxErrorExpectedType(LCURLY);
+    EXPECT_TOKEN_ELSE(OP_LCURLY)
+        syntaxErrorExpectedType(OP_LCURLY);
 	END_EXPECT
 
 	DO_RULE(type_name) AST_SAV_VEC(domains)
 	
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
         EAT
 			DO_RULE(type_name) AST_SAV_VEC(domains)
 	END_WHILE
 
-	EXPECT_TOKEN_ELSE(RCURLY)
-        syntaxErrorExpectedType(RCURLY);
+    EXPECT_TOKEN_ELSE(OP_RCURLY)
+        syntaxErrorExpectedType(OP_RCURLY);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTdomainOptionNode)(astvn_domains, &t_Tag);
@@ -213,48 +213,48 @@ ASTNode* parser::P_fem1d_equation()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(PDE)
-        syntaxErrorExpectedType(PDE);
+	EXPECT_TOKEN_ELSE(KW_PDE)
+        syntaxErrorExpectedType(KW_PDE);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(COMMA)
-        syntaxErrorExpectedType(COMMA);
+    EXPECT_TOKEN_ELSE(OP_COMMA)
+        syntaxErrorExpectedType(OP_COMMA);
 	END_EXPECT
 
 	DO_RULE(full_type_name) AST_SAV_NODE(domain)
 
-	EXPECT_TOKEN_ELSE(COMMA)
-        syntaxErrorExpectedType(COMMA);
+    EXPECT_TOKEN_ELSE(OP_COMMA)
+        syntaxErrorExpectedType(OP_COMMA);
 	END_EXPECT
 
 	DO_RULE(boundary_type) AST_SAV_NODE(leftb)
 
-	EXPECT_TOKEN_ELSE(COMMA)
-        syntaxErrorExpectedType(COMMA);
+    EXPECT_TOKEN_ELSE(OP_COMMA)
+        syntaxErrorExpectedType(OP_COMMA);
 	END_EXPECT
 
 	DO_RULE(boundary_type) AST_SAV_NODE(rightb)
 
-	EXPECT_TOKEN_ELSE(COLON)
-        syntaxErrorExpectedType(COLON);
+    EXPECT_TOKEN_ELSE(OP_COLON)
+        syntaxErrorExpectedType(OP_COLON);
 	END_EXPECT
 
 	DO_RULE(equation) AST_SAV_NODE(fem_eqn)
 
-	EXPECT_TOKEN_ELSE(COMMA)
-        syntaxErrorExpectedType(COMMA);
+    EXPECT_TOKEN_ELSE(OP_COMMA)
+        syntaxErrorExpectedType(OP_COMMA);
 	END_EXPECT
 
 	DO_RULE(expression) AST_SAV_NODE(fem_boundary_left_eqn)
 
-	EXPECT_TOKEN_ELSE(COMMA)
-        syntaxErrorExpectedType(COMMA);
+    EXPECT_TOKEN_ELSE(OP_COMMA)
+        syntaxErrorExpectedType(OP_COMMA);
 	END_EXPECT
 
 	DO_RULE(expression) AST_SAV_NODE(fem_boundary_right_eqn)
 
-	EXPECT_TOKEN_ELSE(SEMICOLON)
-        syntaxErrorExpectedType(SEMICOLON);
+    EXPECT_TOKEN_ELSE(OP_SEMICOLON)
+        syntaxErrorExpectedType(OP_SEMICOLON);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTFEMoneDEquation)(astn_domain, astn_fem_eqn, astn_fem_boundary_left_eqn, astn_fem_boundary_right_eqn, astn_leftb, astn_rightb);
@@ -269,8 +269,8 @@ ASTNode* parser::P_string_index()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(STRING)
-        syntaxErrorExpectedType(STRING);
+	EXPECT_TOKEN_ELSE(DT_STRING)
+        syntaxErrorExpectedType(DT_STRING);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTstringIndex)(&t_string_val);
@@ -283,12 +283,12 @@ ASTNode* parser::P_pdevar_def()
 {
     START_RULE
 
-	EXPECT_TOKEN_ELSE(PDEVAR)
-        syntaxErrorExpectedType(PDEVAR);
+	EXPECT_TOKEN_ELSE(KW_PDEVAR)
+        syntaxErrorExpectedType(KW_PDEVAR);
 	END_EXPECT
 
-	EXPECT_TOKEN_ELSE(EQUALS)
-        syntaxErrorExpectedType(EQUALS);
+    EXPECT_TOKEN_ELSE(OP_EQUALS)
+        syntaxErrorExpectedType(OP_EQUALS);
 	END_EXPECT
 
 	DO_RULE(pdevar_attributes)
@@ -304,20 +304,20 @@ ASTNode* parser::P_pdevar_attributes()
 
     START_RULE
 
-	EXPECT_TOKEN_ELSE(LCURLY)
-        syntaxErrorExpectedType(LCURLY);
+    EXPECT_TOKEN_ELSE(OP_LCURLY)
+        syntaxErrorExpectedType(OP_LCURLY);
 	END_EXPECT
 
 	DO_RULE(segment_attribute) AST_SAV_VEC(all_segment_attributes)
 
 	FOR_ALL_WHILE
-		ITEM_E(COMMA)
+        ITEM_E(OP_COMMA)
             EAT
 			DO_RULE(segment_attribute) AST_SAV_VEC(all_segment_attributes)		
 	END_WHILE
 
-	EXPECT_TOKEN_ELSE(RCURLY)
-        syntaxErrorExpectedType(RCURLY);
+    EXPECT_TOKEN_ELSE(OP_RCURLY)
+        syntaxErrorExpectedType(OP_RCURLY);
 	END_EXPECT
 
 	AST_RETURN_NODE(ASTPdevarAttributesNode)(astvn_all_segment_attributes);
@@ -332,7 +332,7 @@ ASTNode* parser::P_derivative_sigle_var()
     START_RULE
 
 	FOR_ALL_WHILE
-		ITEM_E(APOS)
+        ITEM_E(OP_APOS)
             astvtn_numquotes.push_back(curTok);
             EAT
 	END_WHILE
@@ -350,13 +350,13 @@ ASTNode* parser::P_boundary_type()
     START_RULE
 
 	SWITCH
-		CASE(VALUE)
-		CASE(FLUX)
+		CASE(KW_VALUE)
+		CASE(KW_FLUX)
 		LAST
 			FORCE_ERROR
 				std::vector<int> possible_states;
-				possible_states.push_back(VALUE);
-				possible_states.push_back(FLUX);
+				possible_states.push_back(KW_VALUE);
+				possible_states.push_back(KW_FLUX);
                 syntaxErrorExpectedAnyofType(possible_states);
 			UNFORCE_ERROR
 	END_SWITCH

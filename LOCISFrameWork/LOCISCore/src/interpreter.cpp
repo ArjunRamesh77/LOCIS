@@ -18,7 +18,7 @@ ASTNode* interpreter::dispatch(ASTmodel_collectionNode* node)
 	IS.pass = 2;
     MasterModel = new object;
     MasterModel->sModelObject = new model;
-	MasterModel->setType(MODEL);
+    MasterModel->setType(KW_MODEL);
 	MasterModel->setSType("MODEL");
 	MasterModel->setName("Master");
 	MasterModel->setDimType(SY_SCALAR);
@@ -58,7 +58,7 @@ ASTNode* interpreter::dispatch(ASTmodelNode* node)
 			if (temp)
 			{
 				// Check if its an object declaration
-				if (temp->iDeclType == IDENT)
+                if (temp->iDeclType == DT_IDENT)
 				{
 					if (!(SymTab->getModel(temp->sModelBaseName)))
 					{
@@ -129,7 +129,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_decl_groupNode* node)
 	//What type of entity
 	IS.node = node;
 	IS.dectype = node->iDeclType;
-	if (node->iDeclType == IDENT)
+    if (node->iDeclType == DT_IDENT)
 	{
 		IS.modelName = node->sModelBaseName;
 	}
@@ -157,7 +157,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	switch (IS.dectype)
 	{
 		// Regular LOCIS objects
-		case IDENT:
+        case DT_IDENT:
             ob = new object;
 			mod = SymTab->getModel(IS.modelName);
 			if (!mod)
@@ -166,37 +166,37 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 			}
             static_cast<object*>(ob)->setModelName(IS.modelName);
 			ob->setName(node->sName);
-			ob->setType(MODEL);
+            ob->setType(KW_MODEL);
 			ob->setSType("MODEL");
 			break;
 
 		// FEMoneD line objects (built like variables/parameters)
-		case LINE:
+        case KW_LINE:
 			initFEMLine(node);
 			return node;
 
-		case PARAMETER:
+        case KW_PARAMETER:
             ob = new parameter;
 			ob->setName(node->sName);
 			ob->setNType(IS.numtype);
-			ob->setType(PARAMETER);
+            ob->setType(KW_PARAMETER);
 			ob->setSType("PARAMETER");
 			break;
 
-		case VARIABLE:
+        case KW_VARIABLE:
 
 			// Regular
             ob = new variable;
 			ob->setNType(IS.numtype);
 			ob->setName(node->sName);
-			ob->setType(VARIABLE);
+            ob->setType(KW_VARIABLE);
 			ob->setSType("VARIABLE");
 
 			// Time dependent
             ob2 = new variable;
 			ob2->setNType(IS.numtype);
 			ob2->setName("$" + node->sName);
-			ob2->setType(VARIABLE);
+            ob2->setType(KW_VARIABLE);
 			ob2->setSType("VARIABLE");
 			ob2->setIsdt();
 			
@@ -205,10 +205,10 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
             ob->setOther(ob2);
 			break;
 
-		case ITER:
+        case KW_ITER:
             ob = new parameter;
 			ob->setName(node->sName);
-			ob->setType(ITER);
+            ob->setType(KW_ITER);
 			ob->setSType("ITER");
 			break;
 	}
@@ -224,7 +224,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	}
 
 	//Check if iteration variable
-	if (IS.dectype == ITER)
+    if (IS.dectype == KW_ITER)
 	{
 		ob->setDimType(SY_SCALAR); //Force to a scalar
 		if(node->bIsArray)
@@ -245,7 +245,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	}
 
 	// Object declaration errors
-	if (ob->geType() == MODEL)
+    if (ob->geType() == KW_MODEL)
 	{
 		if (node->bHasDefault)
 		{
@@ -274,7 +274,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 		}
 
 		// Create dt variable the same way as variable
-		if (ob->geType() == VARIABLE)
+        if (ob->geType() == KW_VARIABLE)
 		{
 			ob2->setDimType(SY_VECTOR);
             ob2->setVectorIsInitialized(false);
@@ -291,12 +291,12 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	else
 	{
 		ob->setDimType(SY_SCALAR);
-		if (ob->geType() == VARIABLE)
+        if (ob->geType() == KW_VARIABLE)
 		{
 			ob2->setDimType(SY_SCALAR);
 		}
 
-		if (IS.dectype == IDENT)
+        if (IS.dectype == DT_IDENT)
 		{
 			SAVE_INTERPRETER_STATE
             object* cob = NULL;
@@ -339,7 +339,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 		if (ob)
 			delete ob;
 
-		if (ob->geType() == VARIABLE)
+        if (ob->geType() == KW_VARIABLE)
 		{
 			delete ob2;
 		}
@@ -348,7 +348,7 @@ ASTNode* interpreter::dispatch(ASTmodel_entity_declNode* node)
 	}
 
 	// For Variable type insert dt type too
-	if (ob->geType() == VARIABLE)
+    if (ob->geType() == KW_VARIABLE)
 	{
 		std::string entityName = "$" + node->sName;
 		INSERT_NEW_ENTITY_IN_MODEL(entityName, ob2);
@@ -436,30 +436,30 @@ ASTNode* interpreter::dispatch(ASTbounds_optionNode * node)
 	int ret = 0;
 
 	// Map to char(this was done to conserve memory)
-	if (IS.ob->geType() == VARIABLE)
+    if (IS.ob->geType() == KW_VARIABLE)
 	{
 		char op = ' ';
 		switch (node->iInequalityOp)
 		{
-		case GTHAN:
+        case OP_GTHAN:
             if (IS.ob->getBHasBounds(0)) { semanticErr_optionRedefined(">", IS.ob); return NULL; }
 			op = SY_GREATER_THAN;
             IS.ob->setBHasBounds(0,true);
 			break;
 
-		case LTHAN:
+        case OP_LTHAN:
             if (IS.ob->getBHasBounds(1)) { semanticErr_optionRedefined("<", IS.ob); return NULL; }
 			op = SY_LESS_THAN;
             IS.ob->setBHasBounds(1,true);
 			break;
 
-		case GEQUALS:
+        case OP_GEQUALS:
             if (IS.ob->getBHasBounds(2)) { semanticErr_optionRedefined(">=", IS.ob); return NULL; }
 			op = SY_GREATER_THAN_OR_EQUAL;
             IS.ob->setBHasBounds(2,true);
 			break;
 
-		case LEQUALS:
+        case OP_LEQUALS:
             if (IS.ob->getBHasBounds(3)) { semanticErr_optionRedefined("<=", IS.ob); return NULL; }
 			op = SY_LESS_THAN_OR_EQUAL;
             IS.ob->setBHasBounds(3,true);
@@ -530,7 +530,7 @@ ASTNode* interpreter::dispatch(ASTequationNode* node)
 	assert(LHS);
 	assert(RHS);
 
-	if (node->iEquationTypeOp != EQUALS)
+    if (node->iEquationTypeOp != OP_EQUALS)
 	{
 		semanticErr_OnlyEqualityInEquation(node);
 	}
@@ -555,23 +555,23 @@ ASTNode* interpreter::dispatch(ASTMathBinaryOpNode* node)
 	// Type of binary operation
 	switch (node->iBinaryOp)
 	{
-	case PLUS:
+    case OP_PLUS:
 		node->value = left_eval->value + right_eval->value;
 		break;
 
-	case MINUS:
+    case OP_MINUS:
 		node->value = left_eval->value - right_eval->value;
 		break;
 
-	case MULT:
+    case OP_MULT:
 		node->value = left_eval->value * right_eval->value;
 		break;
 
-	case DIV:
+    case OP_DIV:
 		node->value = left_eval->value / right_eval->value;
 		break;
 
-	case RAISE:
+    case OP_RAISE:
 		node->value = pow(left_eval->value, right_eval->value);
 	}
 
@@ -588,11 +588,11 @@ ASTNode* interpreter::dispatch(ASTMathUnaryNode* node)
 	// Type of unary operation
 	switch (node->iUnaryOp)
 	{
-	case PLUS:
+    case OP_PLUS:
 		node->value = right_eval->value;
 		break;
 
-	case MINUS:
+    case OP_MINUS:
 		node->value = -right_eval->value;
 		break;
 	}
@@ -633,31 +633,31 @@ ASTNode* interpreter::dispatch(ASTLogicalBinaryOpNode* node)
 
 	switch (node->iBinaryOp)
 	{
-	case AND:
+    case OP_AND:
 		node->lvalue = left_eval->lvalue && right_eval->lvalue;
 		break;
 
-	case OR:
+    case OP_OR:
 		node->lvalue = left_eval->lvalue || right_eval->lvalue;
 		break;
 
-	case GTHAN:
+    case OP_GTHAN:
 		node->lvalue = left_eval->value > right_eval->value;
 		break;
 
-	case LTHAN:
+    case OP_LTHAN:
 		node->lvalue = left_eval->value < right_eval->value;
 		break;
 
-	case GEQUALS:
+    case OP_GEQUALS:
 		node->lvalue = left_eval->value >= right_eval->value;
 		break;
 
-	case LEQUALS:
+    case OP_LEQUALS:
 		node->lvalue = left_eval->value <= right_eval->value;
 		break;
 
-	case DEQUALS:
+    case OP_DEQUALS:
 		node->lvalue = left_eval->value == right_eval->value;
 		break;
 	}
@@ -674,7 +674,7 @@ ASTNode* interpreter::dispatch(ASTLogicalUnaryNode* node)
 
 	switch (node->iUnaryOp)
 	{
-	case NOT:
+    case OP_NOT:
 		node->lvalue = !right_eval->lvalue;
 		break;
 	}
@@ -712,7 +712,7 @@ ASTNode* interpreter::dispatch(ASTfor_loopNode* node)
 	if (iter)
 	{
 		//iter has to be an iter type variable
-        if (iter->geType() != ITER)
+        if (iter->geType() != KW_ITER)
 		{
 			semanticErr_OnlyIterAllowedInFor(node);
 		}
@@ -852,12 +852,12 @@ ASTNode* interpreter::dispatch(ASTFEMoneDEquation* node)
 
 	assert(dom);
 	FEMOneDModelDomainData* dom1 = static_cast<FEMOneDModelDomainData*>(dom);
-	if (node->iLeftBoundaryType == VALUE)
+    if (node->iLeftBoundaryType == KW_VALUE)
 	{
         static_cast<variable*>(node->astnDomain->me)->vFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
         static_cast<variable*>(node->astnDomain->me->getOther())->vFixValueToggle[dom1->domainNuemannSize["left"]] = SY_FIX;
 	}
-	if (node->iRightBoundaryType == VALUE)
+    if (node->iRightBoundaryType == KW_VALUE)
 	{
         static_cast<variable*>(node->astnDomain->me)->vFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;
         static_cast<variable*>(node->astnDomain->me->getOther())->vFixValueToggle[dom1->domainNuemannSize["right"]] = SY_FIX;

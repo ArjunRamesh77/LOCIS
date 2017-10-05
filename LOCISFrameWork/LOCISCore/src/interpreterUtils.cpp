@@ -101,7 +101,7 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 			}
 
 			//Now check type of entity
-			if (search_res->geType() != MODEL)
+            if (search_res->geType() != KW_MODEL)
 			{
 				//This means this is terminal as variables and parameters cannot be qualified
 				//Check if this is the final element
@@ -143,7 +143,7 @@ bool interpreter::evaluate(ASTQualifiedNamedReferenceNode* qRefName)
 			}
 
 			//Now check type of entity
-			if (search_res->geType() != MODEL)
+            if (search_res->geType() != KW_MODEL)
 			{
 				//This means this is terminal as variables and parameters cannot be qualified
 				//Check if this is the final element
@@ -289,7 +289,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 
 			//Now check type of entity
-			if (search_res->geType() != MODEL)
+            if (search_res->geType() != KW_MODEL)
 			{
 				//This means this is terminal as variables and parameters cannot be qualified
 				//Check if this is the final element
@@ -320,7 +320,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			*/
 
 			//Now check type of entity
-			if (search_res->geType() != MODEL)
+            if (search_res->geType() != KW_MODEL)
 			{
 				//This means this is terminal as variables and parameters cannot be qualified
 				//Check if this is the final element
@@ -342,7 +342,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	}
 
 	// No direct assignment to iter Parameter
-    if (search_res->geType() == ITER)
+    if (search_res->geType() == KW_ITER)
 	{
 		semanticErr_IterCannotBeAssigned(item->tName);
 		return false;
@@ -351,13 +351,13 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	// Perform checks to see if correct scope
 	if (IS.section_type == SCOPE_SET)
 	{
-        if (search_res->geType() != PARAMETER)
+        if (search_res->geType() != KW_PARAMETER)
 		{
 			semanticErr_OnlyParametersSet(item->tName);
 			return false;
 		}
 
-		if (op != EQUALS)
+        if (op != OP_EQUALS)
 		{
 			semanticErr_NoBoundsAllowed(item->tName);
 			return false;
@@ -365,7 +365,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	}
 	else if (IS.section_type == SCOPE_FIX)
 	{
-        if (search_res->geType() != VARIABLE)
+        if (search_res->geType() != KW_VARIABLE)
 		{
 			semanticErr_OnlyVariablesFix(item->tName);
 			return false;
@@ -382,13 +382,13 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	}
 	else if (IS.section_type == SCOPE_GUESS)
 	{
-        if (search_res->geType() != VARIABLE)
+        if (search_res->geType() != KW_VARIABLE)
 		{
 			semanticErr_OnlyVariablesGuess(item->tName);
 			return false;
 		}
 
-		if (op != EQUALS)
+        if (op != OP_EQUALS)
 		{
 			semanticErr_NoBoundsInGuess(item->tName);
 			return false;
@@ -401,7 +401,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	{
 		switch (op)
 		{
-		case(EQUALS):
+        case(OP_EQUALS):
             search_res->sValue = val;
 			if (IS.section_type == SCOPE_FIX)
 			{
@@ -414,15 +414,15 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 			break;
 
-		case(GEQUALS):
-		case (GTHAN):
+        case(OP_GEQUALS):
+        case (OP_GTHAN):
             v = static_cast<variable*>(search_res);
             v->sLowerType = optochar(op);
             v->sLowerValue = val;
 			break;
 
-		case(LEQUALS):
-		case (LTHAN):
+        case(OP_LEQUALS):
+        case (OP_LTHAN):
             v = static_cast<variable*>(search_res);
             v->sUpperType = optochar(op);
             v->sUpperValue = val;
@@ -436,7 +436,7 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 	{
 		switch (op)
 		{
-		case(EQUALS):
+        case(OP_EQUALS):
 			if (fullsum != -1)
 			{
                 search_res->vValue[fullsum] = val;
@@ -465,8 +465,8 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 			break;
 
-		case(GEQUALS):
-		case (GTHAN):
+        case(OP_GEQUALS):
+        case (OP_GTHAN):
             v = static_cast<variable*>(search_res);
 			if (fullsum != -1)
 			{
@@ -479,8 +479,8 @@ bool interpreter::assign(ASTQualifiedNamedReferenceNode* qRefName, double &val, 
 			}
 			break;
 
-		case(LEQUALS):
-		case (LTHAN):
+        case(OP_LEQUALS):
+        case (OP_LTHAN):
             v = static_cast<variable*>(search_res);
 			if (fullsum != 0)
 			{
@@ -524,7 +524,7 @@ bool interpreter::initVector(modelEntity* search_res)
 	}
 
 	// Check if Object
-	if (search_res->geType() == MODEL)
+    if (search_res->geType() == KW_MODEL)
 	{
         object* cob = NULL;
         model* save = NULL;
@@ -584,7 +584,7 @@ bool interpreter::initAllVector(modelEntity* search_res)
 		}
 
 		// For Variable initialize each other if uninitialized
-		if (search_res->geType() == VARIABLE)
+        if (search_res->geType() == KW_VARIABLE)
 		{
             if (!search_res->getOther()->getVectorIsInitialized())
 			{
@@ -605,13 +605,13 @@ char interpreter::optochar(int & op)
 {
 	switch (op)
 	{
-	case GEQUALS:
+    case OP_GEQUALS:
 		return SY_GREATER_THAN_OR_EQUAL;
-	case LEQUALS:
+    case OP_LEQUALS:
 		return SY_LESS_THAN_OR_EQUAL;
-	case GTHAN:
+    case OP_GTHAN:
 		return SY_GREATER_THAN;
-	case LTHAN:
+    case OP_LTHAN:
 		return SY_LESS_THAN;
 	}
 
@@ -625,7 +625,7 @@ void interpreter::getAllVars(model* MainObj, std::string Name_arg)
     for (auto it = MainObj->getAllModelEntities()->begin(); it != MainObj->getAllModelEntities()->end(); ++it)
 	{
 		// Add all free Variables
-        if (it->second->geType() == VARIABLE && it->second->getVectorIsInitialized() && !it->second->checkIsdt())
+        if (it->second->geType() == KW_VARIABLE && it->second->getVectorIsInitialized() && !it->second->checkIsdt())
 		{
 			//Once for normal/once for dt variable
 			bool done = true;
@@ -746,7 +746,7 @@ void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 		}
 
 		//Add all Parameters
-        if (it->second->geType() == PARAMETER && it->second->getVectorIsInitialized())
+        if (it->second->geType() == KW_PARAMETER && it->second->getVectorIsInitialized())
 		{
             modelEntity* mod = NULL;
 			mod = it->second;
@@ -783,7 +783,7 @@ void interpreter::getAllVars(model* MainObj, std::string Name_arg)
 
 		//Recursive call this function on all objects in the model
 		// Add all free Variables
-		if (it->second->geType() == MODEL)
+        if (it->second->geType() == KW_MODEL)
 		{
 			if (it->second->getDimType() == SY_SCALAR)
 			{
@@ -826,7 +826,7 @@ bool interpreter::InitAll(model* MainObj)
 		}
 
 		// Recursive call to all objects in model
-		if (it->second->geType() == MODEL)
+        if (it->second->geType() == KW_MODEL)
 		{
             object* m = NULL;
             m = static_cast<object*>(it->second);
@@ -864,7 +864,7 @@ bool interpreter::addExtraSymbols(model* md)
     parameter* FEMtrialFunction = new parameter;
 	FEMtrialFunction->setName("_v");
 	FEMtrialFunction->setNType(-3);
-	FEMtrialFunction->setType(PARAMETER);
+    FEMtrialFunction->setType(KW_PARAMETER);
 	FEMtrialFunction->setSType("PARAMETER");
 	FEMtrialFunction->isFEMtrialFunction = true;
 	FEMtrialFunction->setDimType(SY_SCALAR);
@@ -877,7 +877,7 @@ bool interpreter::addExtraSymbols(model* md)
     parameter* tval = new parameter;
 	tval->setName("_t");
 	tval->setNType(-3);
-	tval->setType(PARAMETER);
+    tval->setType(KW_PARAMETER);
 	tval->setSType("PARAMETER");
 	tval->isTval = true;
 	tval->setDimType(SY_SCALAR);
@@ -890,7 +890,7 @@ bool interpreter::addExtraSymbols(model* md)
     parameter* xval = new parameter;
 	xval->setName("_x");
 	xval->setNType(-3);
-	xval->setType(PARAMETER);
+    xval->setType(KW_PARAMETER);
 	xval->setSType("PARAMETER");
 	xval->isFEMxval = true;
 	xval->setDimType(SY_SCALAR);

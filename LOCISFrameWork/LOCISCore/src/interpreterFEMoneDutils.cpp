@@ -636,9 +636,9 @@ start:
 	{
 		
 		FEMOneDModelDomainData* dom_actual = dom->second; // Just pass the reference to the one found already in the object(just add the extra stuff)
-		dom_actual->setNType(REAL);
+        dom_actual->setNType(KW_REAL);
 		dom_actual->setName(dom->first);
-		dom_actual->setType(pDOMAIN);
+        dom_actual->setType(KW_pDOMAIN);
 		dom_actual->setSType("DOMAIN");
 		dom_actual->isFEMoneDDomain = true;
 		dom_actual->setDimType(SY_SCALAR);
@@ -683,17 +683,17 @@ start:
 		// Create and add the variable
 		// Regular
         variable* v = new variable;
-		v->setNType(REAL);
+        v->setNType(KW_REAL);
 		v->setName(var->first);
-		v->setType(VARIABLE);
+        v->setType(KW_VARIABLE);
 		v->setSType("VARIABLE");
 		v->isFEMOneDVariable = true;
 
 		// Time dependent
         variable* dv = new variable;
-		dv->setNType(REAL);
+        dv->setNType(KW_REAL);
 		dv->setName("$" + var->first);
-		dv->setType(VARIABLE);
+        dv->setType(KW_VARIABLE);
 		dv->setSType("VARIABLE");
 		dv->setIsdt();
 		dv->isFEMOneDdVariable = true;
