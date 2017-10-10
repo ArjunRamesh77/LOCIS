@@ -16,7 +16,10 @@ class incidenceGraphNode
 {
     int type;
     unsigned int index;
-    std::map<unsigned int,incidenceGraphNode*> variableNodes;
+    std::map<unsigned int,incidenceGraphNode*> nodes;
+    incidenceGraphNode* matching;
+    bool bIsMatched;
+    bool bIsAlive;
 
 public:
     incidenceGraphNode();
@@ -24,8 +27,15 @@ public:
 
     int getType() const;
     void setType(int value);
-    const std::map<unsigned int, incidenceGraphNode *> &getAllVariableNodes();
+    const std::map<unsigned int, incidenceGraphNode *> &getAllNodes();
     unsigned int getIndex() const;
+    unsigned int getIndexOfMatching() const;
+    incidenceGraphNode *getMatching() const;
+    bool getBIsAlive() const;
     void setIndex(unsigned int value);
-    bool setVariableNode(unsigned int index, incidenceGraphNode* VariableNode);
+    bool setNode(unsigned int index, incidenceGraphNode* node);
+    void setMatching(incidenceGraphNode *value);
+    bool isMatched();
+    void setMatchingAsUnmacthed();
+    void setBIsAlive(bool value);
 };

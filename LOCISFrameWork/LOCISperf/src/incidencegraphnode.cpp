@@ -5,14 +5,15 @@
 incidenceGraphNode::incidenceGraphNode() :
     type(MT_UNSET),
     index(-1),
-    variableNodes()
+    nodes(),
+    bIsMatched(false)
 {
 
 }
 
 incidenceGraphNode::~incidenceGraphNode()
 {
-    DELETE_VECTOR_ENTRIES(variableNodes);
+   DELETE_MAP_ENTRIES(nodes);
 }
 
 unsigned int incidenceGraphNode::getIndex() const
@@ -25,9 +26,19 @@ int incidenceGraphNode::getType() const
     return type;
 }
 
-const std::map<unsigned int, incidenceGraphNode*> &incidenceGraphNode::getAllVariableNodes()
+const std::map<unsigned int, incidenceGraphNode*> &incidenceGraphNode::getAllNodes()
 {
-    return variableNodes;
+    return nodes;
+}
+
+incidenceGraphNode *incidenceGraphNode::getMatching() const
+{
+    return matching;
+}
+
+bool incidenceGraphNode::getBIsAlive() const
+{
+    return bIsAlive;
 }
 
 void incidenceGraphNode::setType(int value)
@@ -35,12 +46,12 @@ void incidenceGraphNode::setType(int value)
     type = value;
 }
 
-bool incidenceGraphNode::setVariableNode(unsigned int index, incidenceGraphNode *variableNode)
+bool incidenceGraphNode::setNode(unsigned int index, incidenceGraphNode *node)
 {
-    auto find = variableNodes.find(index);
-    if(find == variableNodes.end())
+    auto find = nodes.find(index);
+    if(find == nodes.end())
     {
-        variableNodes[index] = variableNode;
+        nodes[index] = node;
         return true;
     }
     return false;
@@ -49,4 +60,26 @@ bool incidenceGraphNode::setVariableNode(unsigned int index, incidenceGraphNode 
 void incidenceGraphNode::setIndex(unsigned int value)
 {
     index = value;
+}
+
+void incidenceGraphNode::setMatching(incidenceGraphNode *value)
+{
+    bIsMatched = true;
+    matching = value;
+}
+
+void incidenceGraphNode::setMatchingAsUnmacthed()
+{
+    bIsMatched = false;
+    matching = NULL;
+}
+
+void incidenceGraphNode::setBIsAlive(bool value)
+{
+    bIsAlive = value;
+}
+
+bool incidenceGraphNode::isMatched()
+{
+    return bIsMatched;
 }
