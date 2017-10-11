@@ -24,15 +24,16 @@ void matchingBase::setBiGraph(incidenceGraph *value)
     biGraph = value;
 }
 
-bool matchingBase::doBfs(incidenceGraphNode *sourceNode)
+bool matchingBase::runBfsDriver(incidenceGraphNode *sourceNode)
 {
     //initialize
-    bfsDepth = 1;
+    bfsDepth = 0;
     bfsNumPops = 0;
-    bfsNumPopsTillNextDepthIncr = sourceNode->getAllNodes().size();
+    bfsNumPopsTillNextDepthIncr = 0;
     bfsUnmatchedVariableDepth = 0;
     bfsGotUnmatched = false;
     unmatchedVariableNodes.clear();
+    bfsResult = new bfsSecondaryGraph;
 
     //main driver loop
     while(doBfs(sourceNode))
@@ -45,16 +46,19 @@ bool matchingBase::doBfs(incidenceGraphNode *sourceNode)
         }
         else
         {
+            sourceNode = NULL;
             sourceNode = bfsQueue.front();
             bfsQueue.pop();
             bfsNumPops++;
         }
     }
-    return false;
+    return true;
 }
 
-bool matchingBase::runBfsDriver(incidenceGraphNode *sourceNode)
+bool matchingBase::doBfs(incidenceGraphNode *sourceNode)
 {
+    if(sourceNode == NULL)
+        return false;
 
     //Only serach till first unmatched variable depth
     if(bfsGotUnmatched)
@@ -80,6 +84,9 @@ bool matchingBase::runBfsDriver(incidenceGraphNode *sourceNode)
         if(sourceNode->isMatched())
             return true;
 
+        //Add to bfs secondary tree
+        //add to secondary tree
+
         //visit all the variables and push matched variables to the queue and unmatched variables tp the vector
         std::map<unsigned int,incidenceGraphNode*>::const_iterator varEnd = sourceNode->getAllNodes().end();
         for(std::map<unsigned int, incidenceGraphNode*>::const_iterator it = sourceNode->getAllNodes().begin(); it != varEnd; ++it)
@@ -87,8 +94,7 @@ bool matchingBase::runBfsDriver(incidenceGraphNode *sourceNode)
             // Now check if the variables are matched to find an augmenting path
             if(it->second->isMatched())
             {
-                //push to queue only if it has visitable edges
-                bfsQueue.push(it->second);
+                 bfsQueue.push(it->second);
             }
             else
             {
@@ -102,14 +108,83 @@ bool matchingBase::runBfsDriver(incidenceGraphNode *sourceNode)
     else
     {
         //push the matching equation of the matching variable
-        bfsQueue.push(sourceNode->getMatching());
+        if(sourceNode->getMatching())
+            bfsQueue.push(sourceNode->getMatching());
+        else
+            throw 1; //This cannot happen right?
     }
     return true;
 }
 
-incidenceGraphNode *matchingBase::doDfs(incidenceGraphNode *sourceNode)
+bool matchingBase::runDfsDriver(incidenceGraphNode *sourceNode)
 {
-    return NULL;
+    // initialize
+    visitCount = 0;
+    dfsGotUnMatched = false;
+
+    //non recursive depth first search
+    while(doDfs(sourceNode))
+    {
+        sourceNode = NULL;
+        sourceNode = dfsStack.top();
+        dfsStack.pop();
+    }
+
+    //flip
+    if(dfsGotUnMatched)
+    {
+
+    }
+    return true;
+}
+
+bool matchingBase::doDfs(incidenceGraphNode *sourceNode)
+{
+    //stop if even one augmenting path discovered
+    if(bfsGotUnmatched)
+    {
+        return false;
+    }
+    else
+    {
+        //possibly cylic
+        if(visitCount > (biGraph->getNumEquationNodes() + biGraph->getNumVariableNodes()))
+        {
+            return false;
+        }
+    }
+
+    //get pairs
+
+    if(sourceNode->getType() == MT_VARIABLE_NODE)
+    {
+        if(sourceNode->isMatched())
+            return true;
+
+        //visit all the variables and push matched variables to the queue and unmatched variables tp the vector
+        std::map<unsigned int,incidenceGraphNode*>::const_iterator equEnd = sourceNode->getAllNodes().end();
+        for(std::map<unsigned int, incidenceGraphNode*>::const_iterator it = sourceNode->getAllNodes().begin(); it != equEnd; ++it)
+        {
+            // Now check if the variables are matched to find an augmenting path
+            if(it->second->isMatched())
+            {
+                dfsStack.push(it->second);
+            }
+            else
+            {
+                dfsGotUnMatched = true;
+                return false;
+            }
+        }
+    }
+    else
+    {
+        //push the matching variable of the matching equation
+        if(sourceNode->getMatching())
+            dfsStack.push(sourceNode->getMatching());
+    }
+
+    return true;
 }
 
 void matchingBase::doFirstMatching()
