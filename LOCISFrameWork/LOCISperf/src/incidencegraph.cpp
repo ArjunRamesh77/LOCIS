@@ -32,7 +32,6 @@ void incidenceGraph::addEquationNode()
     incidenceGraphNode* eNode = new incidenceGraphNode;
     numEquationNodes++;
     eNode->setIndex(numEquationNodes);
-    eNode->setType(MT_EQUATION_NODE);
     equationNodes.push_back(eNode);
 }
 
@@ -41,7 +40,6 @@ void incidenceGraph::addVariableNode()
     incidenceGraphNode* eNode = new incidenceGraphNode;
     numVariableNodes++;
     eNode->setIndex(numVariableNodes);
-    eNode->setType(MT_VARIABLE_NODE);
     variableNodes.push_back(eNode);
 }
 
@@ -49,15 +47,16 @@ bool incidenceGraph::addEdge(unsigned int indexEquation, unsigned int indexVaria
 {
     if((indexEquation < numEquationNodes) && (indexVariable < numVariableNodes))
     {
-        if(equationNodes.at(indexEquation)->setNode(indexVariable, variableNodes.at(indexVariable)))
-        {
-            equationNodes.at(indexEquation)->setMatchingAsUnmacthed();
-            if(variableNodes.at(indexVariable)->setNode(indexEquation, equationNodes.at(indexEquation)))
-            {
-                variableNodes.at(indexVariable)->setMatchingAsUnmacthed();
-                return true;
-            }
-        }
+        incidenceGraphNode* equationNode = equationNodes.at(indexEquation);
+        incidenceGraphNode* variableNode = variableNodes.at(indexVariable);
+
+        equationNode->addNode(variableNodes.at(indexVariable));
+        equationNode->setMatchingAsUnmacthed();
+
+        variableNode->addNode(equationNodes.at(indexEquation));
+        variableNode->setMatchingAsUnmacthed();
+
+        return true;
     }
     return false;
 }
@@ -102,19 +101,20 @@ bool incidenceGraph::createBipartiteEVGraphFromMatrixCOO()
     return true;
 }
 
-void incidenceGraph::initializeMatchingOnGraph(std::vector<incidenceGraphNode*>& unmatched)
+void incidenceGraph::initializeMatchingOnGraph(std::list<incidenceGraphNode*>& unmatched)
 {
     //Loop over Equation Nodes and match with first Unmatched variable
+    bool foundMatching(false);
     for(std::vector<incidenceGraphNode*>::const_iterator eqIt = equationNodes.begin(); eqIt != equationNodes.end(); ++eqIt)
     {
-        bool foundMatching(false);
-        std::map<unsigned int, incidenceGraphNode*>::const_iterator varEnd = (*eqIt)->getAllNodes().end();
-        for(std::map<unsigned int, incidenceGraphNode*>::const_iterator vrIt = (*eqIt)->getAllNodes().begin();
+        foundMatching = false;
+        std::list<incidenceGraphNode*>::const_iterator varEnd = (*eqIt)->getAllNodes().end();
+        for(std::list<incidenceGraphNode*>::const_iterator vrIt = (*eqIt)->getAllNodes().begin();
             vrIt != varEnd; ++vrIt)
         {
-            if(!vrIt->second->isMatched())
+            if(!(*vrIt)->getMatching())
             {
-                addMatching(*eqIt, vrIt->second);
+                addMatching(*eqIt, *vrIt);
                 foundMatching = true;
                 break;
             }

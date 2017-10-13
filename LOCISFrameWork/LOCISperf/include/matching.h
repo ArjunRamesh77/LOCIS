@@ -1,9 +1,15 @@
 #pragma once
 
 #include "incidencegraph.h"
-#include "bfssecondarygraph.h"
 #include <queue>
 #include <stack>
+#include <map>
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// return codes
+#define HC_GRAPH_NULL -1
+
+#define HC_SUCCESS 0
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Base class for implementing a matching algorithm
@@ -11,19 +17,10 @@ class matchingBase
 {
 protected:
     incidenceGraph* biGraph;
-    std::queue<incidenceGraphNode*> bfsQueue;
-    std::stack<incidenceGraphNode*> dfsStack;
-    unsigned int bfsDepth;
-    unsigned int bfsNumPopsTillNextDepthIncr;
-    unsigned int bfsNumPops;
-    unsigned int bfsUnmatchedVariableDepth;
-    bool bfsGotUnmatched;
-    std::vector<incidenceGraphNode*> unmatchedEquationNodes;
-    std::vector<incidenceGraphNode*> unmatchedVariableNodes;
-    bool dfsGotUnMatched;
-    unsigned int visitCount;
-    std::stack<std::pair<incidenceGraphNode*,incidenceGraphNode*>> dfsMatchUnmatchPairs;
-    bfsSecondaryGraph* bfsResult;
+
+    std::list<incidenceGraphNode*> unmatchedEquationNodes;
+    std::list<incidenceGraphNode*> unmatchedVariableNodes;
+    unsigned int bfsAliveIndex;
 
 public:
     matchingBase(incidenceGraph* biGraph_arg);
@@ -32,11 +29,10 @@ public:
 
     incidenceGraph *getBiGraph() const;
     void setBiGraph(incidenceGraph *value);
-    bool runBfsDriver(incidenceGraphNode* sourceNode);
-    bool doBfs(incidenceGraphNode* sourceNode);
-    bool runDfsDriver(incidenceGraphNode* sourceNode);
-    bool doDfs(incidenceGraphNode* sourceNode);
+    bool doBfs();
+    void doDfs(incidenceGraphNode *startNode);
     void doFirstMatching();
+    int matchingHopcroftKarp();
 
     //virtual
     virtual incidenceGraph* doMatching() = 0;

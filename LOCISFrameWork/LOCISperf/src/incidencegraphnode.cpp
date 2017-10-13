@@ -1,19 +1,16 @@
 #include "incidencegraphnode.h"
+#include <stddef.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //incidence graph node
-incidenceGraphNode::incidenceGraphNode() :
-    type(MT_UNSET),
-    index(-1),
-    nodes(),
-    bIsMatched(false)
+unsigned int incidenceGraphNode::getAliveIndex() const
 {
-
+    return aliveIndex;
 }
 
-incidenceGraphNode::~incidenceGraphNode()
+void incidenceGraphNode::setAliveIndex(unsigned int value)
 {
-   DELETE_MAP_ENTRIES(nodes);
+    aliveIndex = value;
 }
 
 unsigned int incidenceGraphNode::getIndex() const
@@ -21,12 +18,25 @@ unsigned int incidenceGraphNode::getIndex() const
     return index;
 }
 
-int incidenceGraphNode::getType() const
+void incidenceGraphNode::setIndex(unsigned int value)
 {
-    return type;
+    index = value;
 }
 
-const std::map<unsigned int, incidenceGraphNode*> &incidenceGraphNode::getAllNodes()
+incidenceGraphNode::incidenceGraphNode() :
+    nodes(),
+    matching(NULL),
+    aliveIndex(0)
+{
+
+}
+
+incidenceGraphNode::~incidenceGraphNode()
+{
+    DELETE_VECTOR_ENTRIES(nodes)
+}
+
+const std::list<incidenceGraphNode*> &incidenceGraphNode::getAllNodes()
 {
     return nodes;
 }
@@ -36,50 +46,18 @@ incidenceGraphNode *incidenceGraphNode::getMatching() const
     return matching;
 }
 
-bool incidenceGraphNode::getBIsAlive() const
+void incidenceGraphNode::addNode(incidenceGraphNode *node)
 {
-    return bIsAlive;
-}
-
-void incidenceGraphNode::setType(int value)
-{
-    type = value;
-}
-
-bool incidenceGraphNode::setNode(unsigned int index, incidenceGraphNode *node)
-{
-    auto find = nodes.find(index);
-    if(find == nodes.end())
-    {
-        nodes[index] = node;
-        return true;
-    }
-    return false;
-}
-
-void incidenceGraphNode::setIndex(unsigned int value)
-{
-    index = value;
+    nodes.push_back(node);
 }
 
 void incidenceGraphNode::setMatching(incidenceGraphNode *value)
 {
-    bIsMatched = true;
     matching = value;
 }
 
 void incidenceGraphNode::setMatchingAsUnmacthed()
 {
-    bIsMatched = false;
     matching = NULL;
 }
 
-void incidenceGraphNode::setBIsAlive(bool value)
-{
-    bIsAlive = value;
-}
-
-bool incidenceGraphNode::isMatched()
-{
-    return bIsMatched;
-}

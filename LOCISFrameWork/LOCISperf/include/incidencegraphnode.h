@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "lociscommon.h"
-#include <map>
+#include <list>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // defines
@@ -14,28 +14,22 @@
 // a graph node
 class incidenceGraphNode
 {
-    int type;
-    unsigned int index;
-    std::map<unsigned int,incidenceGraphNode*> nodes;
+    std::list<incidenceGraphNode*> nodes;
     incidenceGraphNode* matching;
-    bool bIsMatched;
-    bool bIsAlive;
+    unsigned int aliveIndex;
+    unsigned int index;
 
 public:
     incidenceGraphNode();
     ~incidenceGraphNode();
 
-    int getType() const;
-    void setType(int value);
-    const std::map<unsigned int, incidenceGraphNode *> &getAllNodes();
-    unsigned int getIndex() const;
-    unsigned int getIndexOfMatching() const;
+    const std::list<incidenceGraphNode *> &getAllNodes();
     incidenceGraphNode *getMatching() const;
-    bool getBIsAlive() const;
-    void setIndex(unsigned int value);
-    bool setNode(unsigned int index, incidenceGraphNode* node);
+    void addNode(incidenceGraphNode* node);
     void setMatching(incidenceGraphNode *value);
-    bool isMatched();
     void setMatchingAsUnmacthed();
-    void setBIsAlive(bool value);
+    unsigned int getAliveIndex() const;
+    void setAliveIndex(unsigned int value);
+    unsigned int getIndex() const;
+    void setIndex(unsigned int value);
 };

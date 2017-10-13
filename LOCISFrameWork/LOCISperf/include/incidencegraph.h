@@ -1,6 +1,7 @@
 #pragma once
 
 #include "incidencegraphnode.h"
+#include <stddef.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Full bipartite graph
@@ -30,6 +31,6 @@ public:
     void matrixCOOAddCoordinate(unsigned int row, unsigned int col);
 
     bool createBipartiteEVGraphFromMatrixCOO();
-    void initializeMatchingOnGraph(std::vector<incidenceGraphNode *> &unmatched);
+    void initializeMatchingOnGraph(std::list<incidenceGraphNode *> &unmatched);
     void unMatchGraph();
 };
