@@ -18,17 +18,19 @@ OUT = Output/$(config)
 DIR_LOCIS_CMD_APP = LOCISFrameWork/LOCIScmdapp
 DIR_LOCIS_CORE = LOCISFrameWork/LOCISCore
 DIR_LOCIS_FEM = LOCISFrameWork/LocisFEM
+DIR_LOCIS_PERF = LOCISFrameWork/LOCISperf
 
 ALL_DIRS = $(DIR_LOCIS_CMD_APP)\
 		   $(DIR_LOCIS_CORE)\
-		   $(DIR_LOCIS_FEM)
+		   $(DIR_LOCIS_FEM)\
+		   $(DIR_LOCIS_PERF)
 
 # MAKE
 export config
 
 # RULES
 .PHONY : lociscmdapp
-lociscmdapp : locis locisfem
+lociscmdapp : locis locisfem locisperf
 	$(MAKE) -C $(DIR_LOCIS_CMD_APP) 
 
 .PHONY : locis
@@ -37,10 +39,14 @@ locis :
 
 .PHONY : locisfem
 locisfem : 
-	$(MAKE) -C $(DIR_LOCIS_FEM) 
+	$(MAKE) -C $(DIR_LOCIS_FEM)
+
+.PHONY : locisperf
+locisperf :
+	$(MAKE) -C $(DIR_LOCIS_PERF)
 
 .PHONY : all
-all : locis locisfem lociscmdapp
+all : locis locisfem locisperf lociscmdapp
 
 .PHONY : cleand
 cleand :

@@ -46,6 +46,7 @@ PATH_IDA_INCLUDE :=		 $(LOCIS_ROOT)/Solvers/IDA/srcdir/include
 PATH_PYTHON_INCLUDE :=	 /usr/include/python2.7
 PATH_NUMPY_INCLUDE :=	 /home/$(USER)/.local/lib/python2.7/site-packages/numpy/core/include/numpy
 PATH_LOCIS_FEM_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LocisFEM/include
+PATH_LOCIS_PERF_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LOCISperf/include
 
 PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_CMD_INCLUDE)\
 					-I$(PATH_LOCIS_INCLUDE)\
@@ -54,7 +55,8 @@ PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_CMD_INCLUDE)\
 					-I$(PATH_IDA_INCLUDE)\
 					-I$(PATH_PYTHON_INCLUDE)\
 				    -I$(PATH_NUMPY_INCLUDE)\
-					-I$(PATH_LOCIS_FEM_INCLUDE)
+					-I$(PATH_LOCIS_FEM_INCLUDE)\
+					-I$(PATH_LOCIS_PERF_INCLUDE)
 
 # SOURCE PATHS
 PATH_LOCIS_CMD_SRC = src
@@ -64,7 +66,7 @@ PATH_KINSOL_LIB := 		$(LOCIS_ROOT)/Solvers/KINSOL/builddir/src/kinsol
 PATH_IDA_LIB :=  		$(LOCIS_ROOT)/Solvers/IDA/builddir/src/ida
 PATH_NVEC_SERIAL_LIB := $(LOCIS_ROOT)/Solvers/IDA/builddir/src/nvec_ser
 PATH_PYTHON_LIB := 		/usr/lib/python2.7/config-x86_64-linux-gnu
-PATH_LOCIS_LIBS := $(LOCIS_ROOT)/Output/$(config)
+PATH_LOCIS_LIBS := 		$(LOCIS_ROOT)/Output/$(config)
 
 PATH_ALL_LIB = 		-L$(PATH_KINSOL_LIB)\
 					-L$(PATH_IDA_LIB)\
@@ -78,13 +80,15 @@ LIB_KINSOL := 	-lsundials_kinsol
 LIB_IDA := 		-lsundials_ida
 LIB_NVEC :=     -lsundials_nvecserial
 LIB_PYTHON := 	-lpython2.7
+LIB_PERF :=     -llocisperf
      
 LIB_ALL :=		$(LIB_LOCIS)\
 				$(LIB_LOCIS_FEM)\
 				$(LIB_KINSOL)\
 				$(LIB_IDA)\
 				$(LIB_NVEC)\
-				$(LIB_PYTHON)
+				$(LIB_PYTHON)\
+				$(LIB_PERF)
 
 
 # SOURCE/INCLUDE/OBJ NAMES
