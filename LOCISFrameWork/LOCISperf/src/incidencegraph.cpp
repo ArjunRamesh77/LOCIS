@@ -13,34 +13,44 @@ incidenceGraph::incidenceGraph() :
 
 incidenceGraph::~incidenceGraph()
 {
-    DELETE_VECTOR_ENTRIES(equationNodes)
-    DELETE_VECTOR_ENTRIES(variableNodes)
+    //DELETE_VECTOR_ENTRIES(equationNodes)
+    //DELETE_VECTOR_ENTRIES(variableNodes)
 }
 
 unsigned int incidenceGraph::getNumEquationNodes() const
 {
-    return numEquationNodes;
+    return equationNodes.size();
 }
 
 unsigned int incidenceGraph::getNumVariableNodes() const
 {
-    return numVariableNodes;
+    return variableNodes.size();
 }
 
-void incidenceGraph::addEquationNode()
+void incidenceGraph::addEquationNodes(unsigned int num)
 {
-    incidenceGraphNode* eNode = new incidenceGraphNode;
-    numEquationNodes++;
-    eNode->setIndex(numEquationNodes);
-    equationNodes.push_back(eNode);
+    numEquationNodes = 0;
+    equationNodes.clear();
+    for(unsigned int i = 0; i < num; ++i)
+    {
+        incidenceGraphNode* eNode = new incidenceGraphNode;
+        numEquationNodes++;
+        eNode->setIndex(i);
+        equationNodes.push_back(eNode);
+    }
 }
 
-void incidenceGraph::addVariableNode()
+void incidenceGraph::addVariableNodes(unsigned int num)
 {
-    incidenceGraphNode* eNode = new incidenceGraphNode;
-    numVariableNodes++;
-    eNode->setIndex(numVariableNodes);
-    variableNodes.push_back(eNode);
+    numVariableNodes = 0;
+    variableNodes.clear();
+    for(unsigned int i = 0; i < num; ++i)
+    {
+        incidenceGraphNode* eNode = new incidenceGraphNode;
+        numVariableNodes++;
+        eNode->setIndex(i);
+        variableNodes.push_back(eNode);
+    }
 }
 
 bool incidenceGraph::addEdge(unsigned int indexEquation, unsigned int indexVariable)
@@ -72,21 +82,13 @@ void incidenceGraph::matrixCOOClear()
     matrixCOO.clear();
 }
 
-void incidenceGraph::matrixCOOAddCoordinate(unsigned int row, unsigned int col)
+void incidenceGraph::MatrixCOOAddCoordinate(unsigned int row, unsigned int col)
 {
-    std::pair<unsigned int, unsigned int> rowCol{row, col};
-    matrixCOO.push_back(rowCol);
+    matrixCOO.push_back({row, col});
 }
 
 bool incidenceGraph::createBipartiteEVGraphFromMatrixCOO()
 {
-    // First create the unconnected Graph
-    for(unsigned int i = 0; i < numEquationNodes; ++i)
-        addEquationNode();
-
-    for(unsigned int i = 0; i < numVariableNodes; ++i)
-        addVariableNode();
-
     //Loop over entries in the matrixCOO to build the bipartite graph
     // Applies to a general matrix
     for(std::vector<std::pair<unsigned int, unsigned int>>::const_iterator it = matrixCOO.begin(); it != matrixCOO.end(); ++it)
@@ -104,6 +106,7 @@ bool incidenceGraph::createBipartiteEVGraphFromMatrixCOO()
 void incidenceGraph::initializeMatchingOnGraph(std::list<incidenceGraphNode*>& unmatched)
 {
     //Loop over Equation Nodes and match with first Unmatched variable
+    std::cout<<" INITIAL MATCHING::\n";
     bool foundMatching(false);
     for(std::vector<incidenceGraphNode*>::const_iterator eqIt = equationNodes.begin(); eqIt != equationNodes.end(); ++eqIt)
     {
@@ -116,12 +119,14 @@ void incidenceGraph::initializeMatchingOnGraph(std::list<incidenceGraphNode*>& u
             {
                 addMatching(*eqIt, *vrIt);
                 foundMatching = true;
+                std::cout<<" Matched E" << (*eqIt)->getIndex() <<" with V"<<(*vrIt)->getIndex() <<"\n";
                 break;
             }
         }
-        if(foundMatching)
+        if(foundMatching == false)
             unmatched.push_back(*eqIt);
     }
+    std::cout<<" INITIAL MATCHING ENDS::\n";
 }
 
 void incidenceGraph::unMatchGraph()

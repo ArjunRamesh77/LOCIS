@@ -30,12 +30,10 @@ public:
     incidenceGraph *getBiGraph() const;
     void setBiGraph(incidenceGraph *value);
     bool doBfs();
-    void doDfs(incidenceGraphNode *startNode);
+    bool doDfs(incidenceGraphNode *startNode);
     void doFirstMatching();
     int matchingHopcroftKarp();
 
-    //virtual
-    virtual incidenceGraph* doMatching() = 0;
 };
 
 

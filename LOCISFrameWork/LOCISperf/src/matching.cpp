@@ -13,6 +13,11 @@ matchingBase::matchingBase() :
 
 }
 
+matchingBase::~matchingBase()
+{
+
+}
+
 incidenceGraph *matchingBase::getBiGraph() const
 {
     return biGraph;
@@ -33,7 +38,7 @@ bool matchingBase::doBfs()
     unsigned int bfsNumPops(0);
     unsigned int bfsUnmatchedVariableDepth(0);
     unmatchedVariableNodes.clear();
-    bfsAliveIndex++;
+    bfsAliveIndex += 2;
 
     //push all unmatched equation nodes to queue
     std::list<incidenceGraphNode*>::const_iterator unmatchedEquationNodes_end = unmatchedEquationNodes.end();
@@ -72,23 +77,38 @@ bool matchingBase::doBfs()
         // id to know if the node was visited (for dfs traversal)
         sourceNode->setAliveIndex(bfsAliveIndex);
 
+        //local
+        incidenceGraphNode* match(NULL);
+
         //visit all the variables and push matched variables to the queue and unmatched variables tp the vector
         std::list<incidenceGraphNode*>::const_iterator varEnd = sourceNode->getAllNodes().end();
         for(std::list<incidenceGraphNode*>::const_iterator it = sourceNode->getAllNodes().begin(); it != varEnd; ++it)
         {
             // Now check if the variables are matched to find an unmatched variable
-            (*it)->setAliveIndex(bfsAliveIndex);
-            if((*it)->getMatching())
+            match = NULL;
+            match = (*it)->getMatching();
+            if(match)
             {
-                 bfsQueue.push((*it)->getMatching());
+                 if((*it)->getAliveIndex() != bfsAliveIndex)
+                    bfsQueue.push(match);
             }
             else
             {
-                unmatchedVariableNodes.push_back((*it));
-                bfsUnmatchedVariableDepth = bfsDepth;
-                bfsGotUnmatched = true;
+                //unmatched variables must be pushed only once
+                if((*it)->getAliveIndex() != bfsAliveIndex)
+                {
+                    unmatchedVariableNodes.push_back((*it));
+                    bfsUnmatchedVariableDepth = bfsDepth;
+                    bfsGotUnmatched = true;
+                }
             }
+            (*it)->setAliveIndex(bfsAliveIndex);
         }
+
+        sourceNode = NULL;
+        bfsQueue.pop();
+        sourceNode = bfsQueue.front();
+        bfsNumPops++;
 
         // Get graph depth
         if(bfsNumPops == bfsNumPopsTillNextDepthIncr)
@@ -97,23 +117,22 @@ bool matchingBase::doBfs()
             bfsNumPops = 0;
             bfsNumPopsTillNextDepthIncr = bfsQueue.size();
         }
-        else
-        {
-            sourceNode = NULL;
-            bfsQueue.pop();
-            sourceNode = bfsQueue.front();
-            bfsNumPops++;
-        }
+
     }
 
     return bfsGotUnmatched;
 }
 
-void matchingBase::doDfs(incidenceGraphNode* startNode)
+bool matchingBase::doDfs(incidenceGraphNode* startNode)
 {
     // initialize
-    incidenceGraphNode* sourceNode;
+    incidenceGraphNode* match(NULL);
+    incidenceGraphNode* sourceNode(NULL);
+    incidenceGraphNode* sourceNodeMatch(NULL);
+    incidenceGraphNode* lastEquationNode(NULL);
     std::stack<incidenceGraphNode*> dfsStack;
+    std::vector<incidenceGraphNode*> pairs;
+    bool foundUnMatched(false);
 
     //Initialize stack to the start node
     dfsStack.push(startNode);
@@ -122,6 +141,9 @@ void matchingBase::doDfs(incidenceGraphNode* startNode)
     //non recursive depth first search
     while(dfsStack.size() != 0)
     {
+        dfsStack.pop();
+        sourceNodeMatch = sourceNode->getMatching();
+
         std::list<incidenceGraphNode*>::const_iterator equEnd = sourceNode->getAllNodes().end();
         for(std::list<incidenceGraphNode*>::const_iterator it = sourceNode->getAllNodes().begin(); it != equEnd; ++it)
         {
@@ -129,21 +151,62 @@ void matchingBase::doDfs(incidenceGraphNode* startNode)
             // only visited paths are allowed
             if((*it)->getAliveIndex() == bfsAliveIndex)
             {
-                dfsStack.push(sourceNode->getMatching());
+                // Now check if the variables are matched to find an unmatched variable
+                match = NULL;
+                match = (*it)->getMatching();
+                if(match)
+                {
+                     if(sourceNodeMatch)
+                     {
+                         // iterate only through unmatched edges
+                         if(sourceNodeMatch->getIndex() != (*it)->getIndex())
+                         {
+                             dfsStack.push(match);
+                             lastEquationNode = *it;
+                         }
+                     }
+                     else
+                     {
+                        dfsStack.push(match);
+                        lastEquationNode = *it;
+                     }
+                }
+                else
+                {
+                   //reached an unmateched equation
+                    foundUnMatched = true;
+                    lastEquationNode = *it;
+                }
             }
         }
 
-        //match adjacent nodes and make them unvisitable
-        sourceNode->setMatching(*equEnd);
-        (*equEnd)->setMatching(sourceNode);
-        sourceNode->setAliveIndex(bfsAliveIndex + 1);
-        (*equEnd)->setAliveIndex(bfsAliveIndex + 1);
+        //add pairs for matching
+        pairs.push_back(sourceNode);
+        pairs.push_back(lastEquationNode);
+
+        //orphan visited nodes
+        sourceNode->setAliveIndex(bfsAliveIndex+1);
+        lastEquationNode->setAliveIndex(bfsAliveIndex+1);
+
+        //DEBUG
+
+        if(foundUnMatched)
+        {
+            for(std::vector<incidenceGraphNode*>::const_iterator it = pairs.begin(); it != pairs.end(); it = it + 2)
+            {
+                (*it)->setMatching(*(it + 1));
+                (*(it + 1))->setMatching(*it);
+                std::cout<<" Matched E" << (*(it + 1))->getIndex() <<" with V"<<(*it)->getIndex() <<"\n";
+            }
+            break;
+        }
 
         //next
         sourceNode = NULL;
-        dfsStack.pop();
         sourceNode = dfsStack.top();
     }
+
+    return foundUnMatched;
 }
 
 void matchingBase::doFirstMatching()
@@ -173,7 +236,8 @@ int matchingBase::matchingHopcroftKarp()
             std::list<incidenceGraphNode*>::const_iterator unmatchedVariableNodes_end = unmatchedVariableNodes.end();
             for(std::list<incidenceGraphNode*>::const_iterator it = unmatchedVariableNodes.begin(); it != unmatchedVariableNodes_end; ++it)
             {
-                doDfs(*it);
+                if((*it)->getMatching() == NULL)
+                    doDfs(*it);
             }
         }
     }
