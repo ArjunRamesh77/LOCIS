@@ -3,6 +3,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //incidence graph node
+incidenceGraphNode::incidenceGraphNode() :
+    nodes(),
+    matching(NULL),
+    aliveIndex(0),
+    index(0)
+{
+
+}
+
+incidenceGraphNode::~incidenceGraphNode()
+{
+    //DELETE_VECTOR_ENTRIES(nodes)
+}
+
 unsigned int incidenceGraphNode::getAliveIndex() const
 {
     return aliveIndex;
@@ -21,19 +35,6 @@ unsigned int incidenceGraphNode::getIndex() const
 void incidenceGraphNode::setIndex(unsigned int value)
 {
     index = value;
-}
-
-incidenceGraphNode::incidenceGraphNode() :
-    nodes(),
-    matching(NULL),
-    aliveIndex(0)
-{
-
-}
-
-incidenceGraphNode::~incidenceGraphNode()
-{
-    DELETE_VECTOR_ENTRIES(nodes)
 }
 
 const std::list<incidenceGraphNode*> &incidenceGraphNode::getAllNodes()

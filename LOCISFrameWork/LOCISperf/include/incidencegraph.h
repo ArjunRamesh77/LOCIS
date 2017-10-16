@@ -17,6 +17,7 @@ class incidenceGraph
 
 public:
     incidenceGraph();
+    incidenceGraph(unsigned int numU, unsigned int numV);
     ~incidenceGraph();
 
     unsigned int getNumEquationNodes() const;

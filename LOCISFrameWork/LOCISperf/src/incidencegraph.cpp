@@ -6,15 +6,26 @@ incidenceGraph::incidenceGraph() :
     numEquationNodes(0),
     numVariableNodes(0),
     equationNodes(),
-    variableNodes()
+    variableNodes(),
+    matrixCOO()
 {
 
 }
 
+incidenceGraph::incidenceGraph(unsigned int numU, unsigned int numV) :
+    incidenceGraph()
+{
+    if(numU > 0 && numV > 0)
+    {
+        addEquationNodes(numU);
+        addVariableNodes(numV);
+    }
+}
+
 incidenceGraph::~incidenceGraph()
 {
-    //DELETE_VECTOR_ENTRIES(equationNodes)
-    //DELETE_VECTOR_ENTRIES(variableNodes)
+    DELETE_VECTOR_ENTRIES(equationNodes)
+    DELETE_VECTOR_ENTRIES(variableNodes)
 }
 
 unsigned int incidenceGraph::getNumEquationNodes() const
@@ -108,7 +119,8 @@ void incidenceGraph::initializeMatchingOnGraph(std::list<incidenceGraphNode*>& u
     //Loop over Equation Nodes and match with first Unmatched variable
     std::cout<<" INITIAL MATCHING::\n";
     bool foundMatching(false);
-    for(std::vector<incidenceGraphNode*>::const_iterator eqIt = equationNodes.begin(); eqIt != equationNodes.end(); ++eqIt)
+    std::vector<incidenceGraphNode*>::const_iterator equationNodes_end = equationNodes.end();
+    for(std::vector<incidenceGraphNode*>::const_iterator eqIt = equationNodes.begin(); eqIt != equationNodes_end; eqIt++)
     {
         foundMatching = false;
         std::list<incidenceGraphNode*>::const_iterator varEnd = (*eqIt)->getAllNodes().end();
@@ -132,13 +144,15 @@ void incidenceGraph::initializeMatchingOnGraph(std::list<incidenceGraphNode*>& u
 void incidenceGraph::unMatchGraph()
 {
     //unmatch all equations
-    for(std::vector<incidenceGraphNode*>::const_iterator it = equationNodes.begin(); it != equationNodes.end(); ++it)
+    std::vector<incidenceGraphNode*>::const_iterator equationNodes_end = equationNodes.end();
+    for(std::vector<incidenceGraphNode*>::const_iterator it = equationNodes.begin(); it != equationNodes_end; ++it)
     {
         (*it)->setMatching(NULL);
     }
 
     //unmatch all variables
-    for(std::vector<incidenceGraphNode*>::const_iterator it = variableNodes.begin(); it != variableNodes.end(); ++it)
+    std::vector<incidenceGraphNode*>::const_iterator variableNodes_end = variableNodes.end();
+    for(std::vector<incidenceGraphNode*>::const_iterator it = variableNodes.begin(); it != variableNodes_end; ++it)
     {
         (*it)->setMatching(NULL);
     }
