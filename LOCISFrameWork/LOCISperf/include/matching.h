@@ -9,12 +9,13 @@
 // return codes
 #define HC_GRAPH_NULL -1
 #define HC_DFS_NORESULT -2
+#define HC_NO_PERFECT_MATCHING -3
 
 #define HC_SUCCESS 0
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Base class for implementing a matching algorithm
-class matchingBase
+class matchingHopkroftKarp
 {
 protected:
     incidenceGraph* biGraph;
@@ -22,19 +23,20 @@ protected:
     std::list<incidenceGraphNode*> unmatchedEquationNodes;
     std::list<incidenceGraphNode*> unmatchedVariableNodes;
     unsigned int bfsAliveIndex;
+    bool bPerfectMatching;
 
 public:
-    matchingBase(incidenceGraph* biGraph_arg);
-    matchingBase();
-    ~matchingBase();
+    matchingHopkroftKarp(incidenceGraph* biGraph_arg);
+    matchingHopkroftKarp();
+    ~matchingHopkroftKarp();
 
     incidenceGraph *getBiGraph() const;
     void setBiGraph(incidenceGraph *value);
     bool doBfs();
     bool doDfs(incidenceGraphNode *startNode);
     void doFirstMatching();
-    int matchingHopcroftKarp();
-
+    int doMatchingHopcroftKarp();
+    bool getBPerfectMatching() const;
 };
 
 

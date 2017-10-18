@@ -157,3 +157,40 @@ void incidenceGraph::unMatchGraph()
         (*it)->setMatching(NULL);
     }
 }
+
+bool incidenceGraph::checkIfPerfectMatching()
+{
+    std::vector<incidenceGraphNode*>::const_iterator equationNodes_end = equationNodes.end();
+    incidenceGraphNode* node = NULL;
+    bool bResult(true);
+    for(std::vector<incidenceGraphNode*>::const_iterator it = equationNodes.begin(); it != equationNodes_end; ++it)
+    {
+        node = *it;
+        if(node->getMatching() == NULL)
+        {
+            bResult = false;
+            break;
+        }
+    }
+    return bResult;
+}
+
+void incidenceGraph::cleanGraph()
+{
+   DELETE_VECTOR_ENTRIES(equationNodes)
+           DELETE_VECTOR_ENTRIES(variableNodes)
+}
+
+void incidenceGraph::reIndexVariableNodes()
+{
+    unsigned int count(0);
+    incidenceGraphNode* itDeref;
+    std::vector<incidenceGraphNode*>::const_iterator varEnd = variableNodes.end();
+    for(std::vector<incidenceGraphNode*>::const_iterator it = variableNodes.begin(); it != varEnd; ++it)
+    {
+        itDeref = *it;
+        itDeref->setIndex(count);
+        itDeref->setAliveIndex(0);
+        ++count;
+    }
+}

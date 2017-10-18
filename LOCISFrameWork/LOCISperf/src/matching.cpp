@@ -1,36 +1,42 @@
 #include "matching.h"
 
-matchingBase::matchingBase(incidenceGraph *biGraph_arg) :
+matchingHopkroftKarp::matchingHopkroftKarp(incidenceGraph *biGraph_arg) :
     biGraph(biGraph_arg),
     unmatchedEquationNodes(),
     unmatchedVariableNodes(),
-    bfsAliveIndex(0)
+    bfsAliveIndex(0),
+    bPerfectMatching(false)
 {
 
 }
 
-matchingBase::matchingBase() :
-    matchingBase(NULL)
+matchingHopkroftKarp::matchingHopkroftKarp() :
+    matchingHopkroftKarp(NULL)
 {
 
 }
 
-matchingBase::~matchingBase()
+matchingHopkroftKarp::~matchingHopkroftKarp()
 {
 
 }
 
-incidenceGraph *matchingBase::getBiGraph() const
+incidenceGraph *matchingHopkroftKarp::getBiGraph() const
 {
     return biGraph;
 }
 
-void matchingBase::setBiGraph(incidenceGraph *value)
+void matchingHopkroftKarp::setBiGraph(incidenceGraph *value)
 {
     biGraph = value;
 }
 
-bool matchingBase::doBfs()
+bool matchingHopkroftKarp::getBPerfectMatching() const
+{
+    return bPerfectMatching;
+}
+
+bool matchingHopkroftKarp::doBfs()
 {
     //initialize
     bool bfsGotUnmatched(false);
@@ -43,7 +49,8 @@ bool matchingBase::doBfs()
     incidenceGraphNode* match(NULL);
     unsigned int nodesBfsAliveIndex(0);
     incidenceGraphNode* itDeref(NULL);
-    bfsAliveIndex += 2;
+    bPerfectMatching = true;
+    bfsAliveIndex = 1;
 
     //push all unmatched equation nodes to queue
     std::list<incidenceGraphNode*>::const_iterator unmatchedEquationNodes_end = unmatchedEquationNodes.end();
@@ -53,6 +60,7 @@ bool matchingBase::doBfs()
         if(!(*it)->getMatching())
         {
             bfsQueue.push(*it);
+            bPerfectMatching = false;
         }
     }
 
@@ -126,7 +134,7 @@ bool matchingBase::doBfs()
     return bfsGotUnmatched;
 }
 
-bool matchingBase::doDfs(incidenceGraphNode* startNode)
+bool matchingHopkroftKarp::doDfs(incidenceGraphNode* startNode)
 {
     // initialize
     incidenceGraphNode* match(NULL);
@@ -195,8 +203,8 @@ bool matchingBase::doDfs(incidenceGraphNode* startNode)
             pairs.push_back(lastEquationNode);
 
             //orphan visited nodes
-            sourceNode->setAliveIndex(bfsAliveIndex+1);
-            lastEquationNode->setAliveIndex(bfsAliveIndex+1);
+            sourceNode->setAliveIndex(0);
+            lastEquationNode->setAliveIndex(0);
         }
         else
         {
@@ -223,7 +231,7 @@ bool matchingBase::doDfs(incidenceGraphNode* startNode)
     return foundUnMatched;
 }
 
-void matchingBase::doFirstMatching()
+void matchingHopkroftKarp::doFirstMatching()
 {
     if(biGraph)
     {
@@ -232,12 +240,13 @@ void matchingBase::doFirstMatching()
     }
 }
 
-int matchingBase::matchingHopcroftKarp()
+int matchingHopkroftKarp::doMatchingHopcroftKarp()
 {
     if(!biGraph)
         return HC_GRAPH_NULL;
 
     //initialize graph with trivial matching
+    incidenceGraphNode* itDeref(NULL);
     doFirstMatching();
     bool bDfsResultSuccess(false);
 
@@ -253,9 +262,10 @@ int matchingBase::matchingHopcroftKarp()
             std::list<incidenceGraphNode*>::const_iterator unmatchedVariableNodes_end = unmatchedVariableNodes.end();
             for(std::list<incidenceGraphNode*>::const_iterator it = unmatchedVariableNodes.begin(); it != unmatchedVariableNodes_end; ++it)
             {
-                if((*it)->getMatching() == NULL)
+                itDeref = *it;
+                if(itDeref->getMatching() == NULL)
                 {
-                    if(doDfs(*it))
+                    if(doDfs(itDeref))
                     {
                         bDfsResultSuccess = true;
                     }
@@ -269,6 +279,9 @@ int matchingBase::matchingHopcroftKarp()
             }
         }
     }
+
+    if(!bPerfectMatching)
+        return HC_NO_PERFECT_MATCHING;
 
     return HC_SUCCESS;
 }

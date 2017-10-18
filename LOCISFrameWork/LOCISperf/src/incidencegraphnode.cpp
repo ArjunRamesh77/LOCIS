@@ -7,7 +7,8 @@ incidenceGraphNode::incidenceGraphNode() :
     nodes(),
     matching(NULL),
     aliveIndex(0),
-    index(0)
+    index(0),
+    lowlink(0)
 {
 
 }
@@ -60,5 +61,15 @@ void incidenceGraphNode::setMatching(incidenceGraphNode *value)
 void incidenceGraphNode::setMatchingAsUnmacthed()
 {
     matching = NULL;
+}
+
+unsigned int incidenceGraphNode::getLowlink() const
+{
+    return lowlink;
+}
+
+void incidenceGraphNode::setLowlink(unsigned int value)
+{
+    lowlink = value;
 }
 

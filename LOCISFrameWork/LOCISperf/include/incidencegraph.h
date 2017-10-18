@@ -34,4 +34,7 @@ public:
     bool createBipartiteEVGraphFromMatrixCOO();
     void initializeMatchingOnGraph(std::list<incidenceGraphNode *> &unmatched);
     void unMatchGraph();
+    bool checkIfPerfectMatching();
+    void cleanGraph();
+    void reIndexVariableNodes();
 };
