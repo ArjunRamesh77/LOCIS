@@ -1,15 +1,14 @@
 #include "stronglyconnected.h"
 #include <cmath>
 
-stronglyConnectedTarjans::stronglyConnectedTarjans() :
-    stronglyConnectedTarjans(NULL)
+stronglyConnectedTarjans::stronglyConnectedTarjans(incidenceGraph* graph) :
+    biGraph(graph),
+    sccs(NULL)
 {
 
 }
 
-stronglyConnectedTarjans::stronglyConnectedTarjans(incidenceGraphNode *graph) :
-    biGraph(graph),
-    sccs(NULL)
+stronglyConnectedTarjans::stronglyConnectedTarjans()
 {
 
 }
@@ -29,7 +28,7 @@ void stronglyConnectedTarjans::setBiGraph(incidenceGraph *value)
     biGraph = value;
 }
 
-std::list<std::list<incidenceGraphNode*>>* stronglyConnectedTarjans::doStronglyConnectedTarjans(incidenceGraphNode *node)
+std::list<std::list<incidenceGraphNode *> *> *stronglyConnectedTarjans::doStronglyConnectedTarjans(incidenceGraphNode *node)
 {
     //sanity checks
     if(biGraph == NULL)
@@ -47,7 +46,7 @@ std::list<std::list<incidenceGraphNode*>>* stronglyConnectedTarjans::doStronglyC
     if(sccs)
         delete sccs;
 
-    sccs = new std::list<std::list<incidenceGraphNode*>>;
+    sccs = new std::list<std::list<incidenceGraphNode*>*>;
 
     //setup graph
     biGraph->reIndexVariableNodes();

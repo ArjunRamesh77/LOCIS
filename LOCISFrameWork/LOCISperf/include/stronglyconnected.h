@@ -10,11 +10,11 @@ class stronglyConnectedTarjans
     std::list<std::list<incidenceGraphNode*>*>* sccs;
 
 public:
-    stronglyConnectedTarjans(incidenceGraphNode* graph);
+    stronglyConnectedTarjans(incidenceGraph *graph);
     stronglyConnectedTarjans();
     ~stronglyConnectedTarjans();
 
     incidenceGraph *getBiGraph() const;
     void setBiGraph(incidenceGraph *value);
-    std::list<std::list<incidenceGraphNode *> > *doStronglyConnectedTarjans(incidenceGraphNode* node);
+    std::list<std::list<incidenceGraphNode*>*>* doStronglyConnectedTarjans(incidenceGraphNode* node);
 };
