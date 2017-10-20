@@ -36,5 +36,7 @@ public:
     void unMatchGraph();
     bool checkIfPerfectMatching();
     void cleanGraph();
-    void reIndexVariableNodes();
+    void resetAllIndicators();
+    incidenceGraphNode* getEquationAt(unsigned int index);
+    incidenceGraphNode* getVariableAt(unsigned int index);
 };

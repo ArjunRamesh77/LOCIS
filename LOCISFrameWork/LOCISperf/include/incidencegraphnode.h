@@ -20,6 +20,7 @@ class incidenceGraphNode
     unsigned int aliveIndex;
     unsigned int index;
     unsigned int lowlink;
+    unsigned int tIndex;
 
 public:
     incidenceGraphNode();
@@ -36,4 +37,6 @@ public:
     void setIndex(unsigned int value);
     unsigned int getLowlink() const;
     void setLowlink(unsigned int value);
+    unsigned int getTIndex() const;
+    void setTIndex(unsigned int value);
 };

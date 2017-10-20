@@ -181,16 +181,40 @@ void incidenceGraph::cleanGraph()
            DELETE_VECTOR_ENTRIES(variableNodes)
 }
 
-void incidenceGraph::reIndexVariableNodes()
+void incidenceGraph::resetAllIndicators()
 {
-    unsigned int count(0);
-    incidenceGraphNode* itDeref;
-    std::vector<incidenceGraphNode*>::const_iterator varEnd = variableNodes.end();
-    for(std::vector<incidenceGraphNode*>::const_iterator it = variableNodes.begin(); it != varEnd; ++it)
+    incidenceGraphNode* node = NULL;
+    std::vector<incidenceGraphNode*>::const_iterator equationNodes_end = equationNodes.end();
+    for(std::vector<incidenceGraphNode*>::const_iterator it = equationNodes.begin(); it != equationNodes_end; ++it)
     {
-        itDeref = *it;
-        itDeref->setIndex(count);
-        itDeref->setAliveIndex(0);
-        ++count;
+        node = *it;
+        node->setAliveIndex(0);
+        node->setTIndex(0);
     }
+
+    std::vector<incidenceGraphNode*>::const_iterator variableNodes_end = variableNodes.end();
+    for(std::vector<incidenceGraphNode*>::const_iterator it = variableNodes.begin(); it != variableNodes_end; ++it)
+    {
+        node = *it;
+        node->setAliveIndex(0);
+        node->setTIndex(0);
+    }
+}
+
+incidenceGraphNode *incidenceGraph::getEquationAt(unsigned int index)
+{
+    if(index < equationNodes.size())
+    {
+        return equationNodes.at(index);
+    }
+    return NULL;
+}
+
+incidenceGraphNode *incidenceGraph::getVariableAt(unsigned int index)
+{
+    if(index < variableNodes.size())
+    {
+        return variableNodes.at(index);
+    }
+    return NULL;
 }

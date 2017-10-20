@@ -3,12 +3,23 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //incidence graph node
+unsigned int incidenceGraphNode::getTIndex() const
+{
+    return tIndex;
+}
+
+void incidenceGraphNode::setTIndex(unsigned int value)
+{
+    tIndex = value;
+}
+
 incidenceGraphNode::incidenceGraphNode() :
     nodes(),
     matching(NULL),
     aliveIndex(0),
     index(0),
-    lowlink(0)
+    lowlink(0),
+    tIndex(0)
 {
 
 }

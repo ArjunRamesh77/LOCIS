@@ -43,13 +43,11 @@ std::list<std::list<incidenceGraphNode *> *> *stronglyConnectedTarjans::doStrong
     unsigned int index(0);
     dfsStack.push(node);
 
-    if(sccs)
-        delete sccs;
-
+    std::list<std::list<incidenceGraphNode*>*>* sccs = NULL;
     sccs = new std::list<std::list<incidenceGraphNode*>*>;
 
     //setup graph
-    biGraph->reIndexVariableNodes();
+    biGraph->resetAllIndicators();
 
     //iterartive depth first search
     while(dfsStack.size() != 0)
@@ -57,50 +55,68 @@ std::list<std::list<incidenceGraphNode *> *> *stronglyConnectedTarjans::doStrong
         sourceNode = dfsStack.top();
         dfsStack.pop();
 
-        //strongly connected book keeping
-        sourceNode->setIndex(index);
-        sourceNode->setLowlink(index);
-        ++index;
-        tarjansStack.push(sourceNode);
-        sourceNode->setAliveIndex(1);
-
-        //push all the matching equations variables on to the stack
-        match = sourceNode->getMatching();
-        incidenceGraphNode* itDeref;
-        std::list<incidenceGraphNode*>::const_iterator varEnd = match->getAllNodes().end();
-        for(std::list<incidenceGraphNode*>::const_iterator it = match->getAllNodes().begin();
-            it != varEnd; ++it)
+        if(sourceNode->getAliveIndex() == 0) //before recusion
         {
-            itDeref = *it;
+            if(sourceNode->getTIndex() == 0)
+            {
+                //strongly connected book keeping
+                sourceNode->setTIndex(index);
+                sourceNode->setLowlink(index);
+                sourceNode->setAliveIndex(1);
+                ++index;
+                tarjansStack.push(sourceNode);
+                dfsStack.push(sourceNode);
 
-            //push to stack only if node not previosly visited
-            if(itDeref->getIndex() == 0)
-            {
-                dfsStack.push(itDeref);
-                tarjansStack.push(itDeref);
-                sourceNode->setLowlink(std::min(sourceNode->getLowlink(), itDeref->getLowlink()));
-            }
-            else if(itDeref->getAliveIndex())
-            {
-                sourceNode->setLowlink(std::min(sourceNode->getLowlink(), itDeref->getIndex()));
+                //push all the matching equations variables on to the stack
+                match = sourceNode->getMatching();
+                incidenceGraphNode* itDeref;
+                std::list<incidenceGraphNode*>::const_iterator varEnd = match->getAllNodes().end();
+                for(std::list<incidenceGraphNode*>::const_iterator it = match->getAllNodes().begin();
+                    it != varEnd; ++it)
+                {
+                    itDeref = *it;
+                    if(itDeref->getAliveIndex() == 0)
+                    {
+                        dfsStack.push(itDeref);
+                    }
+                }
             }
         }
-
-        //found a stronly connected system
-        if(sourceNode->getLowlink() == sourceNode->getIndex())
+        else //after recursion
         {
-            std::list<incidenceGraphNode*>* sccItem = new std::list<incidenceGraphNode*>;
-            do
+            //push all the matching equations variables on to the stack
+            match = sourceNode->getMatching();
+            incidenceGraphNode* itDeref;
+            std::list<incidenceGraphNode*>::const_iterator varEnd = match->getAllNodes().end();
+            for(std::list<incidenceGraphNode*>::const_iterator it = match->getAllNodes().begin();
+                it != varEnd; ++it)
             {
-                childNode = tarjansStack.top();
-                tarjansStack.pop();
-                childNode->setAliveIndex(0);
-                sccItem->push_back(childNode);
+                itDeref = *it;
+
+                if(itDeref->getAliveIndex() == 1)
+                {
+                    if(itDeref->getTIndex() <= sourceNode->getTIndex())
+                       sourceNode->setLowlink(std::min(sourceNode->getLowlink(), itDeref->getTIndex()));
+                    else
+                       sourceNode->setLowlink(std::min(sourceNode->getLowlink(), itDeref->getLowlink()));
+                }
             }
-            while(sourceNode->getIndex() != childNode->getIndex());
-            sccs->push_back(sccItem);
+
+            //found a stronly connected system
+            if(sourceNode->getLowlink() == sourceNode->getTIndex())
+            {
+                std::list<incidenceGraphNode*>* sccItem = new std::list<incidenceGraphNode*>;
+                do
+                {
+                    childNode = tarjansStack.top();
+                    tarjansStack.pop();
+                    childNode->setAliveIndex(0);
+                    sccItem->push_back(childNode);
+                }
+                while(sourceNode->getIndex() != childNode->getIndex());
+                sccs->push_back(sccItem);
+            }
         }
     }
-
     return sccs;
 }

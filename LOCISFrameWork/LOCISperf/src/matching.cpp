@@ -50,7 +50,7 @@ bool matchingHopkroftKarp::doBfs()
     unsigned int nodesBfsAliveIndex(0);
     incidenceGraphNode* itDeref(NULL);
     bPerfectMatching = true;
-    bfsAliveIndex = 1;
+    bfsAliveIndex += 2;
 
     //push all unmatched equation nodes to queue
     std::list<incidenceGraphNode*>::const_iterator unmatchedEquationNodes_end = unmatchedEquationNodes.end();
