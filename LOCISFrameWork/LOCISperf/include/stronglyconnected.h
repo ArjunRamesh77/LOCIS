@@ -7,7 +7,6 @@
 class stronglyConnectedTarjans
 {
     incidenceGraph* biGraph;
-    std::list<std::list<incidenceGraphNode*>*>* sccs;
 
 public:
     stronglyConnectedTarjans(incidenceGraph *graph);

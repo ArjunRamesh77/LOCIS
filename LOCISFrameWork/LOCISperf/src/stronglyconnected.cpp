@@ -2,8 +2,7 @@
 #include <cmath>
 
 stronglyConnectedTarjans::stronglyConnectedTarjans(incidenceGraph* graph) :
-    biGraph(graph),
-    sccs(NULL)
+    biGraph(graph)
 {
 
 }

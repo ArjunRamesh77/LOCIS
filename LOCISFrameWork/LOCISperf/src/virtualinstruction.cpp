@@ -1,51 +1,65 @@
 #include "virtualinstruction.h"
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// virtualOper
 virtualOper::virtualOper(__int8_t operType_arg, double value_arg, unsigned int index_arg) :
     operType(operType_arg),
     value(value_arg),
-    index(index_arg)
+    index(index_arg),
+    last(0)
 {
 
 }
 
-virtualSingleExpressionStack::virtualSingleExpressionStack()
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// virtualInstructionStack
+virtualInstructionStack::virtualInstructionStack() :
+    allInst()
 {
 
 }
 
-void virtualSingleExpressionStack::addGeneralInstr(__int8_t operType_arg, double value_arg, unsigned int index_arg)
+virtualInstructionStack::~virtualInstructionStack()
+{
+
+}
+
+void virtualInstructionStack::addGeneralInstr(__int8_t operType_arg, double value_arg, unsigned int index_arg)
 {
     allInst.push_back(virtualOper(operType_arg, value_arg, index_arg));
 }
 
-void virtualSingleExpressionStack::addMathInstr(__int8_t op)
+void virtualInstructionStack::addMathInstr(__int8_t op)
 {
     allInst.push_back(virtualOper(op, 0, 0));
 }
 
-void virtualSingleExpressionStack::addVariableIndex(unsigned int index)
+void virtualInstructionStack::addVariable1Index(unsigned int index)
 {
-    allInst.push_back(virtualOper(VR_VAR_INDEX, 0, index));
+    allInst.push_back(virtualOper(VR_VAR1_INDEX, 0, index));
 }
 
-void virtualSingleExpressionStack::addConstInstr(double value)
+void virtualInstructionStack::addConstInstr(double value)
 {
     allInst.push_back(virtualOper(VR_CONST, value, 0));
 }
 
-double virtualSingleExpressionStack::evalStackBased()
+void virtualInstructionStack::addFunctionSISO(unsigned int index)
 {
-    std::vector<virtualOper>::const_iterator allInst_end = allInst.end();
-    for(std::vector<virtualOper>::const_iterator vo = allInst.begin(); vo != allInst_end; ++vo)
-    {
-        //swictch by type
-        switch (vo->operType) {
+    allInst.push_back(virtualOper(VR_FUNCTION_SISO, 0, index));
+}
 
-        case value:
+void virtualInstructionStack::addFunctionDISO(unsigned int index)
+{
+    allInst.push_back(virtualOper(VR_FUNCTION_DISO, 0, index));
+}
 
-            break;
-        default:
-            break;
-        }
-    }
+void virtualInstructionStack::makeLast()
+{
+    (allInst.end() - 1)->last = 1;
+}
+
+std::vector<virtualOper> *virtualInstructionStack::getAllInst()
+{
+    return &allInst;
 }
