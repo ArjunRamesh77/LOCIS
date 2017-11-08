@@ -14,6 +14,7 @@ public:
     genericResiual();
     ~genericResiual();
 
-    int evalResidualStackBased(double* r, double* x);
+    int evalResidual1StackBased(double* r, double* x);
+    int evalResidual2StackBased(double* r, double* yy, double* yp);
     void setInstStackPtr(virtualInstructionStack *value);
 };

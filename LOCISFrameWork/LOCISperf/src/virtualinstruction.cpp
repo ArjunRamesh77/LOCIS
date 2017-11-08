@@ -39,9 +39,19 @@ void virtualInstructionStack::addVariable1Index(unsigned int index)
     allInst.push_back(virtualOper(VR_VAR1_INDEX, 0, index));
 }
 
+void virtualInstructionStack::addVariable2Index(unsigned int index)
+{
+    allInst.push_back(virtualOper(VR_VAR2_INDEX, 0, index));
+}
+
 void virtualInstructionStack::addConstInstr(double value)
 {
     allInst.push_back(virtualOper(VR_CONST, value, 0));
+}
+
+void virtualInstructionStack::addInter(unsigned int index)
+{
+    allInst.push_back(virtualOper(VR_INTER_INDEX, 0, index));
 }
 
 void virtualInstructionStack::addFunctionSISO(unsigned int index)

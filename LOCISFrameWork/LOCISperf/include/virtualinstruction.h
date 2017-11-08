@@ -16,8 +16,15 @@ enum
     VR_UNA_ADD,
     VR_UNA_SUB,
     VR_BIN_RAISE,
+    VR_ASSIGN,
     VR_VAR1_INDEX,
+    VR_VAR2_INDEX,
+    VR_INTER_INDEX,
+    VR_VAR1_VECTOR,
+    VR_VAR2_VECTOR,
+    VR_VAR_VECTOR,
     VR_CONST,
+    VR_CONST_VECTOR,
     VR_FUNCTION_SISO,
     VR_FUNCTION_DISO
 };
@@ -39,7 +46,7 @@ enum
     VR_FUNC_ASINH,
     VR_FUNC_ATANH,
     VR_FUNC_EXP,
-    VR_FUNC,LOG,
+    VR_FUNC_LOG,
     VR_FUNC_LOG10,
     VR_FUNC_SQRT
 };
@@ -64,6 +71,7 @@ struct virtualOper
 
    virtualOper(__int8_t operType_arg, double value_arg, unsigned int index_arg);
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // loads all the functions for the virtual machine
@@ -94,15 +102,18 @@ public:
     virtualInstructionStack();
     ~virtualInstructionStack();
 
+    //scalar operations
     void addGeneralInstr(__int8_t operType_arg, double value_arg, unsigned int index_arg);
     void addMathInstr(__int8_t op);
     void addVariable1Index(unsigned int index);
+    void addVariable2Index(unsigned int index);
     void addConstInstr(double value);
+    void addInter(unsigned int index);
     void addFunctionSISO(unsigned int index);
     void addFunctionDISO(unsigned int index);
     void makeLast();
 
     //evaluation routines
     std::vector<virtualOper>* getAllInst();
-    void evalStackBased(std::vector<virtualOper>::const_iterator oper, std::stack<double> &stackPointer);
+    void evalStackBased(std::vector<virtualOper>::const_iterator oper, std::stack<double> &stackPointer, std::vector<double> &inter);
 };

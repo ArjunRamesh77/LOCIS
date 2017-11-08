@@ -2,7 +2,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // main evaluation function
-void virtualInstructionStack::evalStackBased(std::vector<virtualOper>::const_iterator oper, std::stack<double>& stackRef)
+void virtualInstructionStack::evalStackBased(std::vector<virtualOper>::const_iterator oper, std::stack<double>& stackRef, std::vector<double> &inter)
 {
     //locals
     double val1(0);
@@ -68,6 +68,12 @@ void virtualInstructionStack::evalStackBased(std::vector<virtualOper>::const_ite
 
         val1 = -val1;
         stackRef.push(val1);
+        break;
+
+    case VR_ASSIGN:
+        val1 = stackRef.top();
+        stackRef.pop();
+        inter.push_back(val1);
         break;
 
     case VR_FUNCTION_SISO:
