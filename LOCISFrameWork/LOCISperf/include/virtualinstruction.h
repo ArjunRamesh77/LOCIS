@@ -20,6 +20,7 @@ enum
     VR_VAR1_INDEX,
     VR_VAR2_INDEX,
     VR_INTER_INDEX,
+    VR_DERIV_INDEX,
     VR_VAR1_VECTOR,
     VR_VAR2_VECTOR,
     VR_VAR_VECTOR,
@@ -51,6 +52,8 @@ enum
     VR_FUNC_SQRT
 };
 
+#define CONST_LOG10 2.30258509299
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DISO functions
 enum
@@ -70,6 +73,9 @@ struct virtualOper
    __int8_t last;
 
    virtualOper(__int8_t operType_arg, double value_arg, unsigned int index_arg);
+   virtualOper(__int8_t operType_arg, double value_arg);
+   virtualOper(__int8_t operType_arg, unsigned int index_arg);
+   virtualOper(__int8_t operType_arg);
 };
 
 

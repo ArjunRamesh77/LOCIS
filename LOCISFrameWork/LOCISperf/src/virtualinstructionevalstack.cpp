@@ -1,5 +1,6 @@
 #include "virtualinstruction.h"
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // main evaluation function
 void virtualInstructionStack::evalStackBased(std::vector<virtualOper>::const_iterator oper, std::stack<double>& stackRef, std::vector<double> &inter)
@@ -27,7 +28,7 @@ void virtualInstructionStack::evalStackBased(std::vector<virtualOper>::const_ite
         val2 = stackRef.top();
         stackRef.pop();
 
-        val1 = val1 - val2;
+        val1 = val2 - val1;
         stackRef.push(val1);
         break;
 
@@ -52,6 +53,13 @@ void virtualInstructionStack::evalStackBased(std::vector<virtualOper>::const_ite
         break;
 
     case VR_BIN_RAISE:
+        val1 = stackRef.top();
+        stackRef.pop();
+        val2 = stackRef.top();
+        stackRef.pop();
+
+        val1 = std::pow(val1, val2);
+        stackRef.push(val1);
         break;
 
     case VR_UNA_ADD:

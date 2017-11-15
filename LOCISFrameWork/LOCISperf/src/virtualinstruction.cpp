@@ -11,6 +11,24 @@ virtualOper::virtualOper(__int8_t operType_arg, double value_arg, unsigned int i
 
 }
 
+virtualOper::virtualOper(__int8_t operType_arg, double value_arg) :
+    virtualOper(operType_arg, value_arg, 0)
+{
+
+}
+
+virtualOper::virtualOper(__int8_t operType_arg, unsigned int index_arg) :
+    virtualOper(operType_arg, 0.0, index_arg)
+{
+
+}
+
+virtualOper::virtualOper(__int8_t operType_arg) :
+    virtualOper(operType_arg, 0.0, 0)
+{
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // virtualInstructionStack
 virtualInstructionStack::virtualInstructionStack() :

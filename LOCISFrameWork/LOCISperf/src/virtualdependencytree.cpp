@@ -2,6 +2,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // dependency tree node
+unsigned int *virtualDependencyTreeNode::getWIndexDeriv() const
+{
+    return wIndexDeriv;
+}
+
+void virtualDependencyTreeNode::setWIndexDeriv(unsigned int *value)
+{
+    wIndexDeriv = new unsigned int(*value);
+}
+
 virtualDependencyTreeNode::virtualDependencyTreeNode(std::vector<virtualOper>::const_iterator oper_arg) :
     virtualDependencyTreeNode(0,0, oper_arg)
 {
@@ -12,7 +22,8 @@ virtualDependencyTreeNode::virtualDependencyTreeNode(__int8_t nodeType_arg, __in
     nodeType(nodeType_arg),
     wIndex(wIndex_arg),
     oper(oper_arg),
-    to()
+    to(),
+    wIndexDeriv(NULL)
 {
 
 }
@@ -37,7 +48,7 @@ __int8_t virtualDependencyTreeNode::getNodeType() const
     return nodeType;
 }
 
-__int8_t virtualDependencyTreeNode::getWIndex() const
+unsigned int virtualDependencyTreeNode::getWIndex() const
 {
     return wIndex;
 }
@@ -52,7 +63,7 @@ void virtualDependencyTreeNode::setNodeType(const __int8_t &value)
     nodeType = value;
 }
 
-void virtualDependencyTreeNode::setWIndex(const __int8_t &value)
+void virtualDependencyTreeNode::setWIndex(const unsigned int &value)
 {
     wIndex = value;
 }
@@ -64,6 +75,26 @@ void virtualDependencyTreeNode::setOper(const std::vector<virtualOper>::const_it
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // dependency tree
+std::vector<virtualOper> *virtualDependencyTree::getInstr() const
+{
+    return instr;
+}
+
+void virtualDependencyTree::setInstr(std::vector<virtualOper> *value)
+{
+    instr = value;
+}
+
+int virtualDependencyTree::getJacType() const
+{
+    return jacType;
+}
+
+void virtualDependencyTree::setJacType(int value)
+{
+    jacType = value;
+}
+
 virtualDependencyTree::virtualDependencyTree()
 {
 
@@ -76,7 +107,7 @@ virtualDependencyTree::~virtualDependencyTree()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // builds a dependency tree from a residual function
-virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualOper>::const_iterator iterFucntion)
+virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualOper>::const_iterator& iterFucntion)
 {
     //init
     wIndex = 0;
@@ -84,7 +115,7 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
     interBegin.clear();
 
     //iterate till final
-    std::vector<virtualOper>::const_iterator vo = iterFucntion;
+    std::vector<virtualOper>::const_iterator& vo = iterFucntion;
     std::stack<virtualDependencyTreeNode*> localNodeStack;
     auto find = indepVariables.find(0);
 
@@ -95,14 +126,29 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
     virtualDependencyTreeNode* node3 = NULL;
 
     //iterate till f(x)
-    do
+    while(1)
     {
         switch(vo->operType)
         {
         case VR_VAR1_INDEX:
+            if(jacType == VDT_INDEX2)
+            {
+                node = new virtualDependencyTreeNode(VR_CONST, wIndex, vo);
+
+                // create const = inter
+                virtualOper vo1(VR_CONST, vo->index);
+                vo1.last = VR_VAR1_INDEX;
+                instr->push_back(vo1);
+                instr->push_back(virtualOper(VR_ASSIGN, wIndex));
+
+                localNodeStack.push(node);
+                ++wIndex;
+                continue;
+            }
+
             node = NULL;
             find = indepVariables.find(vo->index);
-            if(find != indepVariables.end())
+            if(find == indepVariables.end())
             {
                 // if the variable is encountered for the first time put in the map of dependents
                 node = new virtualDependencyTreeNode(vo->operType, wIndex, vo);
@@ -110,8 +156,8 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
 
                 // all new variables need their own trivial intermediate expression
                 // create a = inter
-                instr->push_back(virtualOper(vo->operType, 0, vo->index));
-                instr->push_back(virtualOper(VR_ASSIGN, 0, wIndex));
+                instr->push_back(virtualOper(vo->operType, vo->index));
+                instr->push_back(virtualOper(VR_ASSIGN, wIndex));
 
                 // increment only if the variable is encountered for the first time
                 ++wIndex;
@@ -123,17 +169,57 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
             localNodeStack.push(node);
             break;
 
+        case VR_VAR2_INDEX:
+            if(jacType == VDT_INDEX1)
+            {
+                node = new virtualDependencyTreeNode(VR_CONST, wIndex, vo);
+
+                // create const = inter
+                virtualOper vo1(VR_CONST, vo->index);
+                vo1.last = VR_VAR2_INDEX;
+                instr->push_back(vo1);
+                instr->push_back(virtualOper(VR_ASSIGN, wIndex));
+
+                localNodeStack.push(node);
+                ++wIndex;
+                continue;
+            }
+
+            node = NULL;
+            find = indepVariables.find(vo->index);
+            if(find == indepVariables.end())
+            {
+                // if the variable is encountered for the first time put in the map of dependents
+                node = new virtualDependencyTreeNode(vo->operType, wIndex, vo);
+                indepVariables[vo->index] = node;
+
+                // all new variables need their own trivial intermediate expression
+                // create a = inter
+                instr->push_back(virtualOper(vo->operType,vo->index));
+                instr->push_back(virtualOper(VR_ASSIGN, wIndex));
+
+                // increment only if the variable is encountered for the first time
+                ++wIndex;
+            }
+            else
+            {
+                node = indepVariables[vo->index];
+            }
+            localNodeStack.push(node);
+            break;
+
+
         case VR_CONST:
             //a constant is always considered to a be a new intermediate
             node = new virtualDependencyTreeNode(vo->operType, wIndex, vo);
 
             // create const = inter
             instr->push_back(virtualOper(vo->operType, vo->value, wIndex));
-            instr->push_back(virtualOper(VR_ASSIGN, 0, wIndex));
+            instr->push_back(virtualOper(VR_ASSIGN, wIndex));
 
             localNodeStack.push(node);
             ++wIndex;
-            break;;
+            break;
 
         case VR_BIN_ADD:
         case VR_BIN_SUB:
@@ -153,15 +239,18 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
             localNodeStack.push(node3);
 
             //create a b binop = inter
-            instr->push_back(virtualOper(VR_INTER_INDEX, 0, node1->getWIndex())); interBegin.push_back(instr->end() - 1);
-            instr->push_back(virtualOper(VR_INTER_INDEX, 0, node1->getWIndex()));
+            instr->push_back(virtualOper(VR_INTER_INDEX, node2->getWIndex()));
+            interBegin[wIndex] = instr->size()-1;
+            instr->push_back(virtualOper(VR_INTER_INDEX, node1->getWIndex()));
             instr->push_back(*vo);
-            instr->push_back(virtualOper(VR_ASSIGN, 0, wIndex));
+            instr->push_back(virtualOper(VR_ASSIGN, wIndex));
 
             ++wIndex;
+            break;
 
         case VR_UNA_ADD:
         case VR_UNA_SUB:
+        case VR_FUNCTION_SISO:
             //add operands to the stack
             node1 = localNodeStack.top();
             localNodeStack.pop();
@@ -172,9 +261,10 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
             localNodeStack.push(node3);
 
             //create a b binop = inter
-            instr->push_back(virtualOper(VR_INTER_INDEX, 0, node1->getWIndex())); interBegin.push_back(instr->end() - 1);
+            instr->push_back(virtualOper(VR_INTER_INDEX, node1->getWIndex()));
+            interBegin[wIndex] = instr->size()-1;
             instr->push_back(*vo);
-            instr->push_back(virtualOper(VR_ASSIGN, 0, wIndex));
+            instr->push_back(virtualOper(VR_ASSIGN, wIndex));
 
             ++wIndex;
 
@@ -182,8 +272,13 @@ virtualDependencyTreeNode *virtualDependencyTree::buildTree(std::vector<virtualO
             break;
         }
 
+        if(vo->last == 1)
+        {
+            ++vo;
+            break;
+        }
         ++vo;
-    }while(vo->last != 1);
+    }
 
     if(localNodeStack.size() == 1)
         return localNodeStack.top();
@@ -204,24 +299,39 @@ int virtualDependencyTree::getReverseModeAutoDiffInst()
     for(std::map<unsigned int, virtualDependencyTreeNode*>::const_iterator it1 = indepVariables.begin(); it1 != indepVariables_end; ++it1)
     {
         //loop over each independent variables' possibly multiple paths( this needs to be summed)
+        std::vector<std::vector<unsigned int>*> piSigmaNumbers;
         std::vector<virtualDependencyTreeNode*>::const_iterator it1_second_getAllTo_end = it1->second->getAllTo().end();
         for(std::vector<virtualDependencyTreeNode*>::const_iterator it2 = it1->second->getAllTo().begin(); it2 != it1_second_getAllTo_end; ++it2)
         {
-            unsigned int c = 0;
-            virtualDependencyTreeNode* aNodeInVar = *it2;
-            while(aNodeInVar->getAllTo().size() != 0)
+            // init
+            std::vector<unsigned int>* piNumbers = new std::vector<unsigned int>;
+
+            // first find derivative w.r.t the root variable
+            item = *it2;
+            itemPrev = it1->second;
+            addIntermediateDerivativeInstr(item, itemPrev, true);
+            //addPiDerivativeInstr(numPi, itemPrev->getWIndexDeriv());
+            piNumbers->push_back(*(itemPrev->getWIndexDeriv()));
+            itemPrev = item;
+
+            while(item->getAllTo().size() != 0)
             {
-                item = *(aNodeInVar->getAllTo().begin());
-                aNodeInVar = item;
-                c++;
-                if(c > 1)
-                {
-                    addIntermediateDerivativeInstr(item, itemPrev);
-                }
+                item = *(item->getAllTo().begin());
+                addIntermediateDerivativeInstr(item, itemPrev);
+                piNumbers->push_back(*(itemPrev->getWIndexDeriv()));
+                //addPiDerivativeInstr(numPi, itemPrev->getWIndexDeriv());
                 itemPrev = item;
             }
+            piSigmaNumbers.push_back(piNumbers);
         }
+
+        //now derivative with respect to the outer for's independent variable is available
+        addFinalDerivative(piSigmaNumbers);
+        instr->push_back(virtualOper(VR_DERIV_INDEX, it1->first));
     }
+
+    // the derivatives w.r.t to all independent variables have been added
+    (instr->end() - 1)->last = 4;
     return 0;
 }
 
