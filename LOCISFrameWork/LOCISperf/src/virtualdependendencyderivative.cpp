@@ -20,7 +20,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
 
     //get the iterator pointer for the Function in the main instruction list
     //std::vector<virtualOper>::const_iterator fnIt = interBegin[wIndexFunction];
-    virtualOper* fnIt = &(instr->at(interBegin[wIndexFunction]));
+    unsigned int interIndex = interBegin[wIndexFunction];
+    virtualOper fnIt = instr->at(interIndex);
 
     //locals
     unsigned int wIndexL = 0;
@@ -28,12 +29,12 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
     std::stack<virtualOper> localStack;
 
     //run the instruction till the assign operation to determine the derivative
-    while(fnIt->operType != VR_ASSIGN)
+    while(fnIt.operType != VR_ASSIGN)
     {
-        switch(fnIt->operType)
+        switch(fnIt.operType)
         {
         case VR_INTER_INDEX:
-            localStack.push(*fnIt);
+            localStack.push(fnIt);
             break;
 
         case VR_BIN_ADD:
@@ -63,7 +64,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
                 instr->push_back(virtualOper(VR_CONST, 0.0));
             }
 
-            instr->push_back(virtualOper(fnIt->operType));
+            instr->push_back(virtualOper(fnIt.operType));
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
             itemPrev->setWIndexDeriv(&wIndex);
             wIndex++;
@@ -208,7 +209,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             {
                 instr->push_back(virtualOper(VR_CONST, 0.0));
             }
-            instr->push_back(virtualOper(fnIt->operType));
+            instr->push_back(virtualOper(fnIt.operType));
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
             itemPrev->setWIndexDeriv(&wIndex);
             wIndex++;
@@ -220,7 +221,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
 
             if(wIndexR == wIndexIndepVar)
             {
-                getSISOFunctionDerivative(fnIt, wIndexR);
+                getSISOFunctionDerivative(&fnIt, wIndexR);
             }
             else
             {
@@ -232,7 +233,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             break;
 
         }
-        ++fnIt;
+        fnIt = (instr->at(++interIndex));
     }
     return 0;
 }

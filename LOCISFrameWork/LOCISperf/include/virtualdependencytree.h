@@ -24,7 +24,7 @@ class virtualDependencyTreeNode
 
 public:
     virtualDependencyTreeNode(std::vector<virtualOper>::const_iterator oper_arg);
-    virtualDependencyTreeNode(__int8_t nodeType_arg, __int8_t wIndex_arg, std::vector<virtualOper>::const_iterator oper_arg);
+    virtualDependencyTreeNode(__int8_t nodeType_arg, unsigned int wIndex_arg, std::vector<virtualOper>::const_iterator oper_arg);
     ~virtualDependencyTreeNode();
 
     void connectTo(virtualDependencyTreeNode* node);

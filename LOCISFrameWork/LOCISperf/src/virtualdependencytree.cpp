@@ -18,7 +18,7 @@ virtualDependencyTreeNode::virtualDependencyTreeNode(std::vector<virtualOper>::c
 
 }
 
-virtualDependencyTreeNode::virtualDependencyTreeNode(__int8_t nodeType_arg, __int8_t wIndex_arg, std::vector<virtualOper>::const_iterator oper_arg) :
+virtualDependencyTreeNode::virtualDependencyTreeNode(__int8_t nodeType_arg, unsigned int wIndex_arg, std::vector<virtualOper>::const_iterator oper_arg) :
     nodeType(nodeType_arg),
     wIndex(wIndex_arg),
     oper(oper_arg),
@@ -293,6 +293,7 @@ int virtualDependencyTree::getReverseModeAutoDiffInst()
     //local
     virtualDependencyTreeNode* item = NULL;
     virtualDependencyTreeNode* itemPrev = NULL;
+    long dbgNum = 0;
 
     //loop over the each independendent variable
     std::map<unsigned int, virtualDependencyTreeNode*>::const_iterator indepVariables_end = indepVariables.end();
@@ -316,6 +317,7 @@ int virtualDependencyTree::getReverseModeAutoDiffInst()
 
             while(item->getAllTo().size() != 0)
             {
+                dbgNum++;
                 item = *(item->getAllTo().begin());
                 addIntermediateDerivativeInstr(item, itemPrev);
                 piNumbers->push_back(*(itemPrev->getWIndexDeriv()));
