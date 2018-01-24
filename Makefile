@@ -15,20 +15,27 @@ endif
 OUT = Output/$(config)
 
 # DIRS
+DIR_LOCIS_API = LOCISFrameWork/LOCISapi
 DIR_LOCIS_CMD_APP = LOCISFrameWork/LOCIScmdapp
 DIR_LOCIS_CORE = LOCISFrameWork/LOCISCore
 DIR_LOCIS_FEM = LOCISFrameWork/LocisFEM
 DIR_LOCIS_PERF = LOCISFrameWork/LOCISperf
 
-ALL_DIRS = $(DIR_LOCIS_CMD_APP)\
+ALL_DIRS = $(DIR_LOCIS_API)\
+		   $(DIR_LOCIS_CMD_APP)\
 		   $(DIR_LOCIS_CORE)\
 		   $(DIR_LOCIS_FEM)\
 		   $(DIR_LOCIS_PERF)
 
 # MAKE
 export config
+export shared
 
 # RULES
+.PHONY : locisapi
+lociscmdapp : locis locisfem locisperf
+	$(MAKE) -C $(DIR_LOCIS_API) 
+
 .PHONY : lociscmdapp
 lociscmdapp : locis locisfem locisperf
 	$(MAKE) -C $(DIR_LOCIS_CMD_APP) 

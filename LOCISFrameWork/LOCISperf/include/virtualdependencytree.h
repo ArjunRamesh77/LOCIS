@@ -18,23 +18,20 @@ class virtualDependencyTreeNode
 {
     __int8_t nodeType;
     unsigned int wIndex;
-    std::vector<virtualOper>::const_iterator oper;
     std::vector<virtualDependencyTreeNode*> to;
     unsigned int* wIndexDeriv;
 
 public:
-    virtualDependencyTreeNode(std::vector<virtualOper>::const_iterator oper_arg);
-    virtualDependencyTreeNode(__int8_t nodeType_arg, unsigned int wIndex_arg, std::vector<virtualOper>::const_iterator oper_arg);
+    virtualDependencyTreeNode();
+    virtualDependencyTreeNode(__int8_t nodeType_arg, unsigned int wIndex_arg);
     ~virtualDependencyTreeNode();
 
     void connectTo(virtualDependencyTreeNode* node);
     std::vector<virtualDependencyTreeNode *> &getAllTo();
     __int8_t getNodeType() const;
     unsigned int getWIndex() const;
-    std::vector<virtualOper>::const_iterator getOper() const;
     void setNodeType(const __int8_t &value);
     void setWIndex(const unsigned int &value);
-    void setOper(const std::vector<virtualOper>::const_iterator &value);
     unsigned int *getWIndexDeriv() const;
     void setWIndexDeriv(unsigned int *value);
 };
@@ -49,6 +46,8 @@ class virtualDependencyTree
     std::vector<virtualOper>* residualFunctionInstr;
     int jacType;
     unsigned int wIndex;
+    bool bZeroPi;
+    unsigned int numTreeInstr;
 
 public:
     virtualDependencyTree();
@@ -56,12 +55,12 @@ public:
     ~virtualDependencyTree();
 
     //builds the dependency tree and returns the residual function evaluation in w form
+    void setInstr(std::vector<virtualOper> *value);
     virtualDependencyTreeNode* buildTree(std::vector<virtualOper>::const_iterator &iterFucntion);
-    int getReverseModeAutoDiffInst();
     int addIntermediateDerivativeInstr(virtualDependencyTreeNode* item, virtualDependencyTreeNode* itemPrev, bool root = false);
+    int getReverseModeAutoDiffInst();
     int getSISOFunctionDerivative(virtualOper* fnIt, unsigned int wIndexR);
     std::vector<virtualOper> *getInstr() const;
-    void setInstr(std::vector<virtualOper> *value);
     int getJacType() const;
     void setJacType(int value);
     int addFinalDerivative(std::vector<std::vector<unsigned int>*>& psnum);

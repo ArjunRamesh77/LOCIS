@@ -6,8 +6,7 @@ incidenceGraph::incidenceGraph() :
     numEquationNodes(0),
     numVariableNodes(0),
     equationNodes(),
-    variableNodes(),
-    matrixCOO()
+    variableNodes()
 {
 
 }
@@ -86,32 +85,6 @@ void incidenceGraph::addMatching(incidenceGraphNode* equationNode, incidenceGrap
 {
     equationNode->setMatching(variableNode);
     variableNode->setMatching(equationNode);
-}
-
-void incidenceGraph::matrixCOOClear()
-{
-    matrixCOO.clear();
-}
-
-void incidenceGraph::MatrixCOOAddCoordinate(unsigned int row, unsigned int col)
-{
-    matrixCOO.push_back({row, col});
-}
-
-bool incidenceGraph::createBipartiteEVGraphFromMatrixCOO()
-{
-    //Loop over entries in the matrixCOO to build the bipartite graph
-    // Applies to a general matrix
-    for(std::vector<std::pair<unsigned int, unsigned int>>::const_iterator it = matrixCOO.begin(); it != matrixCOO.end(); ++it)
-    {
-        // Row indicates the equation index, column indicates the incidence of a variable
-        if(!addEdge(it->first, it->second))
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void incidenceGraph::initializeMatchingOnGraph(std::list<incidenceGraphNode*>& unmatched)

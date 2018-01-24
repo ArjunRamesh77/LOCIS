@@ -12,9 +12,6 @@ class incidenceGraph
     std::vector<incidenceGraphNode*> equationNodes;
     std::vector<incidenceGraphNode*> variableNodes;
 
-    //Matrix styles
-    std::vector<std::pair<unsigned int,unsigned int>> matrixCOO;
-
 public:
     incidenceGraph();
     incidenceGraph(unsigned int numU, unsigned int numV);
@@ -28,10 +25,6 @@ public:
     void addMatching(incidenceGraphNode *equationNode, incidenceGraphNode *variableNode);
 
     //Matrix functions
-    void matrixCOOClear();
-    void MatrixCOOAddCoordinate(unsigned int row, unsigned int col);
-
-    bool createBipartiteEVGraphFromMatrixCOO();
     void initializeMatchingOnGraph(std::list<incidenceGraphNode *> &unmatched);
     void unMatchGraph();
     bool checkIfPerfectMatching();
@@ -39,4 +32,5 @@ public:
     void resetAllIndicators();
     incidenceGraphNode* getEquationAt(unsigned int index);
     incidenceGraphNode* getVariableAt(unsigned int index);
+
 };

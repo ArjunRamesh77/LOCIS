@@ -3,9 +3,8 @@
 #include "virtualinstruction.h"
 #include "virtualdependencytree.h"
 
-class genericJacobian
+class genericJacobian : public virtualInstructionStack
 {
-    virtualInstructionStack* instResidualStackPtr;
     virtualInstructionStack instJacobianStack1;
     virtualInstructionStack instJacobianStack2;
     virtualDependencyTree vdt;
@@ -15,14 +14,14 @@ public:
     genericJacobian();
     ~genericJacobian();
 
+    unsigned int getNVar() const;
+    void setNVar(unsigned int value);
+
     //construction
     int generateFullJacobianInstr(int type);
     int generateDualPartJacobian();
-
-    //evaluation
     int evalDenseJacobian1StackBased(double* j, double* x);
     int evalDenseJacobian2StackBased(double* j, double alpha, double* yy, double* yp);
-    void setInstStackPtr(virtualInstructionStack *value);
-    unsigned int getNVar() const;
-    void setNVar(unsigned int value);
+    int evalSparseJacobian3StackBased(double *rp, double *cp, double *value);
+
 };

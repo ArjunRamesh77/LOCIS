@@ -39,6 +39,7 @@ NAME_PROGRAM = liblocis.a
 
 # ALL INCLUDE PATHS
 PATH_LOCIS_INCLUDE :=	 include
+PATH_LOCIS_API_INCLUDE :=	$(LOCIS_ROOT)/LOCISFrameWork/LOCISapi/include
 PATH_KINSOL_INCLUDE :=	 $(LOCIS_ROOT)/Solvers/KINSOL/srcdir/include
 PATH_SUNDIALS_INCLUDE := $(LOCIS_ROOT)/Solvers/KINSOL/builddir/include
 PATH_IDA_INCLUDE :=		 $(LOCIS_ROOT)/Solvers/IDA/srcdir/include
@@ -46,7 +47,8 @@ PATH_PYTHON_INCLUDE :=	 /usr/include/python2.7
 PATH_NUMPY_INCLUDE :=	 /home/$(USER)/.local/lib/python2.7/site-packages/numpy/core/include/numpy
 PATH_LOCIS_FEM_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LocisFEM/include
 
-PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_INCLUDE)\
+PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_API_INCLUDE)\
+					-I$(PATH_LOCIS_INCLUDE)\
 					-I$(PATH_SUNDIALS_INCLUDE)\
 					-I$(PATH_KINSOL_INCLUDE)\
 					-I$(PATH_IDA_INCLUDE)\
@@ -66,10 +68,12 @@ LOCIS_OBJ = $(addprefix $(PATH_LOCIS_TEMP)/$(config)/,$(patsubst %.$(EXT_CPP),%.
 AR := ar
 CXX := g++
 ARFLAGS = rcs
+
+# Create position independent code for shared libs
 ifeq ($(config),debug)
-	CXXFLAGS = -Wall -c -std=c++11 -g -fpermissive
+	CXXFLAGS := -Wall $(shared) -c -std=c++11 -g -fpermissive
 else
-	CXXFLAGS = -Wall -c -std=c++11 -O3 -fpermissive
+	CXXFLAGS = -Wall $(shared) -c -std=c++11 -O3 -fpermissive
 endif
 
 # FUNCTIONS

@@ -12,6 +12,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
     //only exception is root because root derivative will always be overriden by possibly multiple paths
     if(!root)
     {
+        //if not null that means derivative instructions already added
         if(itemPrev->getWIndexDeriv() != NULL)
         {
             return 0;
@@ -24,6 +25,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
     virtualOper fnIt = instr->at(interIndex);
 
     //locals
+    __int8_t tn(0);
     unsigned int wIndexL = 0;
     unsigned int wIndexR = 0;
     std::stack<virtualOper> localStack;
@@ -52,6 +54,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             else
             {
                 instr->push_back(virtualOper(VR_CONST, 0.0));
+                ++tn;
             }
 
             //d(y + x) = 0 + 1
@@ -62,6 +65,13 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             else
             {
                 instr->push_back(virtualOper(VR_CONST, 0.0));
+                ++tn;
+            }
+
+            //error
+            if(tn == 0)
+            {
+                return -1;
             }
 
             instr->push_back(virtualOper(fnIt.operType));
@@ -97,7 +107,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
                 }
                 else
                 {
-                    instr->push_back(virtualOper(VR_CONST, 0.0));
+                    //error
+                    return -1;
                 }
             }
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
@@ -115,6 +126,7 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             if((wIndexL == wIndexIndepVar) && (wIndexR == wIndexIndepVar))
             {
                 instr->push_back(virtualOper(VR_CONST, 0.0));
+                break;
             }
             else
             {
@@ -137,7 +149,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
                 }
                 else
                 {
-                    instr->push_back(virtualOper(VR_CONST, 0.0));
+                    //error
+                    return -1;
                 }
             }
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
@@ -188,7 +201,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
                 }
                 else
                 {
-                    instr->push_back(virtualOper(VR_CONST, 0.0));
+                    //error
+                    return -1;
                 }
             }
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
@@ -207,7 +221,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             }
             else
             {
-                instr->push_back(virtualOper(VR_CONST, 0.0));
+                //error
+                return -1;
             }
             instr->push_back(virtualOper(fnIt.operType));
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
@@ -225,7 +240,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
             }
             else
             {
-                instr->push_back(virtualOper(VR_CONST, 0.0));
+                //error
+                return -1;
             }
             instr->push_back(virtualOper(VR_ASSIGN, wIndex));
             itemPrev->setWIndexDeriv(&wIndex);
@@ -238,6 +254,8 @@ int virtualDependencyTree::addIntermediateDerivativeInstr(virtualDependencyTreeN
     return 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// generates the final derivative instruction
 int virtualDependencyTree::addFinalDerivative(std::vector<std::vector<unsigned int>*>& psnum)
 {
     //loop over sigma

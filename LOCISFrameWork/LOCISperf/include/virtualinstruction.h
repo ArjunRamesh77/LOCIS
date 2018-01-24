@@ -19,15 +19,21 @@ enum
     VR_ASSIGN,
     VR_VAR1_INDEX,
     VR_VAR2_INDEX,
+    VR_CONST_VAR1,
+    VR_CONST_VAR2,
     VR_INTER_INDEX,
     VR_DERIV_INDEX,
     VR_VAR1_VECTOR,
     VR_VAR2_VECTOR,
     VR_VAR_VECTOR,
     VR_CONST,
+    VR_LOAD_VAR1_INDEX,
+    VR_LOAD_VAR2_INDEX,
+    VR_LOAD_CONST,
     VR_CONST_VECTOR,
     VR_FUNCTION_SISO,
-    VR_FUNCTION_DISO
+    VR_FUNCTION_DISO,
+    VR_NOOP
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,18 +70,28 @@ typedef double (*TD_fpSISO)(double);
 typedef double (*TD_fpDISO)(double, double);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define VR_DUMMY_DOUBLE 0.0
+#define VR_DUMMY_INDEX 0
+#define VR_SIGNAL_LAST 1
+#define VR_SIGNAL_GRADIENT_COMPLETE 4
+#define FUNCTION_TYPE_ALG 0
+#define FUNCTION_TYPE_DAE 1
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // A single operation or operand
 struct virtualOper
 {
    __int8_t operType;
    double value;
    unsigned int index;
-   __int8_t last;
+   __int8_t signal;
 
    virtualOper(__int8_t operType_arg, double value_arg, unsigned int index_arg);
+   virtualOper(__int8_t operType_arg, double value_arg, unsigned int index_arg, __int8_t signal);
    virtualOper(__int8_t operType_arg, double value_arg);
    virtualOper(__int8_t operType_arg, unsigned int index_arg);
    virtualOper(__int8_t operType_arg);
+   virtualOper();
 };
 
 
@@ -99,17 +115,30 @@ public:
 extern virtualFunctionLoader g_virtualFunctionLoader;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// a full set of instructions
+// a full set of instructions and its execution environment
 class virtualInstructionStack
 {
-    std::vector<virtualOper> allInst;
+protected:
+    int functionType;
+    bool bInstructionOwner;
+    std::vector<virtualOper>* allInst;
+    std::stack<double> instStack;
+    std::vector<double> instInter;
+    double val1;
+    double val2;
 
 public:
     virtualInstructionStack();
     ~virtualInstructionStack();
 
+    //control
+    void createNewInstructionStack(std::vector<virtualOper>* instStackPointer);
+
     //scalar operations
+    int getFunctionType() const;
+    void setFunctionType(int value);
     void addGeneralInstr(__int8_t operType_arg, double value_arg, unsigned int index_arg);
+    void addGeneralInstrWithSignal(__int8_t operType_arg, double value_arg, unsigned int index_arg, __int8_t signal);
     void addMathInstr(__int8_t op);
     void addVariable1Index(unsigned int index);
     void addVariable2Index(unsigned int index);
@@ -117,9 +146,13 @@ public:
     void addInter(unsigned int index);
     void addFunctionSISO(unsigned int index);
     void addFunctionDISO(unsigned int index);
+    void addCopyInstruction(virtualOper *cpy);
+    void clearVirtualMachineStack();
+    void clearVisrtualMachineInter();
+    void setInstInter(std::vector<double>* instInter);
     void makeLast();
 
     //evaluation routines
     std::vector<virtualOper>* getAllInst();
-    void evalStackBased(std::vector<virtualOper>::const_iterator oper, std::stack<double> &stackPointer, std::vector<double> &inter);
+    void evalStackBased(std::vector<virtualOper>::const_iterator oper);
 };
