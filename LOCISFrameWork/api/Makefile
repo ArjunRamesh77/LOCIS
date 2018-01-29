@@ -24,7 +24,7 @@ LOCIS_ROOT = ../../
 
 # OUTPUT PATHS
 PATH_LOCIS_API_OUT = $(LOCIS_ROOT)/Output
-PATH_LOCIS_API_TEMP = $(LOCIS_ROOT)/Temp/LOCISapi
+PATH_LOCIS_API_TEMP = $(LOCIS_ROOT)/Temp/api
 
 # REQUIRED FOLDERS
 REQUIRED_DIRS = $(PATH_LOCIS_API_OUT)/$(config)\
@@ -40,14 +40,14 @@ NAME_PROGRAM = liblocisapi.so
 
 # INCLUDE PATHS
 PATH_LOCIS_API_INCLUDE := include
-PATH_LOCIS_INCLUDE :=	 $(LOCIS_ROOT)/LOCISFrameWork/LOCISCore/include
+PATH_LOCIS_INCLUDE :=	 $(LOCIS_ROOT)/LOCISFrameWork/core/include
 PATH_KINSOL_INCLUDE :=	 $(LOCIS_ROOT)/Solvers/KINSOL/srcdir/include
 PATH_SUNDIALS_INCLUDE := $(LOCIS_ROOT)/Solvers/KINSOL/builddir/include
 PATH_IDA_INCLUDE :=		 $(LOCIS_ROOT)/Solvers/IDA/srcdir/include
 PATH_PYTHON_INCLUDE :=	 /usr/include/python2.7
 PATH_NUMPY_INCLUDE :=	 /home/$(USER)/.local/lib/python2.7/site-packages/numpy/core/include/numpy
-PATH_LOCIS_FEM_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LocisFEM/include
-PATH_LOCIS_PERF_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LOCISperf/include
+PATH_LOCIS_FEM_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/fem/include
+PATH_LOCIS_PERF_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/perf/include
 
 PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_API_INCLUDE)\
 					-I$(PATH_LOCIS_INCLUDE)\
@@ -66,7 +66,7 @@ PATH_LOCIS_API_SRC = src
 PATH_KINSOL_LIB := 		$(LOCIS_ROOT)/Solvers/KINSOL/builddir/src/kinsol
 PATH_IDA_LIB :=  		$(LOCIS_ROOT)/Solvers/IDA/builddir/src/ida
 PATH_NVEC_SERIAL_LIB := $(LOCIS_ROOT)/Solvers/IDA/builddir/src/nvec_ser
-PATH_PYTHON_LIB := 		~/ARJUN/Python-2.7.14
+PATH_PYTHON_LIB := 		/usr/lib/python2.7/config-x86_64-linux-gnu
 PATH_LOCIS_LIBS := 		$(LOCIS_ROOT)/Output/$(config)
 
 PATH_ALL_LIB = 		-L$(PATH_KINSOL_LIB)\
@@ -118,7 +118,7 @@ endef
 
 # TARGETS
 $(PATH_LOCIS_API_OUT)/$(config)/$(NAME_PROGRAM): $(LOCIS_API_OBJ) $(LOCIS_API_OBJ_C)
-	@$(CXX) $^ -shared -o $@ $(PATH_ALL_LIB) $(LIB_ALL)    
+	@$(CXX) $^ -o $@ $(PATH_ALL_LIB) $(LIB_ALL)    
 
 $(LOCIS_API_OBJ) :
 $(PATH_LOCIS_API_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_API_SRC)/%.$(EXT_CPP) $(LOCIS_API_INC)

@@ -24,7 +24,7 @@ LOCIS_ROOT = ../../
 
 # OUTPUT PATHS
 PATH_LOCIS_FEM_OUT =  $(LOCIS_ROOT)/Output
-PATH_LOCIS_FEM_TEMP = $(LOCIS_ROOT)/Temp/LOCISFem
+PATH_LOCIS_FEM_TEMP = $(LOCIS_ROOT)/Temp/fem
 
 # REQUIRED FOLDERS
 REQUIRED_DIRS = $(PATH_LOCIS_FEM_OUT)/$(config)\
@@ -39,15 +39,14 @@ _makeRequiredFolders := $(shell for d in $(REQUIRED_DIRS); \
 NAME_PROGRAM = liblocisfem.a 
 
 # ALL INCLUDE PATHS
-PATH_LOCIS_API_INCLUDE :=	$(LOCIS_ROOT)/LOCISFrameWork/LOCISapi/include
+PATH_LOCIS_API_INCLUDE :=	$(LOCIS_ROOT)/LOCISFrameWork/api/include
 PATH_LOCIS_FEM_INCLUDE := include
 PATH_KINSOL_INCLUDE :=	 $(LOCIS_ROOT)/Solvers/KINSOL/srcdir/include
 PATH_SUNDIALS_INCLUDE := $(LOCIS_ROOT)/Solvers/KINSOL/builddir/include
 PATH_IDA_INCLUDE :=		 $(LOCIS_ROOT)/Solvers/IDA/srcdir/include
 PATH_PYTHON_INCLUDE :=	 /usr/include/python2.7
 PATH_NUMPY_INCLUDE :=	 /home/$(USER)/.local/lib/python2.7/site-packages/numpy/core/include/numpy
-PATH_LOCIS_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LOCISCore/include
-PATH_LOCIS_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/LOCISCore/include
+PATH_LOCIS_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/core/include
 
 PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_API_INCLUDE)\
 					-I$(PATH_LOCIS_FEM_INCLUDE)\
