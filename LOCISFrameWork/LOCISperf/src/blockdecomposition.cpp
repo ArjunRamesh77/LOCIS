@@ -58,7 +58,7 @@ int blockDecomposition::computeBlockSystem(genericResidual *mainInputResidual_ar
     if(mainInputResidual_arg == NULL)
         return -1;
 
-    if(numVar == 0 || numEqu)
+    if(numVar == 0 || numEqu == 0)
         return -1;
 
     setMainInputResidual(mainInputResidual_arg);

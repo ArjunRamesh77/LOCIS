@@ -20,8 +20,9 @@ public:
     //construction
     int generateFullJacobianInstr(int type);
     int generateDualPartJacobian();
-    int evalDenseJacobian1StackBased(double* j, double* x);
-    int evalDenseJacobian2StackBased(double* j, double alpha, double* yy, double* yp);
-    int evalSparseJacobian3StackBased(double *rp, double *cp, double *value);
+    int evalDenseJacobian1StackBased(double* xOrig, double *x, double* j);
+    int evalDenseJacobian2StackBased(double alpha, double* yyOrig, double* yy, double* ypOrig, double* yp, double* j);
+    int evalSparseJacobian3StackBased(double *xOrig, double *x, double *rp, double *cp, double *value);
+    int evalOneVarDerivativeStackBased(double *xOrig, double x, double &j);
 
 };

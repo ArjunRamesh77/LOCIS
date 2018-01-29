@@ -14,6 +14,6 @@ public:
     virtual ~genericResidual();
 
     //Steady State residual
-    int evalResidual1StackBased(double* r, double* x);
-    int evalResidual2StackBased(double* r, double* yy, double* yp);
+    int evalResidual1StackBased(double* xOrig, double* x, double* r);
+    int evalResidual2StackBased(double* yyOrig, double* yy, double* ypOrig, double* yp, double* r);
 };
