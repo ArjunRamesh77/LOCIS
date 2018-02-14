@@ -64,3 +64,10 @@ int genericJacobian::generateDualPartJacobian()
     return 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// returns the total nonzeroes in the jacobian
+unsigned int genericJacobian::getNNZ()
+{
+    return NNZ;
+}
+

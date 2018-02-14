@@ -3,19 +3,21 @@
 #include "solver.h"
 #include "genericresidual.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // base class for all non-linear algebraic solver
 class solverNonLinearAlg : public solver
 {
 protected:
-
+    double* xGuess;
+    double* xOrig;
 
 public:
-    solverNonLinearAlg(int type);
+    solverNonLinearAlg(int type, std::string name);
     ~solverNonLinearAlg();
 
-    virtual void setGuess(double* xGuess_arg) = 0;
-    virtual int solve(double* xSol) = 0;
+    void setGuess(double* xGuess_arg);
+    void setXOrig(double xOrig_arg);
 
+    //interface
+    virtual int solve() = 0;
 };

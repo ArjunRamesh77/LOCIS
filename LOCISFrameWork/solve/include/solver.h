@@ -2,6 +2,7 @@
 
 #include "genericresidual.h"
 #include "genericjacobian.h"
+#include <string>
 #include <math.h>
 
 enum solverTypes
@@ -12,11 +13,47 @@ enum solverTypes
     SOLVER_ODE
 };
 
-enum jacobianType
+enum solverNames
 {
-    JACOBIAN_DENSE,
-    JACOBIAN_SPARSE_CRS,
-    JACOBIAN_SPARSE_CSC
+    SOLVER_KINSOL,
+    SOLVER_IDA
+};
+
+enum matrixTypes
+{
+    MATRIX_DENSE,
+    MATRIX_SPARSE_CSR,
+    MATRIX_SPARSE_CSC
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// generic options strucnture
+struct solverOptions
+{
+    unsigned int numVars;
+    double absXTol;
+    double relXTol;
+    double absFTol;
+    double relFTol;
+    int maxIter;
+    int traceLevel;
+
+    solverOptions();
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// generic output
+struct solverOutput
+{
+    bool bGood;
+    long int workSpaceSize;
+    long int numFevals;
+    long int numJacevals;
+    long int numNonLinIter;
+    double funcNorm;
+    double xNorm;
+
+    solverOutput();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,25 +62,25 @@ class solver
 {
 protected:
     int solverType;
+    std::string solverName;
     unsigned int numVar;
     unsigned int numEqu;
     genericResidual* residual;
     genericJacobian* jacobian;
-    int jacobianType;
-    double absTol;
-    double relTol;
-    int maxIter;
-    int traceLevel;
+    solverOptions* option;
 
 public:
-    solver(int sovlerType_arg);
+    solver(int sovlerType_arg, std::string solverName_arg);
     ~solver();
 
     void setSolveDimensions(unsigned int numEqu_arg, unsigned int numVar_arg);
     void setResiduaAndJacobian(genericResidual* residual_arg, genericJacobian* jacobian_arg);
-    void setJacobianType(int jacobianType_arg);
-    void setTraceLevel(unsigned int traceLevel_arg);
-    void setAbsoluteTolerance(double absTol_arg);
-    void setRelativeTolerance(double relTol_arg);
-    void setMaxIterations(int maxIter_arg);
+    int getSolverType();
+    std::string getSolverName();
+
+    //interface
+    virtual bool setSolverParameters(solverOptions* ops);
+    virtual bool init() = 0;
+    virtual bool exit() = 0;
+    virtual bool getSolverOutput(solverOutput* out) = 0;
 };

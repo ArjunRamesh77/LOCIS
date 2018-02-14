@@ -5,6 +5,7 @@ locis.*
 Solvers/KINSOL/builddir/**
 Solvers/IDA/builddir/**
 Solvers/KINSOL-3.1.0/**
+Solvers/IDA-3.1.0/**
 
 # OUTPUT DIRECTORIES
 Temp/**

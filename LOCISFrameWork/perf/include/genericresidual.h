@@ -15,5 +15,5 @@ public:
 
     //Steady State residual
     int evalResidual1StackBased(double* xOrig, double* x, double* r);
-    int evalResidual2StackBased(double* yyOrig, double* yy, double* ypOrig, double* yp, double* r);
+    int evalResidual2StackBased(double* yyOrig, double* yy, double* ypOrig, double* yp, double t, double* r);
 };

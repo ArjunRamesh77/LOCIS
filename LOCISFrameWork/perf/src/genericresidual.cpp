@@ -50,7 +50,7 @@ int genericResidual::evalResidual1StackBased(double *xOrig, double *x, double *r
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // evaluate DAE residual
-int genericResidual::evalResidual2StackBased(double *yyOrig, double *yy, double *ypOrig, double *yp, double *r)
+int genericResidual::evalResidual2StackBased(double *yyOrig, double *yy, double *ypOrig, double *yp, double t, double *r)
 {
     unsigned int rIndex = 0;
     clearVirtualMachineStack();
@@ -76,6 +76,10 @@ int genericResidual::evalResidual2StackBased(double *yyOrig, double *yy, double 
 
         case VR_CONST_VAR2:
             instStack.push(ypOrig[vo->index]);
+            break;
+
+        case VR_TIME:
+            instStack.push(t);
             break;
 
         default:
