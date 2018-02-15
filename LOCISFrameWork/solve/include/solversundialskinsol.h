@@ -35,7 +35,6 @@ struct solverOptionsKinsol : public solverOptions
     KINErrHandlerFn errCb;
     KINInfoHandlerFn infoCb;
     int strategy;
-    int matrixType;
     int linearSolverType;
     int noInitSetup;
     int noResMon;

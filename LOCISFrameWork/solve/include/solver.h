@@ -31,6 +31,7 @@ enum matrixTypes
 struct solverOptions
 {
     unsigned int numVars;
+    int matrixType;
     double absXTol;
     double relXTol;
     double absFTol;

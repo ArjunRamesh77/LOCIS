@@ -127,17 +127,6 @@ bool solverSundialsIda::setSolverParameters(solverOptionsIda *ops)
     }
 
     //check sanity
-    switch (ops->matrixType)
-    {
-    case MATRIX_DENSE:
-    case MATRIX_SPARSE_CSR:
-    case MATRIX_SPARSE_CSC:
-        break;
-
-    default:
-        return false
-    }
-
     switch (ops->linearSolverType)
     {
     case LINSOLV_IDA_INTRINSIC_DENSE:

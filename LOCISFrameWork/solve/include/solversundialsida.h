@@ -37,7 +37,6 @@ enum kinsolLinearSolverTypes
 struct solverOptionsIda : public solverOptions
 {
     IDAErrHandlerFn errCb;
-    int matrixType;
     int linearSolverType;
     int maxOrd;
     long int maxNumSteps;
@@ -82,7 +81,7 @@ struct solverOutputIda : public solverOutput
 
     void buildEweight(long int num);
     void buildEle(long int num);
-    void deleteEle();
+    void deleteVectorData();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

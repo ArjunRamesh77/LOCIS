@@ -63,6 +63,18 @@ std::string solver::getSolverName()
 // set the data from the user
 bool solver::setSolverParameters(solverOptions *ops)
 {
+    //check sanity
+    switch (ops->matrixType)
+    {
+    case MATRIX_DENSE:
+    case MATRIX_SPARSE_CSR:
+    case MATRIX_SPARSE_CSC:
+        break;
+
+    default:
+        return false
+    }
+
     if(ops->absXTol < 0.0)
         return false;
 
