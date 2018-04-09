@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------------------------
 #
-# Makefile to build liblocis.a
+# Makefile to build liblocisolve.a
 # Created 09/17/217
 # NOTES:
 #	works only on linux for now
@@ -22,12 +22,12 @@ endif
 LOCIS_ROOT = ../../
 
 # OUTPUT PATHS
-PATH_LOCIS_OUT = $(LOCIS_ROOT)/Output
-PATH_LOCIS_TEMP = $(LOCIS_ROOT)/Temp/core
+PATH_LOCIS_SOLVE_OUT = $(LOCIS_ROOT)/Output
+PATH_LOCIS_SOLVE_TEMP = $(LOCIS_ROOT)/Temp/solve
 
 # REQUIRED FOLDERS
-REQUIRED_DIRS = $(PATH_LOCIS_OUT)/$(config)\
-			    $(PATH_LOCIS_TEMP)/$(config)
+REQUIRED_DIRS = $(PATH_LOCIS_SOLVE_OUT)/$(config)\
+			    $(PATH_LOCIS_SOLVE_TEMP)/$(config)
 
 _makeRequiredFolders := $(shell for d in $(REQUIRED_DIRS); \
 						do								   \
@@ -35,27 +35,27 @@ _makeRequiredFolders := $(shell for d in $(REQUIRED_DIRS); \
 						done)
 
 # PROGRAM
-NAME_PROGRAM = liblocis.a 
+NAME_PROGRAM = liblocissolve.a 
 
 # SOURCE PATHS
-PATH_LOCIS_SRC = src
+PATH_LOCIS_SOLVE_SRC = src
 
 # SOURCE/INCLUDE/OBJ NAMES
-LOCIS_INC = $(wildcard $(PATH_LOCIS_INCLUDE)/*.$(EXT_HEADER))
-LOCIS_SRC = $(notdir $(wildcard $(PATH_LOCIS_SRC)/*.$(EXT_CPP)))
-LOCIS_OBJ = $(addprefix $(PATH_LOCIS_TEMP)/$(config)/,$(patsubst %.$(EXT_CPP),%.$(EXT_OBJ),$(LOCIS_SRC)))
+LOCIS_SOLVE_INC = $(wildcard $(PATH_LOCIS_SOLVE_INCLUDE)/*.$(EXT_HEADER))
+LOCIS_SOLVE_SRC = $(notdir $(wildcard $(PATH_LOCIS_SOLVE_SRC)/*.$(EXT_CPP)))
+LOCIS_SOLVE_OBJ = $(addprefix $(PATH_LOCIS_SOLVE_TEMP)/$(config)/,$(patsubst %.$(EXT_CPP),%.$(EXT_OBJ),$(LOCIS_SOLVE_SRC)))
 
 # FUNCTIONS
 define cleanOutputs	
-	@rm -f $(PATH_LOCIS_TEMP)/$1/*;		
-	@rm -f $(PATH_LOCIS_OUT)/$1/$(NAME_PROGRAM);	
+	@rm -f $(PATH_LOCIS_SOLVE_TEMP)/$1/*;		
+	@rm -f $(PATH_LOCIS_SOLVE_OUT)/$1/$(NAME_PROGRAM);	
 endef
 
 # TARGETS
-$(PATH_LOCIS_OUT)/$(config)/$(NAME_PROGRAM): $(LOCIS_OBJ)
+$(PATH_LOCIS_SOLVE_OUT)/$(config)/$(NAME_PROGRAM): $(LOCIS_SOLVE_OBJ)
 	@$(AR) $(ARFLAGS) $@ $^   
 
-$(PATH_LOCIS_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_SRC)/%.$(EXT_CPP) $(LOCIS_INC)
+$(PATH_LOCIS_SOLVE_TEMP)/$(config)/%.$(EXT_OBJ) : $(PATH_LOCIS_SOLVE_SRC)/%.$(EXT_CPP) $(LOCIS_SOLVE_INC)
 	@echo "Building $@"
 	@$(CXX) $(CXXFLAGS) $(PATH_ALL_INCLUDE) $< -o $@ 
 

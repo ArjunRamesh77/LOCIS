@@ -38,25 +38,6 @@ _makeRequiredFolders := $(shell for d in $(REQUIRED_DIRS); \
 # PROGRAM
 NAME_PROGRAM = liblocisfem.a 
 
-# ALL INCLUDE PATHS
-PATH_LOCIS_API_INCLUDE :=	$(LOCIS_ROOT)/LOCISFrameWork/api/include
-PATH_LOCIS_FEM_INCLUDE := include
-PATH_KINSOL_INCLUDE :=	 $(LOCIS_ROOT)/Solvers/KINSOL/srcdir/include
-PATH_SUNDIALS_INCLUDE := $(LOCIS_ROOT)/Solvers/KINSOL/builddir/include
-PATH_IDA_INCLUDE :=		 $(LOCIS_ROOT)/Solvers/IDA/srcdir/include
-PATH_PYTHON_INCLUDE :=	 /usr/include/python2.7
-PATH_NUMPY_INCLUDE :=	 /home/$(USER)/.local/lib/python2.7/site-packages/numpy/core/include/numpy
-PATH_LOCIS_INCLUDE := $(LOCIS_ROOT)/LOCISFrameWork/core/include
-
-PATH_ALL_INCLUDE =  -I$(PATH_LOCIS_API_INCLUDE)\
-					-I$(PATH_LOCIS_FEM_INCLUDE)\
-					-I$(PATH_SUNDIALS_INCLUDE)\
-					-I$(PATH_KINSOL_INCLUDE)\
-					-I$(PATH_IDA_INCLUDE)\
-					-I$(PATH_PYTHON_INCLUDE)\
-				    -I$(PATH_NUMPY_INCLUDE)\
-					-I$(PATH_LOCIS_INCLUDE)
-
 # SOURCE PATHS
 PATH_LOCIS_FEM_SRC = src
 
@@ -66,26 +47,6 @@ LOCIS_FEM_SRC = $(notdir $(wildcard $(PATH_LOCIS_FEM_SRC)/*.$(EXT_CPP)))
 LOCIS_FEM_SRC_C = $(notdir $(wildcard $(PATH_LOCIS_FEM_SRC)/*.$(EXT_C)))
 LOCIS_FEM_OBJ = $(addprefix $(PATH_LOCIS_FEM_TEMP)/$(config)/,$(patsubst %.$(EXT_CPP),%.$(EXT_OBJ),$(LOCIS_FEM_SRC)))
 LOCIS_FEM_OBJ_C = $(addprefix $(PATH_LOCIS_FEM_TEMP)/$(config)/,$(patsubst %.$(EXT_C),%.$(EXT_OBJ),$(LOCIS_FEM_SRC_C)))
-
-# COMPILER AND FLAGS
-AR := ar
-CXX := g++
-CC := gcc
-ARFLAGS = rcs
-
-ifeq ($(config),debug)
-	CXXFLAGS = -Wall $(shared) -c -std=c++11 -g -fpermissive
-	CCFLAGS = -Wall $(shared) -c -g
-else
-	CXXFLAGS = -Wall $(shared) -c -std=c++11 -O3 -fpermissive
-	CCFLAGS = -Wall $(shared) -c 
-endif
-
-# FUNCTIONS
-define cleanOutputs	
-	@rm -f $(PATH_LOCIS_FEM_TEMP)/$1/*.$(EXT_OBJ);		
-	@rm -f $(PATH_LOCIS_FEM_OUT)/$1/$(NAME_PROGRAM);	
-endef
 
 # TARGETS
 $(PATH_LOCIS_FEM_OUT)/$(config)/$(NAME_PROGRAM): $(LOCIS_FEM_OBJ) $(LOCIS_FEM_OBJ_C)
