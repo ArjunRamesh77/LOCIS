@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <dlfcn.h>
 
-
+/*
 std::stringstream dynResOut;
 long dynFlag;
 
@@ -16,11 +16,13 @@ long dynFlag;
 long errorCallback(long lErrorType, const char* cMessage)
 {
     std::cout << cMessage << std::endl;
+    return 0;
 }
 
 long infoCallback(long lInfoType, const char* cMessage)
 {
     std::cout<< cMessage;
+    return 0;
 }
 
 long steadyStateResults(long lpNum, const char* cNames, double* dpValues)
@@ -33,6 +35,7 @@ long steadyStateResults(long lpNum, const char* cNames, double* dpValues)
         std::getline(ss, Name);
         std::cout<< cNames[i] << "   " << dpValues[i] << std::endl;
     }
+    return 0;
 }
 
 long dynamicResults(long lColIndex, long lpNum, const char* cNames, double* dpTime, double* dpValues)
@@ -58,48 +61,13 @@ long dynamicResults(long lColIndex, long lpNum, const char* cNames, double* dpTi
         }
         dynResOut<<std::endl;
     }
+    return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
 // Entry point
 int main(int argc, const char** argv)
 {   
-    //Load so
-    void* handle = NULL;
-    char* error;
-    handle = dlopen ("/home/arjun/ARJUN/locis/Output/debug/liblocisapi.so", RTLD_LAZY);
-    if (!handle)
-    {
-        std::cout<< dlerror();
-        exit(1);
-    }
-
-    //Load all functions
-    LOCISDLL_LOCISCreate LOCISCreate;
-    LOCISDLL_LOCISInit LOCISInit;
-    LOCISDLL_LOCISSolve LOCISSolve;
-    LOCISDLL_LOCISExit LOCISExit;
-
-    LOCISCreate = dlsym(handle, "LOCISCreate");
-    if ((error = dlerror()) != NULL)  {
-        exit(1);
-    }
-
-    LOCISInit = dlsym(handle, "LOCISInit");
-    if ((error = dlerror()) != NULL)  {
-        exit(1);
-    }
-
-    LOCISSolve = dlsym(handle, "LOCISSolve");
-    if ((error = dlerror()) != NULL)  {
-        exit(1);
-    }
-
-    LOCISExit = dlsym(handle, "LOCISExit");
-    if ((error = dlerror()) != NULL)  {
-        exit(1);
-    }
-
     int b;
     long instanceId = -1;
     long result = -1;
@@ -132,140 +100,222 @@ int main(int argc, const char** argv)
 
         result = LOCISExit(instanceId, true);
     }
-
-    dlclose(handle);
     return 0;
 }
+*/
 
+#include "solverkernel.h"
+#include "genericresidual.h"
 
-//#include "matching.h"
-//#include "stronglyconnected.h"
-//#include "genericresidual.h"
-//#include "genericjacobian.h"
-
-int main1()
+int main()
 {
-    /*
-    incidenceGraph biPartite;
-
-    //set graph size
-    biPartite.addEquationNodes(6);
-    biPartite.addVariableNodes(6);
-    */
-
-    //add edges
-    /*
-    biPartite.matrixCOOClear();
-    biPartite.MatrixCOOAddCoordinate(0,0);
-    biPartite.MatrixCOOAddCoordinate(0,1);
-    biPartite.MatrixCOOAddCoordinate(1,2);
-    biPartite.MatrixCOOAddCoordinate(1,3);
-    biPartite.MatrixCOOAddCoordinate(2,0);
-    biPartite.MatrixCOOAddCoordinate(2,4);
-    biPartite.MatrixCOOAddCoordinate(2,5);
-    biPartite.MatrixCOOAddCoordinate(3,1);
-    biPartite.MatrixCOOAddCoordinate(3,4);
-    biPartite.MatrixCOOAddCoordinate(3,6);
-    biPartite.MatrixCOOAddCoordinate(4,2);
-    biPartite.MatrixCOOAddCoordinate(4,4);
-    biPartite.MatrixCOOAddCoordinate(5,3);
-    biPartite.MatrixCOOAddCoordinate(5,7);
-    biPartite.MatrixCOOAddCoordinate(6,5);
-    biPartite.MatrixCOOAddCoordinate(7,7);
-    */
-
-    /*
-       biPartite.MatrixCOOAddCoordinate(0, 1);
-       biPartite.MatrixCOOAddCoordinate(0, 2);
-       biPartite.MatrixCOOAddCoordinate(1, 0);
-       biPartite.MatrixCOOAddCoordinate(2, 1);
-       biPartite.MatrixCOOAddCoordinate(3, 1);
-       biPartite.MatrixCOOAddCoordinate(3, 3);
-       */
-
-    /*
-     biPartite.MatrixCOOAddCoordinate(0, 2);
-     biPartite.MatrixCOOAddCoordinate(0, 3);
-     biPartite.MatrixCOOAddCoordinate(1, 1);
-     biPartite.MatrixCOOAddCoordinate(2, 1);
-     biPartite.MatrixCOOAddCoordinate(2, 2);
-     biPartite.MatrixCOOAddCoordinate(2, 4);
-     biPartite.MatrixCOOAddCoordinate(3, 0);
-     biPartite.MatrixCOOAddCoordinate(3, 1);
-     biPartite.MatrixCOOAddCoordinate(4, 0);
-     biPartite.MatrixCOOAddCoordinate(4, 2);
-     biPartite.MatrixCOOAddCoordinate(4, 4);
-
-     //dummy node
-     biPartite.MatrixCOOAddCoordinate(5, 0);
-     biPartite.MatrixCOOAddCoordinate(5, 1);
-     biPartite.MatrixCOOAddCoordinate(5, 2);
-     biPartite.MatrixCOOAddCoordinate(5, 3);
-     biPartite.MatrixCOOAddCoordinate(5, 4);
-     biPartite.MatrixCOOAddCoordinate(5, 5);
+    //--------------------------------- NON-LINEAR-ALG---------------------------------------------
+    //kernel JSON input
+    const char kernelInput[] = "{ \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
+                               "  \"num-vars\" : 2,"
+                               "  \"num-equs\" : 2,"
+                               "  \"solver-name\" : \"SOLVER_KINSOL\","
+                               "  \"solution-method\" : \"DIRECT\","
+                               "  \"options-SOLVER_KINSOL\" : {   \"input\" : { \"matrixType\" : 0,"
+                               "                                                \"linearSolverType\" : 0,"
+                               "                                                \"strategy\" : 0,"
+                               "                                                \"noInitSetup\" : 0,"
+                               "                                                \"relFTol\" : 1.0e-6},"
+                               "                                  \"output\" : {}}"
+                               " }";
 
 
 
-    //create graph
-    biPartite.createBipartiteEVGraphFromMatrixCOO();
+    //residual instructions
+    std::vector<virtualOper> resInstr;
+    resInstr.push_back(virtualOper(VR_CONST, 3.0));
+    resInstr.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)0));
+    resInstr.push_back(virtualOper(VR_BIN_MUL));
+    resInstr.push_back(virtualOper(VR_CONST, 9.0));
+    resInstr.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    resInstr.push_back(virtualOper(VR_BIN_MUL));
+    resInstr.push_back(virtualOper(VR_BIN_ADD));
+    resInstr.push_back(virtualOper(VR_CONST, 3.6));
+    resInstr.push_back(virtualOper(VR_BIN_ADD));
+    (resInstr.end() - 1)->signal = VR_SIGNAL_LAST;
+    resInstr.push_back(virtualOper(VR_CONST, 8.0));
+    resInstr.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)0));
+    resInstr.push_back(virtualOper(VR_BIN_MUL));
+    resInstr.push_back(virtualOper(VR_CONST, 1.6));
+    resInstr.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    resInstr.push_back(virtualOper(VR_BIN_MUL));
+    resInstr.push_back(virtualOper(VR_BIN_ADD));
+    resInstr.push_back(virtualOper(VR_CONST, 5.6));
+    resInstr.push_back(virtualOper(VR_BIN_ADD));
+    (resInstr.end() - 1)->signal = VR_SIGNAL_LAST;
 
-    //matching
-   matchingHopkroftKarp hk(&biPartite);
-   hk.doMatchingHopcroftKarp();
+    //solver kernel
+    solverKernel sk;
+    sk.setFlatEquationSet(&resInstr);
+    sk.setMainSystem(kernelInput);
 
-   //tarjans
-   stronglyConnectedTarjans st(&biPartite);
-   std::list<std::list<incidenceGraphNode*>*>* scc = st.doStronglyConnectedTarjans(biPartite.getVariableAt(5));
+    //set the guesses
+    double* xg = sk.getSystem()->getVarX();
+    xg[0] = 1.0;
+    xg[1] = 1.0;
 
-   for(std::list<std::list<incidenceGraphNode*>*>::const_iterator it1 = scc->begin(); it1 != scc->end(); it1++)
-   {
-        std::cout<<"SCC :";
-        for(std::list<incidenceGraphNode*>::const_iterator it2 = (*it1)->begin(); it2 != (*it1)->end(); it2++)
-        {
-            std::cout<<" "<<(*it2)->getIndex();
-        }
-        std::cout<<std::endl;
-   }
-   */
+    //initialize
+    if(sk.initSystem())
+        sk.solveSystem();
 
-    //residual test
-    //virtualInstructionStack inst;
-    //genericJacobian jac;
-    //genericResiual gr;
+    //solution
+    for(int i = 0; i < 2; ++i)
+        std::cout<<" x[" << i << "] = " << xg[i];
 
-    //long n = 10;
-    //v[0]*(v[0] +  v[1])
-    //long count = 0;
-    //for(long i = 0; i < n; i++)
-    //{
-    //    inst.addVariable1Index(i);
-    //   if(count > 0)
-    //        inst.addMathInstr(VR_BIN_MUL);
-    //    count++;
-    //}
-    //inst.makeLast();
+    //--------------------------------- NON-LINEAR-DAE---------------------------------------------
+    //kernel
+    const char kernelInput1[] = "{ \"system-type\" : \"SOLVER_DAE_NONLINEAR\","
+                               "  \"num-vars\" : 5,"
+                               "  \"num-equs\" : 5,"
+                               "  \"solver-name\" : \"SOLVER_IDA\","
+                               "  \"solution-method\" : \"DIRECT\","
+                               "  \"time-start\" : 0.0,"
+                               "  \"time-end\" : 100.0,"
+                               "  \"time-step\" : 100,"
+                               "  \"options-SOLVER_IDA\" : {   \"input\" : { \"matrixType\" : 0,"
+                               "                                             \"linearSolverType\" : 0,"
+                               "                                             \"iTask\" : 1,"
+                               "                                             \"relFTol\" : 1.0e-8,"
+                               "                                             \"absFTol\" : 1.0e-8},"
+                               "                               \"output\" : {}},"
+                               "  \"init-dae\" : { \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
+                               "                   \"num-vars\" : 9,"
+                               "                   \"num-equs\" : 9,"
+                               "                   \"solver-name\" : \"SOLVER_KINSOL\","
+                               "                   \"solution-method\" : \"DIRECT\","
+                               "                   \"options-SOLVER_KINSOL\" : {   \"input\" : { \"matrixType\" : 0,"
+                               "                                                                 \"linearSolverType\" : 0,"
+                               "                                                                 \"strategy\" : 0,"
+                               "                                                                 \"noInitSetup\" : 0,"
+                               "                                                                 \"relFTol\" : 1.0e-6},"
+                               "                                                   \"output\" : {}}}"
+                               " }";
 
-    //gr.setInstStackPtr(&inst);
+    //residual
+    std::vector<virtualOper> daeRes;
+    // x = 0, y = 1, v = 2, w = 3, lam = 4
+    //m*(v*v + w*w - g*y) - 2*lam*(x*x + y*y)
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)2));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)2));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)3));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)3));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_ADD));
+    daeRes.push_back(virtualOper(VR_CONST, 9.8));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    daeRes.push_back(virtualOper(VR_CONST, 1.0));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)0));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)0));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_ADD));
+    daeRes.push_back(virtualOper(VR_CONST, 2.0));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)4));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
 
-    //double* v = new double[n];
-    //double* j = new double[n];
-    //for(long i = 0; i < n; i++)
-    //    j[i] = 0.0;
+    //$x = v;
+    daeRes.push_back(virtualOper(VR_VAR2_INDEX, (unsigned int)0));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)2));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
 
-    //for(long i = 0; i < n; i++)
-    //   v[i] = i + 1;
+    //$y = w;
+    daeRes.push_back(virtualOper(VR_VAR2_INDEX, (unsigned int)1));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)3));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
 
-    //jac.setInstStackPtr(&inst);
-    //jac.setNVar(n);
-    //jac.generateFullJacobianInstr(0);
-    //jac.evalDenseJacobian1StackBased(j, v);
-    //for(long i = 0; i < n; i++)
-    //    std::cout<<j[i]<<std::endl;
+    //m*$v + 2*x*lam = 0;
+    daeRes.push_back(virtualOper(VR_CONST, 1.0));
+    daeRes.push_back(virtualOper(VR_VAR2_INDEX, (unsigned int)2));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_CONST, 2.0));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)0));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)4));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_ADD));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
 
-    //gr.evalResidual1StackBased(r, v);
-    //delete []v;
-    //delete []j;
+    //m*$w + m*g + 2*y*lam = 0;
+    daeRes.push_back(virtualOper(VR_CONST, 1.0));
+    daeRes.push_back(virtualOper(VR_VAR2_INDEX, (unsigned int)3));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_CONST, 1.0));
+    daeRes.push_back(virtualOper(VR_CONST, 9.8));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_ADD));
+    daeRes.push_back(virtualOper(VR_CONST, 2.0));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)4));
+    daeRes.push_back(virtualOper(VR_BIN_MUL));
+    daeRes.push_back(virtualOper(VR_BIN_ADD));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
 
+    //init(12 instr)
+    //x = 0;
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)0));
+    daeRes.push_back(virtualOper(VR_CONST, 0.0));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    //y + s = 0;
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)1));
+    daeRes.push_back(virtualOper(VR_CONST, 1.0));
+    daeRes.push_back(virtualOper(VR_BIN_ADD));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    //v = 0.01;
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)2));
+    daeRes.push_back(virtualOper(VR_CONST, 0.01));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    //w = 0;
+    daeRes.push_back(virtualOper(VR_VAR1_INDEX, (unsigned int)3));
+    daeRes.push_back(virtualOper(VR_CONST, 0.0));
+    daeRes.push_back(virtualOper(VR_BIN_SUB));
+    (daeRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    //solver kernel
+    solverKernel sk1;
+    sk1.setFlatEquationSet(&daeRes);
+    sk1.setNumInstrInit(12);
+    sk1.setMainSystem(kernelInput1);
+
+    //set the guesses
+    double* yyg = sk1.getSystem()->getVarYY();
+    double* ypg = sk1.getSystem()->getVarYP();
+
+    yyg[0] = 0;
+    yyg[1] = -1;
+    yyg[2] = 1;
+    yyg[3] = 0;
+    yyg[4] = 1*(1 + 1*9.8)/(2*1*1);
+    ypg[0] = 1;
+    ypg[1] = 1;
+    ypg[2] = 1;
+    ypg[3] = 1;
+    ypg[4] = 1;
+
+    //initialize
+    if(sk1.initSystem())
+        sk1.solveSystem();
 
 
    return 0;
