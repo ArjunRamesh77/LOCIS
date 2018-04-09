@@ -50,29 +50,29 @@ void blockDecomposition::setNumVarsEqu(unsigned int numVar_arg, unsigned int num
     numEqu = numEqu_arg;
 }
 
-int blockDecomposition::computeBlockSystem(genericResidual *mainInputResidual_arg, unsigned int numVar_arg, unsigned int numEqu_arg)
+bool blockDecomposition::computeBlockSystem(genericResidual *mainInputResidual_arg, unsigned int numVar_arg, unsigned int numEqu_arg)
 {
     int ret = 0;
 
     //check input sanity
     if(mainInputResidual_arg == NULL)
-        return -1;
+        return false;
 
     if(numVar == 0 || numEqu == 0)
-        return -1;
+        return false;
 
     setMainInputResidual(mainInputResidual_arg);
     setNumVarsEqu(numVar_arg, numEqu_arg);
 
     ret = getEquationSets();
     if(ret != 0)
-        return ret;
+        return false;
 
     ret = generateResidualsFromConnectedSystem();
     if(ret != 0)
-        return ret;
+        return false;
 
-    return ret;
+    return true;
 }
 
 unsigned int blockDecomposition::getNumEquationSets()

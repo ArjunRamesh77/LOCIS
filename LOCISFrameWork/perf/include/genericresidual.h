@@ -1,6 +1,7 @@
 #pragma once
 
 #include "virtualinstruction.h"
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // implements a residual based on the virtualInstruction
@@ -8,10 +9,14 @@
 // or by JIT
 class genericResidual : public virtualInstructionStack
 {
-
+    unsigned int numEquations;
 public:
     genericResidual();
     virtual ~genericResidual();
+
+    void setNumEquations(unsigned int numEquations_arg);
+    void countNumEquations();
+    unsigned int getNumEquations();
 
     //Steady State residual
     int evalResidual1StackBased(double* xOrig, double* x, double* r);

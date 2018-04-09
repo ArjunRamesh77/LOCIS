@@ -79,11 +79,11 @@ void virtualInstructionStack::createNewInstructionStack(std::vector<virtualOper>
     if(instStackPointer == NULL)
     {
         bInstructionOwner = true;
-        instStackPointer = new std::vector<virtualOper>;
+        allInst = new std::vector<virtualOper>;
     }
     else
     {
-        instStackPointer->clear();
+       allInst = instStackPointer;
     }
 }
 

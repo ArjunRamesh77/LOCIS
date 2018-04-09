@@ -15,9 +15,10 @@ public:
     solverNonLinearAlg(int type, std::string name);
     ~solverNonLinearAlg();
 
-    void setGuess(double* xGuess_arg);
-    void setXOrig(double xOrig_arg);
+    void setXGuess(double* xGuess_arg);
+    void setXOrig(double *xOrig_arg);
+    bool buildResidualAndJacobian(std::vector<virtualOper>* pEquationVec);
 
     //interface
-    virtual int solve() = 0;
+    virtual bool solve() = 0;
 };

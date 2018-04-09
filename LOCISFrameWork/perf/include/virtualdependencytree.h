@@ -12,6 +12,13 @@
 #define VDT_INDEX1 2
 #define VDT_INDEX2 3
 
+enum matrixTypes
+{
+    MATRIX_DENSE,
+    MATRIX_SPARSE_CSR,
+    MATRIX_SPARSE_CSC
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // dependency tree node
 class virtualDependencyTreeNode
@@ -48,6 +55,7 @@ class virtualDependencyTree
     unsigned int wIndex;
     bool bZeroPi;
     unsigned int numTreeInstr;
+    unsigned int numVars;
 
 public:
     virtualDependencyTree();
@@ -63,6 +71,7 @@ public:
     std::vector<virtualOper> *getInstr() const;
     int getJacType() const;
     void setJacType(int value);
+    void setNumVars(unsigned int val);
     int addFinalDerivative(std::vector<std::vector<unsigned int>*>& psnum);
 };
 

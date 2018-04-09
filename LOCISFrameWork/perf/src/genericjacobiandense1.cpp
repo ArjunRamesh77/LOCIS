@@ -1,4 +1,5 @@
 #include "genericjacobian.h"
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dense evaluation Steady State
@@ -34,7 +35,7 @@ int genericJacobian::evalDenseJacobian1StackBased(double *xOrig, double *x, doub
         case VR_DERIV_INDEX:
             dValue = instStack.top();
             instStack.pop();
-            j[nVar*jIndex + vo->index] = dValue;
+            j[vo->index*nVar + jIndex] = dValue;
             break;
 
         default:
@@ -45,7 +46,18 @@ int genericJacobian::evalDenseJacobian1StackBased(double *xOrig, double *x, doub
         if(vo->signal == VR_SIGNAL_GRADIENT_COMPLETE)
         {
             jIndex++;
+            instInter.clear();
         }
     }
+
+
+    std::cout<<"JACOBIAN"<<std::endl;
+    for(unsigned int m = 0; m < nVar; ++m)
+    {
+        for(unsigned int n = 0; n < nVar; n++)
+            std::cout<< j[n*nVar + m] <<"  ";
+        std::cout<<std::endl;
+    }
+
     return 0;
 }

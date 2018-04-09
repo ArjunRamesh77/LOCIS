@@ -1,6 +1,7 @@
 #pragma once
 
 #include "genericresidual.h"
+#include <map>
 
 //helper struct
 struct initializerDaeGenRecognize
@@ -22,9 +23,9 @@ public:
     initializerDaeGen();
     ~initializerDaeGen();
 
-    int convertToDaeInitializerResidual(genericResidual* daeRes, std::vector<initializerDaeGenRecognize>& varMap);
-    int revertToDaeResidual(genericResidual* daeInitRes, std::vector<initializerDaeGenRecognize>& varMap);
+    int convertToDaeInitializerResidual(std::vector<virtualOper> *daeResInstr, std::vector<initializerDaeGenRecognize>& varMap);
 
-    unsigned int getNumberAlgVars();
+    unsigned int getNumAlgVars();
     unsigned int getNumDiffVars();
+    int revertToDaeResidual(std::vector<virtualOper> &equVec, std::vector<initializerDaeGenRecognize> &varMap);
 };

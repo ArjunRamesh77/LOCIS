@@ -20,12 +20,13 @@ int idaJacobianFunction(double tt, double cj, N_Vector yy, N_Vector yp, N_Vector
     solverIdaUserData* udata = static_cast<solverIdaUserData*>(userData);
     double* dyy = NV_DATA_S(yy);
     double* dyp = NV_DATA_S(yp);
+    double* j = NULL;
 
     //chose the type of jacobian
     switch(udata->jacType)
     {
     case MATRIX_DENSE:
-        double* j = static_cast<SUNMatrixContent_Dense>(Jac->content)->data;
+        j = static_cast<SUNMatrixContent_Dense>(Jac->content)->data;
         udata->jac->evalDenseJacobian2StackBased(cj, udata->yyOrig, dyy, udata->ypOrig, dyp, j);
         break;
 
@@ -34,9 +35,6 @@ int idaJacobianFunction(double tt, double cj, N_Vector yy, N_Vector yp, N_Vector
 
     case MATRIX_SPARSE_CSR:
         break;
-
-    default:
-
     }
 
     return 0;
@@ -44,12 +42,11 @@ int idaJacobianFunction(double tt, double cj, N_Vector yy, N_Vector yp, N_Vector
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IDA root function
-int idaRootFunction(double t, N_Vector y, N_Vector yp, double *gout, void *userData)
+int idaRootFunction(double t, N_Vector yy, N_Vector yp, double *gout, void *userData)
 {
     solverIdaUserData* udata = static_cast<solverIdaUserData*>(userData);
     double* dyy = NV_DATA_S(yy);
     double* dyp = NV_DATA_S(yp);
-    double* dgout = NV_DATA_S(gout);
-    udata->interf->evalRootResidual(dyy, dyp, dgout);
+    udata->interf->evalRootResidual(dyy, dyp, t, gout);
     return 0;
 }

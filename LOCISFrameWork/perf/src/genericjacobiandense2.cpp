@@ -64,9 +64,9 @@ int genericJacobian::evalDenseJacobian2StackBased(double alpha, double *yyOrig, 
                 dValue = instStack.top();
                 instStack.pop();
                 if(i == 1)
-                    j[nVar*jIndex + vo->index] = dValue;
+                    j[jIndex + vo->index*nVar] = dValue;
                 else
-                    j[nVar*jIndex + vo->index] = j[nVar*jIndex + vo->index] + alpha*dValue;
+                    j[jIndex + vo->index*nVar] = j[jIndex + vo->index*nVar] + alpha*dValue;
                 break;
 
             default:
@@ -77,6 +77,7 @@ int genericJacobian::evalDenseJacobian2StackBased(double alpha, double *yyOrig, 
             if(vo->signal == VR_SIGNAL_GRADIENT_COMPLETE)
             {
                 jIndex++;
+                instInter.clear();
             }
         }
     }

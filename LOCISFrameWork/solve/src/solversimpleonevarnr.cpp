@@ -1,3 +1,5 @@
+/*
+
 #pragma once
 
 #include "solversimpleonevarnr.h"
@@ -12,7 +14,7 @@ solverSimpleOneVarNR::~solverSimpleOneVarNR()
 
 }
 
-void solverSimpleOneVarNR::setGuess(double *xGuess_arg)
+void solverSimpleOneVarNR::setXGuess(double *xGuess_arg)
 {
     xGuess = *xGuess_arg;
 }
@@ -128,3 +130,5 @@ start:
 
     return 0;
 }
+
+*/

@@ -9,10 +9,12 @@
 #include "sunmatrix/sunmatrix_dense.h"
 #include "sunmatrix/sunmatrix_sparse.h"
 #include "sunlinsol/sunlinsol_dense.h"
-#include "sunlinsol/sunlinsol_lapackdense.h"
-#include "sunlinsol/sunlinsol_klu.h"
+//#include "sunlinsol/sunlinsol_lapackdense.h"
+//#include "sunlinsol/sunlinsol_klu.h"
 #include "sundials/sundials_types.h"
 #include "sundials/sundials_math.h"
+
+#include "rapidjsonwrapper.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ida user supplied functions
@@ -21,11 +23,11 @@ int idaResidualFunction(double tt, N_Vector yy, N_Vector yp, N_Vector rr, void* 
 int idaJacobianFunction(double tt, double cj, N_Vector yy, N_Vector yp, N_Vector rr, SUNMatrix Jac, void* userData,
                         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
-int idaRootFunction(double t, N_Vector y, N_Vector yp, double* gout, void* userData);
+int idaRootFunction(double t, N_Vector yy, N_Vector yp, double* gout, void* userData);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ida linear solver types
-enum kinsolLinearSolverTypes
+enum idaLinearSolverTypes
 {
     LINSOLV_IDA_INTRINSIC_DENSE,
     LINSOLV_IDA_LAPACK_DENSE,
@@ -37,23 +39,32 @@ enum kinsolLinearSolverTypes
 struct solverOptionsIda : public solverOptions
 {
     IDAErrHandlerFn errCb;
-    int linearSolverType;
-    int maxOrd;
+    long int linearSolverType;
+    long int maxOrd;
     long int maxNumSteps;
     double initStep;
     double maxStep;
     double stopTime;
-    int maxErrorTestFails;
-    int maxNonLinIters;
-    int maxConvFails;
+    long int maxErrorTestFails;
+    long int maxNonLinIters;
+    long int maxConvFails;
     double nonLinConvCoef;
-    int suppressAlg;
+    long int suppressAlg;
     double* id;
+    N_Vector Nid;
+    unsigned int sizeId;
     double* varCons;
-    int nroots;
+    N_Vector NvarCons;
+    unsigned int sizeVarcons;
+    long int nroots;
     int* rootdir;
+    unsigned int sizeRootdir;
     double* vAbsFtol;
+    N_Vector NvAbsFTol;
+    unsigned int sizeVAbsFtol;
+    long int iTask;
 
+public:
     solverOptionsIda();
 };
 
@@ -63,6 +74,8 @@ struct solverOutputIda : public solverOutput
 {
     long int lenrw;
     long int leniw;
+    long int leniwLS;
+    long int lenrwLS;
     long int nsteps;
     long int nlinsetups;
     long int netfails;
@@ -74,11 +87,14 @@ struct solverOutputIda : public solverOutput
     double tcur;
     double tolsfac;
     double* eweight;
+    unsigned int sizeEweight;
     double* ele;
+    unsigned int sizeEle;
     long int nncfails;
+    long int gevals;
 
+public:
     solverOutputIda();
-
     void buildEweight(long int num);
     void buildEle(long int num);
     void deleteVectorData();
@@ -86,6 +102,7 @@ struct solverOutputIda : public solverOutput
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // data structure to be passed to all ida functions
+class solverSundialsIda;
 struct solverIdaUserData
 {
     unsigned int numVars;
@@ -106,28 +123,25 @@ class solverSundialsIda : public solverNonLinearDae
     void* idamem;
     N_Vector yy;
     N_Vector yp;
-    double* yyGuess;
-    double* ypGuess;
     SUNMatrix J;
     SUNLinearSolver LS;
     solverIdaUserData userData;
-    N_Vector Nid;
-    N_Vector NvarCons;
-    N_Vector NvAbsFTol;
     int* rootsFound;
+    long int iTask;
 
 public:
     solverSundialsIda();
     ~solverSundialsIda();
 
+    //ida
+
     //interface: solver
-    virtual bool setSolverParameters(solverOptionsIda *ops);
-    virtual bool init();
+    virtual bool init(solverOptions *ops1);
     virtual bool exit();
-    virtual bool getSolverOutput(solverOutputIda* out);
+    virtual bool getSolverOutput(solverOutput* out1);
 
     //interface: solverNonLinearDae
-    virtual int solve(double time, int itask);
+    virtual bool solve(double time);
 };
 
 

@@ -38,7 +38,7 @@ public:
     void setNumVarsEqu(unsigned int numVar, unsigned int numEqu);
     int getEquationSets();
     int generateResidualsFromConnectedSystem();
-    int computeBlockSystem(genericResidual* mainInputResidual_arg, unsigned int numVar_arg, unsigned int numEqu_arg);
+    bool computeBlockSystem(genericResidual* mainInputResidual_arg, unsigned int numVar_arg, unsigned int numEqu_arg);
 
     unsigned int getNumEquationSets();
     std::vector<unsigned int> *getVariable1Mapping(unsigned int systemNum);

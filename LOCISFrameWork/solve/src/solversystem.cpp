@@ -2,7 +2,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // solver System
-solverSystem::solverSystem()
+solverSystem::solverSystem() :
+    varx(NULL),
+    varyy(NULL),
+    varyp(NULL)
 {
 
 }
@@ -17,37 +20,59 @@ void solverSystem::setSystemType(int type)
     systemType = type;
 }
 
+void solverSystem::setSolveMode(int mode)
+{
+    solveMode = mode;
+}
+
+void solverSystem::setDaeInitSystem(solverSystem *daeInitSystem_arg)
+{
+    daeInitSystem = daeInitSystem_arg;
+}
+
+void solverSystem::setTimeRange(double tStart_arg, double tEnd_arg, unsigned int nSteps_arg)
+{
+    tStart = tStart_arg;
+    tEnd = tEnd_arg;
+    numSteps = nSteps_arg;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // allocate variables based on systemType
-void solverSystem::setAndAllocateSystemDims(unsigned int numVar_arg, unsigned int numEqu_arg)
+bool solverSystem::setAndAllocateSystemDims(unsigned int numVar_arg, unsigned int numEqu_arg)
 {
+    bool ret = true;
     numVar = numVar_arg;
     numEqu = numEqu_arg;
 
     switch(systemType)
     {
-    case 0:
+    case SOLVER_ALG_NONLINEAR:
         if(varx)
         {
             delete varx;
             varx = NULL;
         }
         varx = new double[numVar];
+        break;
 
-    case 1:
+    case SOLVER_DAE_NONLINEAR:
         if(varyy)
         {
             delete varyy;
             varyy = NULL;
         }
-        varyp = new double[numVar];
+        varyy = new double[numVar];
         if(varyp)
         {
             delete varyp;
             varyp = NULL;
         }
         varyp = new double[numVar];
+        break;
     }
+
+    return ret;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +100,7 @@ void solverSystem::setRootResidual(unsigned int numRoots_arg, genericResidual *r
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // set the system solver
-void solverSystem::setSolver(solver* solver_arg, solverOptions *sops_args, solverOutput *sout_arg)
+void solverSystem::setSolver(solver* solver_arg, solverOptions *sops_arg, solverOutput *sout_arg)
 {
     solv = solver_arg;
     sops = sops_arg;
@@ -121,12 +146,36 @@ void solverSystem::setBlockMapVarYP(std::vector<unsigned int> *mapVarYP_arg)
     mapVarYP = mapVarYP_arg;
 }
 
+//void solverSystem::setBlockSolverOptionsNonLinAlg(solverOptions *bsops)
+//{
+//    blockSopsNonLinAlg = bsops;
+//}
+
+//void solverSystem::setBlockSolverOptionsNonLinDae(solverOptions *bsops)
+//{
+//    blockSolverNonLinDae = bsops;
+//}
+
+//void solverSystem::setBlockSolverNonLinAlgName(int type)
+//{
+//    blockSolverNonLinAlgName = type;
+//}
+
+//void solverSystem::setBlockSolverNonLinDaeName(int type)
+//{
+//    blockSolverNonLinDaeName = type;
+//}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // get the main root node
 solverSystem *solverSystem::getRoot()
 {
     return root;
+}
+
+solverSystem *solverSystem::getDaeInitSystem()
+{
+    return daeInitSystem;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +221,21 @@ genericResidual *solverSystem::getResidual()
 genericJacobian *solverSystem::getJacobian()
 {
     return jacobian;
+}
+
+double solverSystem::getTStart()
+{
+    return tStart;
+}
+
+double solverSystem::getTEnd()
+{
+    return tEnd;
+}
+
+unsigned int solverSystem::getNumSteps()
+{
+    return numSteps;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,37 +306,11 @@ solverSystem *solverSystem::getBlockAt(unsigned int id)
     return NULL;
 }
 
-bool solverSystem::buildResidualFromEquationVector()
-{
-    if(pEquationVec)
-    {
-        genericResidual.createNewInstructionStack(pEquationVec);
-        return true;
-    }
-    return false;
-}
+//solverOptions *solverSystem::getBlockSolverOptions()
+//{
+//    return blockSops;
+//}
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// build jacobian based of matrix type
-bool solverSystem::buildJacobianFromResidual()
-{
-    if(jacobian)
-    {
-        switch(sops->matrixType)
-        {
-        case MATRIX_DENSE:
-            break;
-
-        case MATRIX_SPARSE_CSC:
-            break;
-
-        case MATRIX_SPARSE_CSR:
-            break;
-
-        }
-    }
-    return false;
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // aids the block solver to track Original variables
@@ -301,6 +339,7 @@ bool solverSystem::copyBlockVarXToRoot()
     }
     return true;
 }
+
 bool solverSystem::copyBlockVarYYToRoot()
 {
     double* varRoot = root->getVarYY();
@@ -351,6 +390,39 @@ bool solverSystem::copyBlockVarYPToRoot()
         return false;
     }
     return true;
+}
+
+void solverSystem::setVariables()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// returns
+solver *solverSystem::createBlockSolver(int systemType_arg, solverOptions* sops_arg, solverOutput* sout_arg)
+{
+    solver* sol = NULL;
+
+    switch(systemType_arg)
+    {
+    case FUNCTION_TYPE_ALG:
+        if(blockSolverNonLinAlg == SOLVER_KINSOL)
+        {
+            sol = new solverSundialsKinsol;
+            sops_arg = blockSopsNonLinAlg;
+            sout_arg = new solverOutputKinsol;
+        }
+        break;
+    case FUNCTION_TYPE_DAE:
+        if(blockSolverNonLinDae == SOLVER_IDA)
+        {
+            sol = new solverSundialsIda;
+            sops_arg = blockSopsNonLinDae;
+            sout_arg = new solverOutputIda;
+        }
+    }
+
+    return sol;
 }
 
 

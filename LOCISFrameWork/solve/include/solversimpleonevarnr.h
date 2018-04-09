@@ -1,3 +1,5 @@
+/*
+
 #pragma once
 
 #include "solvernonlinearalg.h"
@@ -16,10 +18,12 @@ public:
     solverSimpleOneVarNR();
     ~solverSimpleOneVarNR();
 
-    void setGuess(double* xGuess_arg);
+    void setXGuess(double* xGuess_arg);
     void setDampingFactor(double damp);
     void setBuseFNorm(bool val);
     void setBuseAbsTol(bool val);
     void setMaxNumTrys(int numTrys_arg);
     int solve(double* xSol);
 };
+
+*/

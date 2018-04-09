@@ -17,12 +17,13 @@ int kisnsolJacobianFunction(N_Vector u, N_Vector fu, SUNMatrix J, void *userData
 {
     solverKinsolUserData* udata = static_cast<solverKinsolUserData*>(userData);
     double* x = NV_DATA_S(u);
+    double* j = NULL;
 
     //chose the type of jacobian
     switch(udata->jacType)
     {
     case MATRIX_DENSE:
-        double* j = static_cast<SUNMatrixContent_Dense>(J->content)->data;
+        j = static_cast<SUNMatrixContent_Dense>(J->content)->data;
         udata->jac->evalDenseJacobian1StackBased(udata->xOrig, x, j);
         break;
 
@@ -31,10 +32,6 @@ int kisnsolJacobianFunction(N_Vector u, N_Vector fu, SUNMatrix J, void *userData
 
     case MATRIX_SPARSE_CSR:
         break;
-
-
-    default:
-
     }
 
     return 0;

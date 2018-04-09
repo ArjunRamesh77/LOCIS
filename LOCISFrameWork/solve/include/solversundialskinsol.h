@@ -9,10 +9,13 @@
 #include "sunmatrix/sunmatrix_dense.h"
 #include "sunmatrix/sunmatrix_sparse.h"
 #include "sunlinsol/sunlinsol_dense.h"
-#include "sunlinsol/sunlinsol_lapackdense.h"
-#include "sunlinsol/sunlinsol_klu.h"
+//#include "sunlinsol/sunlinsol_lapackdense.h"
+//#include "sunlinsol/sunlinsol_klu.h"
 #include "sundials/sundials_types.h"
 #include "sundials/sundials_math.h"
+
+//generic
+#include "rapidjsonwrapper.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // kinsol user supplied functions
@@ -34,27 +37,30 @@ struct solverOptionsKinsol : public solverOptions
 {
     KINErrHandlerFn errCb;
     KINInfoHandlerFn infoCb;
-    int strategy;
-    int linearSolverType;
-    int noInitSetup;
-    int noResMon;
+    long int strategy;
+    long int linearSolverType;
+    long int noInitSetup;
+    long int noResMon;
     long int maxSetupCalls;
     long int maxSubSetupCalls;
-    int etaChoice;
+    long int etaChoice;
     double etaConst;
     double gamma;
     double alpha;
     double omegaConst;
     double omegaMin;
     double omegaMax;
-    int noMineps;
+    long int noMineps;
     double maxNewtonStep;
-    double maxBetaFails;
+    long int maxBetaFails;
     double relErrFunc;
     double scStepTol;
     double* varCons;
+    N_Vector NvarCons;
+    unsigned int size_varCons;
     long int maa;
 
+public:
     solverOptionsKinsol();
 };
 
@@ -72,6 +78,7 @@ struct solverOutputKinsol : public solverOutput
     long int nfevalsLS;
     long int lsflag;
 
+public:
     solverOutputKinsol();
 };
 
@@ -85,6 +92,7 @@ struct solverKinsolUserData
     genericResidual* res;
     genericJacobian* jac;
 
+public:
     solverKinsolUserData();
 };
 
@@ -104,11 +112,10 @@ public:
     ~solverSundialsKinsol();
 
     //interface: solver
-    virtual bool setSolverParameters(solverOptionsKinsol *ops);
-    virtual bool init();
-    virtual bool exit();
-    virtual bool getSolverOutput(solverOutputKinsol* out);
+    bool init(solverOptions* ops1);
+    bool exit();
+    bool getSolverOutput(solverOutput* out1);
 
     //interface: solverNonLinearAlg
-    virtual int solve();
+    bool solve();
 };

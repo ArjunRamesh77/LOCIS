@@ -10,6 +10,7 @@ class genericJacobian : public virtualInstructionStack
     virtualDependencyTree vdt;
     unsigned int nVar;
     unsigned int NNZ;
+    int jacobianStyle;
 
 public:
     genericJacobian();
@@ -17,6 +18,7 @@ public:
 
     unsigned int getNVar() const;
     void setNVar(unsigned int value);
+    void setJacobianStyle(int value);
 
     //construction
     int generateFullJacobianInstr(int type);

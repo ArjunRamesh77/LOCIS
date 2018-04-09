@@ -8,13 +8,21 @@ unsigned int genericJacobian::getNVar() const
 void genericJacobian::setNVar(unsigned int value)
 {
     nVar = value;
+    vdt.setNumVars(nVar);
+}
+
+void genericJacobian::setJacobianStyle(int value)
+{
+    jacobianStyle = value;
+    vdt.setJacType(jacobianStyle);
 }
 
 genericJacobian::genericJacobian() :
     instJacobianStack1(),
     instJacobianStack2(),
     vdt(),
-    nVar(0)
+    nVar(0),
+    jacobianStyle(MATRIX_DENSE)
 {
 
 }

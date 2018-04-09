@@ -11,6 +11,34 @@ genericResidual::~genericResidual()
 
 }
 
+void genericResidual::setNumEquations(unsigned int numEquations_arg)
+{
+    numEquations = numEquations_arg;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// count the number of equations in the residual
+void genericResidual::countNumEquations()
+{
+    if(allInst)
+    {
+        unsigned int count = 0;
+        for(auto it = allInst->begin(); it != allInst->end(); ++it)
+        {
+            if(it->signal == VR_SIGNAL_LAST)
+            {
+                ++count;
+            }
+        }
+        numEquations = count;
+    }
+}
+
+unsigned int genericResidual::getNumEquations()
+{
+    return numEquations;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // evaluate steady state residual
 int genericResidual::evalResidual1StackBased(double *xOrig, double *x, double *r)
@@ -18,6 +46,9 @@ int genericResidual::evalResidual1StackBased(double *xOrig, double *x, double *r
     unsigned int rIndex = 0;
     clearVirtualMachineStack();
     clearVisrtualMachineInter();
+
+    //debug
+    std::cout<<"RESIDUAL"<<std::endl;
 
     std::vector<virtualOper>::const_iterator allInst_end = allInst->end();
     for(std::vector<virtualOper>::const_iterator vo = allInst->begin(); vo != allInst_end; ++vo)
@@ -41,10 +72,13 @@ int genericResidual::evalResidual1StackBased(double *xOrig, double *x, double *r
         {
             //update residual
             r[rIndex] = instStack.top();
+            //debug
+            std::cout<< r[rIndex] << std::endl;
             rIndex++;
             instStack.pop();
         }
     }
+
     return 0;
 }
 

@@ -93,6 +93,12 @@ int virtualDependencyTree::getJacType() const
 void virtualDependencyTree::setJacType(int value)
 {
     jacType = value;
+    wIndex = 0;
+}
+
+void virtualDependencyTree::setNumVars(unsigned int val)
+{
+    numVars = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +127,14 @@ int virtualDependencyTree::getReverseModeAutoDiffInst()
         ++itb;
     }
 
+    //see if dense matrix
+    //if yes iterate from beginning to end
+    if(jacType == MATRIX_DENSE)
+    {
+        minIndex = 0;
+        maxIndex = numVars - 1;
+    }
+
     //loop in order
     std::map<unsigned int, virtualDependencyTreeNode*>::const_iterator it1;
     for(unsigned int i = minIndex; i <= maxIndex; ++i)
@@ -130,6 +144,12 @@ int virtualDependencyTree::getReverseModeAutoDiffInst()
         auto find = indepVariables.find(i);
         if(find == indepVariables.end())
         {
+            //for dense jacobians need to add dy/dx = 0, if y not part of tree
+            if(jacType == MATRIX_DENSE)
+            {
+                instr->push_back(virtualOper(VR_CONST, 0.0));
+                instr->push_back(virtualOper(VR_DERIV_INDEX, i));
+            }
             continue;
         }
         it1 = find;
