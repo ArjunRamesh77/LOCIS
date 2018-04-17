@@ -7,7 +7,6 @@
 class solverSolutionMethod
 {
 protected:
-    bool bInitDone;
     solverSystem* system;
 
 public:

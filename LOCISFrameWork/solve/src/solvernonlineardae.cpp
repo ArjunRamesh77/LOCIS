@@ -56,10 +56,11 @@ bool solverNonLinearDae::buildResidualAndJacobian(std::vector<virtualOper> *pEqu
 {
     if(pEquationVec)
     {
-        if(residual)
-            delete residual;
-        residual = new genericResidual;
-        residual->createNewInstructionStack(pEquationVec);
+        if(!residual)
+        {
+            residual = new genericResidual;
+            residual->createNewInstructionStack(pEquationVec);
+        }
 
         switch(option->matrixType)
         {

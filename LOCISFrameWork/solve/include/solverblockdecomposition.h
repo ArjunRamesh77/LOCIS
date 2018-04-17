@@ -1,4 +1,3 @@
-/*
 
 #pragma once
 
@@ -32,8 +31,7 @@ public:
     ~solverBlockDecomposition();
 
     virtual bool initSystem();
-    virtual int solve(double time = 0.0);
+    virtual bool solve(double time = 0.0);
     virtual solverOutput* getSolverOutput(solverOutputBlockDecomp* out);
 };
 
-*/

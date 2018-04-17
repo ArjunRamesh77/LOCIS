@@ -8,6 +8,10 @@ bool solverKernel::solveDaeInitialization()
     bool ret = true;
     solverSystem* daeInitSystem = mainSystem.getDaeInitSystem();
 
+    //allocate vars (This is required for initialization system)
+    //variables will not be allocated in solution method class since varx is not null
+    daeInitSystem->allocateSystemDims();
+
     //get the dae init instructions
     std::vector<initializerDaeGenRecognize> varMap;
     initializerDaeGen daeGen;

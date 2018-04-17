@@ -6,6 +6,7 @@
 #include <string>
 #include <math.h>
 
+//also used with system type
 enum solverTypes
 {
     SOLVER_ALG_NONLINEAR,

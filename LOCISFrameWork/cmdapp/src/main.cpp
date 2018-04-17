@@ -111,18 +111,24 @@ int main()
 {
     //--------------------------------- NON-LINEAR-ALG---------------------------------------------
     //kernel JSON input
-    const char kernelInput[] = "{ \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
+    const char kernelInput[] = "{ \"root\" : {"
+                               "  \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
                                "  \"num-vars\" : 2,"
                                "  \"num-equs\" : 2,"
-                               "  \"solver-name\" : \"SOLVER_KINSOL\","
-                               "  \"solution-method\" : \"DIRECT\","
-                               "  \"options-SOLVER_KINSOL\" : {   \"input\" : { \"matrixType\" : 0,"
-                               "                                                \"linearSolverType\" : 0,"
-                               "                                                \"strategy\" : 0,"
-                               "                                                \"noInitSetup\" : 0,"
-                               "                                                \"relFTol\" : 1.0e-6},"
-                               "                                  \"output\" : {}}"
-                               " }";
+                               "  \"solution-method\" : { \"type\" : \"SOLVER_MODE_DIRECT\","
+                               "                          \"solver\" : { \"type\" : \"SOLVER_ALG_NONLINEAR\","
+                               "                                       \"name\" : \"SOLVER_KINSOL\","
+                               "                                       \"input\" : { \"matrixType\" : 0,"
+                               "                                                     \"linearSolverType\" : 0,"
+                               "                                                     \"strategy\" : 0,"
+                               "                                                     \"noInitSetup\" : 0,"
+                               "                                                     \"relFTol\" : 1.0e-6},"
+                               "                                       \"output\" : {}}}"
+                               "}"
+                               "}";
+
+
+//    "}";
 
 
 
@@ -153,15 +159,20 @@ int main()
     solverKernel sk;
     sk.setFlatEquationSet(&resInstr);
     sk.setMainSystem(kernelInput);
+    sk.allocateGlobalSystemVars();
 
+    //initialize
+    double* xg = NULL;
     //set the guesses
-    double* xg = sk.getSystem()->getVarX();
+    xg = sk.getSystem()->getVarX();
     xg[0] = 1.0;
     xg[1] = 1.0;
 
-    //initialize
     if(sk.initSystem())
+    {
+        //solve
         sk.solveSystem();
+    }
 
     //solution
     for(int i = 0; i < 2; ++i)
@@ -169,32 +180,36 @@ int main()
 
     //--------------------------------- NON-LINEAR-DAE---------------------------------------------
     //kernel
-    const char kernelInput1[] = "{ \"system-type\" : \"SOLVER_DAE_NONLINEAR\","
+    const char kernelInput1[] ="{ \"root\" : {"
+                               "  \"system-type\" : \"SOLVER_DAE_NONLINEAR\","
                                "  \"num-vars\" : 5,"
                                "  \"num-equs\" : 5,"
-                               "  \"solver-name\" : \"SOLVER_IDA\","
-                               "  \"solution-method\" : \"DIRECT\","
                                "  \"time-start\" : 0.0,"
                                "  \"time-end\" : 100.0,"
                                "  \"time-step\" : 100,"
-                               "  \"options-SOLVER_IDA\" : {   \"input\" : { \"matrixType\" : 0,"
-                               "                                             \"linearSolverType\" : 0,"
-                               "                                             \"iTask\" : 1,"
-                               "                                             \"relFTol\" : 1.0e-8,"
-                               "                                             \"absFTol\" : 1.0e-8},"
-                               "                               \"output\" : {}},"
+                               "  \"solution-method\" :{ \"type\" : \"SOLVER_MODE_DIRECT\","
+                               "                        \"solver\" : { \"type\" : \"SOLVER_DAE_NONLINEAR\","
+                               "                                       \"name\" : \"SOLVER_IDA\","
+                               "                                       \"input\" : { \"matrixType\" : 0,"
+                               "                                                     \"linearSolverType\" : 0,"
+                               "                                                     \"iTask\" : 1,"
+                               "                                                     \"relFTol\" : 1.0e-8,"
+                               "                                                     \"absFTol\" : 1.0e-8},"
+                               "                                       \"output\" : {}}},"
                                "  \"init-dae\" : { \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
                                "                   \"num-vars\" : 9,"
                                "                   \"num-equs\" : 9,"
-                               "                   \"solver-name\" : \"SOLVER_KINSOL\","
-                               "                   \"solution-method\" : \"DIRECT\","
-                               "                   \"options-SOLVER_KINSOL\" : {   \"input\" : { \"matrixType\" : 0,"
-                               "                                                                 \"linearSolverType\" : 0,"
-                               "                                                                 \"strategy\" : 0,"
-                               "                                                                 \"noInitSetup\" : 0,"
-                               "                                                                 \"relFTol\" : 1.0e-6},"
-                               "                                                   \"output\" : {}}}"
-                               " }";
+                               "                   \"solution-method\" : { \"type\" : \"SOLVER_MODE_DIRECT\","
+                               "                                           \"solver\" : { \"type\" : \"SOLVER_ALG_NONLINEAR\","
+                               "                                                          \"name\" : \"SOLVER_KINSOL\","
+                               "                                                          \"input\" : { \"matrixType\" : 0,"
+                               "                                                                        \"linearSolverType\" : 0,"
+                               "                                                                        \"strategy\" : 0,"
+                               "                                                                        \"noInitSetup\" : 0,"
+                               "                                                                        \"relFTol\" : 1.0e-6},"
+                               "                                                          \"output\" : {}}}}"
+                               "}"
+                               "}";
 
     //residual
     std::vector<virtualOper> daeRes;
@@ -297,10 +312,13 @@ int main()
     sk1.setFlatEquationSet(&daeRes);
     sk1.setNumInstrInit(12);
     sk1.setMainSystem(kernelInput1);
+    sk1.allocateGlobalSystemVars();
 
     //set the guesses
-    double* yyg = sk1.getSystem()->getVarYY();
-    double* ypg = sk1.getSystem()->getVarYP();
+    double* yyg = NULL;
+    double* ypg = NULL;
+    yyg = sk1.getSystem()->getVarYY();
+    ypg = sk1.getSystem()->getVarYP();
 
     yyg[0] = 0;
     yyg[1] = -1;
@@ -315,7 +333,42 @@ int main()
 
     //initialize
     if(sk1.initSystem())
+    {
         sk1.solveSystem();
+    }
+
+    //---------------------------------BLOCK DECOMPOSITION---------------------------------------------
+    const char kernelInput2[] = "{ \"system-type\" : \"SOLVER_DAE_NONLINEAR\","
+                               "  \"num-vars\" : 2,"
+                               "  \"num-equs\" : 2,"
+                               "  \"solution-method\" { \"type\" : \"BLOCK_DECOMPOSITION\","
+                               "                        \"solver-dae\" : { \"type\" : \"SOLVER_DAE_NONLINEAR\","
+                               "                                            \"name\" : \"SOLVER_IDA\","
+                               "                                            \"input\" : { \"matrixType\" : 0,"
+                               "                                                     \"linearSolverType\" : 0,"
+                               "                                                     \"iTask\" : 1,"
+                               "                                                     \"relFTol\" : 1.0e-8,"
+                               "                                                     \"absFTol\" : 1.0e-8},"
+                               "                                            \"output\" : {}},"
+                               "                        \"solver-alg\" : {  \"type\" : \"SOLVER_ALG_NON_LINEAR\","
+                               "                                            \"input\" : { \"matrixType\" : 0,"
+                               "                                                      \"linearSolverType\" : 0,"
+                               "                                                      \"strategy\" : 0,"
+                               "                                                      \"noInitSetup\" : 0,"
+                               "                                                      \"relFTol\" : 1.0e-6},"
+                               "                                            \"output\" : {}}},"
+                               "  \"init-dae\" : { \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
+                               "                   \"num-vars\" : 9,"
+                               "                   \"num-equs\" : 9,"
+                               "                   \"solution-method\" : { \"type\" : \"DIRECT\","
+                               "                                           \"solver\" : { \"type\" : \"SOLVER_ALG_NON_LINEAR\","
+                               "                                                          \"input\" : { \"matrixType\" : 0,"
+                               "                                                                        \"linearSolverType\" : 0,"
+                               "                                                                        \"strategy\" : 0,"
+                               "                                                                        \"noInitSetup\" : 0,"
+                               "                                                                        \"relFTol\" : 1.0e-6},"
+                               "                                                          \"output\" : {}}}}"
+                               " }";
 
 
    return 0;

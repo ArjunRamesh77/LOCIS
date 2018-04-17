@@ -15,14 +15,30 @@ solverSystem::~solverSystem()
 
 }
 
-void solverSystem::setSystemType(int type)
+void solverSystem::setSystemType(int val)
 {
-    systemType = type;
+    systemType = val;
 }
 
-void solverSystem::setSolveMode(int mode)
+void solverSystem::setSolveMode(int val)
 {
-    solveMode = mode;
+    solveMode = val;
+}
+
+void solverSystem::setSolverType(int val)
+{
+    solverType = val;
+}
+
+void solverSystem::setSolverName(int val)
+{
+    solverName = val;
+}
+
+void solverSystem::setSolverInputAndOutput(rapidjson::Value* in, rapidjson::Value* out)
+{
+    solveInput = in;
+    solveOutput = out;
 }
 
 void solverSystem::setDaeInitSystem(solverSystem *daeInitSystem_arg)
@@ -39,40 +55,44 @@ void solverSystem::setTimeRange(double tStart_arg, double tEnd_arg, unsigned int
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // allocate variables based on systemType
-bool solverSystem::setAndAllocateSystemDims(unsigned int numVar_arg, unsigned int numEqu_arg)
+bool solverSystem::setSystemDims(unsigned int numVar_arg, unsigned int numEqu_arg)
 {
     bool ret = true;
     numVar = numVar_arg;
     numEqu = numEqu_arg;
 
-    switch(systemType)
-    {
-    case SOLVER_ALG_NONLINEAR:
-        if(varx)
-        {
-            delete varx;
-            varx = NULL;
-        }
-        varx = new double[numVar];
-        break;
-
-    case SOLVER_DAE_NONLINEAR:
-        if(varyy)
-        {
-            delete varyy;
-            varyy = NULL;
-        }
-        varyy = new double[numVar];
-        if(varyp)
-        {
-            delete varyp;
-            varyp = NULL;
-        }
-        varyp = new double[numVar];
-        break;
-    }
-
     return ret;
+}
+
+bool solverSystem::allocateSystemDims()
+{
+    if(numVar > 0 && numEqu > 0)
+    {
+        switch(systemType)
+        {
+        case SOLVER_ALG_NONLINEAR:
+            if(!varx)
+            {
+                varx = new double[numVar];
+            }           
+            break;
+
+        case SOLVER_DAE_NONLINEAR:
+            if(!varyy)
+            {
+                varyy = new double[numVar];
+            }
+
+            if(!varyp)
+            {
+                varyp = new double[numVar];
+            }
+
+            break;
+        }
+        return true;
+    }
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,22 +101,6 @@ void solverSystem::setEquationVector(std::vector<virtualOper> *pEquationVec_arg)
 {
     pEquationVec = pEquationVec_arg;
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// set the residual directly
-void solverSystem::setResidual(genericResidual *res)
-{
-    residual = res;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// set the root residual
-void solverSystem::setRootResidual(unsigned int numRoots_arg, genericResidual *rootResidual_arg)
-{
-    numRoots = numRoots_arg;
-    rootResidual = rootResidual_arg;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // set the system solver
@@ -146,25 +150,23 @@ void solverSystem::setBlockMapVarYP(std::vector<unsigned int> *mapVarYP_arg)
     mapVarYP = mapVarYP_arg;
 }
 
-//void solverSystem::setBlockSolverOptionsNonLinAlg(solverOptions *bsops)
-//{
-//    blockSopsNonLinAlg = bsops;
-//}
+void solverSystem::setBlockSolvers(int alg, int dae)
+{
+    blockAlgSolver = alg;
+    blockDaeSolver = dae;
+}
 
-//void solverSystem::setBlockSolverOptionsNonLinDae(solverOptions *bsops)
-//{
-//    blockSolverNonLinDae = bsops;
-//}
+void solverSystem::setBlockAlgInputOutput(rapidjson::Value *in, rapidjson::Value *out)
+{
+    blockSolverInputAlg = in;
+    blockSolverInputAlg = out;
+}
 
-//void solverSystem::setBlockSolverNonLinAlgName(int type)
-//{
-//    blockSolverNonLinAlgName = type;
-//}
-
-//void solverSystem::setBlockSolverNonLinDaeName(int type)
-//{
-//    blockSolverNonLinDaeName = type;
-//}
+void solverSystem::setBlockDaeInputOutput(rapidjson::Value *in, rapidjson::Value *out)
+{
+    blockSolverInputDae = in;
+    blockSolverOutputDae = out;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // get the main root node
@@ -192,6 +194,21 @@ int solverSystem::getSolveMode()
     return solveMode;
 }
 
+int solverSystem::getSolverName()
+{
+    return solverName;
+}
+
+rapidjson::Value *solverSystem::getSolveInput()
+{
+    return solveInput;
+}
+
+rapidjson::Value *solverSystem::getSolveOutput()
+{
+    return solveOutput;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // return system dimensions
 unsigned int solverSystem::getNumVar()
@@ -211,18 +228,38 @@ std::vector<virtualOper> *solverSystem::getPEquationVec()
     return pEquationVec;
 }
 
+int solverSystem::getBlockSolverAlgName()
+{
+    return blockAlgSolver;
+}
+
+int solverSystem::getBlockSolverDaeName()
+{
+    return blockDaeSolver;
+}
+
+rapidjson::Value *solverSystem::getBlockSolveAlgInput()
+{
+    return blockSolverInputAlg;
+}
+
+rapidjson::Value *solverSystem::getBlockSolveAlgOutput()
+{
+    return blockSolverOutputAlg;
+}
+
+rapidjson::Value *solverSystem::getBlockSolveDaeInput()
+{
+    return blockSolverInputDae;
+}
+
+rapidjson::Value *solverSystem::getBlockSolveDaeOutput()
+{
+    return blockSolverOutputDae;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// return the system functions
-genericResidual *solverSystem::getResidual()
-{
-    return residual;
-}
-
-genericJacobian *solverSystem::getJacobian()
-{
-    return jacobian;
-}
-
+// dae time
 double solverSystem::getTStart()
 {
     return tStart;
@@ -280,11 +317,6 @@ int solverSystem::getNumRoots()
     return numRoots;
 }
 
-genericResidual *solverSystem::getRootResidual()
-{
-    return rootResidual;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // block decomp vars
 unsigned int solverSystem::getBlockId()
@@ -314,144 +346,115 @@ solverSystem *solverSystem::getBlockAt(unsigned int id)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // aids the block solver to track Original variables
-bool solverSystem::copyBlockVarXToRoot()
+void solverSystem::copyBlockVarXToRoot()
 {
     double* varRoot = root->getVarX();
-    if(varRoot)
+    unsigned int count = 0;
+    for(auto it = mapVarX->begin(); it != mapVarX->end(); ++it)
     {
-        if(mapVarX)
-        {
-            unsigned int count = 0;
-            for(auto it = mapVarX->begin(); it != mapVarX->end(); ++it)
-            {
-                varRoot[*it] = varx[count];
-                ++count;
-            }
-        }
-        else
-        {
-            return false;
-        }
+        varRoot[*it] = varx[count];
+        ++count;
     }
-    else
-    {
-        return false;
-    }
-    return true;
 }
 
-bool solverSystem::copyBlockVarYYToRoot()
+void solverSystem::copyBlockVarYYToRoot()
 {
     double* varRoot = root->getVarYY();
-    if(varRoot)
+    unsigned int count = 0;
+    for(auto it = mapVarX->begin(); it != mapVarX->end(); ++it)
     {
-        if(mapVarX)
-        {
-            unsigned int count = 0;
-            for(auto it = mapVarX->begin(); it != mapVarX->end(); ++it)
-            {
-                varRoot[*it] = varyy[count];
-                ++count;
-            }
-        }
-        else
-        {
-            return false;
-        }
+        varRoot[*it] = varyy[count];
+        ++count;
     }
-    else
-    {
-        return false;
-    }
-    return true;
 }
 
-bool solverSystem::copyBlockVarYPToRoot()
+void solverSystem::copyBlockVarYPToRoot()
 {
     double* varRoot = root->getVarYP();
-    if(varRoot)
+    unsigned int count = 0;
+    for(auto it = mapVarX->begin(); it != mapVarX->end(); ++it)
     {
-        if(mapVarX)
-        {
-            unsigned int count = 0;
-            for(auto it = mapVarX->begin(); it != mapVarX->end(); ++it)
-            {
-                varRoot[*it] = varyp[count];
-                ++count;
-            }
-        }
-        else
-        {
-            return false;
-        }
+        varRoot[*it] = varyp[count];
+        ++count;
     }
-    else
-    {
-        return false;
-    }
-    return true;
-}
-
-void solverSystem::setVariables()
-{
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// returns
-solver *solverSystem::createBlockSolver(int systemType_arg, solverOptions* sops_arg, solverOutput* sout_arg)
+// utility
+int getSolverTypeFromString(std::string val)
 {
-    solver* sol = NULL;
-
-    switch(systemType_arg)
+    if(val == "SOLVER_ALG_NONLINEAR")
     {
-    case FUNCTION_TYPE_ALG:
-        if(blockSolverNonLinAlg == SOLVER_KINSOL)
-        {
-            sol = new solverSundialsKinsol;
-            sops_arg = blockSopsNonLinAlg;
-            sout_arg = new solverOutputKinsol;
-        }
-        break;
-    case FUNCTION_TYPE_DAE:
-        if(blockSolverNonLinDae == SOLVER_IDA)
-        {
-            sol = new solverSundialsIda;
-            sops_arg = blockSopsNonLinDae;
-            sout_arg = new solverOutputIda;
-        }
+        return SOLVER_ALG_NONLINEAR;
     }
-
-    return sol;
+    else if(val == "SOLVER_DAE_NONLINEAR")
+    {
+        return SOLVER_DAE_NONLINEAR;
+    }
+    return -1;
 }
 
+int getSolveModeFromString(std::string val)
+{
+    if(val == "SOLVER_MODE_DIRECT")
+    {
+        return SOLVER_MODE_DIRECT;
+    }
+    else if(val == "SOLVER_MODE_BLOCK_DECOMPOSITION")
+    {
+        return SOLVER_MODE_BLOCK_DECOMPOSITION;
+    }
+    return -1;
+}
 
+int getSolverNamefromString(std::string val)
+{
+    if(val == "SOLVER_KINSOL")
+    {
+        return SOLVER_KINSOL;
+    }
+    else if(val == "SOLVER_IDA")
+    {
+        return SOLVER_IDA;
+    }
+    return -1;
+}
 
+solver* getSolverfromSolverName(int val)
+{
+    if(val == SOLVER_KINSOL)
+    {
+        return new solverSundialsKinsol;
+    }
+    else if(val == SOLVER_IDA)
+    {
+        return new solverSundialsIda;
+    }
+    return NULL;
+}
 
+solverOptions* getSolverOptionsFromSolverName(int val)
+{
+    if(val == SOLVER_KINSOL)
+    {
+        return new solverOptionsKinsol;
+    }
+    else if(val == SOLVER_IDA)
+    {
+        return new solverOptionsIda;
+    }
+    return NULL;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+solverOutput* getSolverOutputFromSolverName(int val)
+{
+    if(val == SOLVER_KINSOL)
+    {
+        return new solverOutputKinsol;
+    }
+    else if(val == SOLVER_IDA)
+    {
+        return new solverOutputIda;
+    }
+    return NULL;
+}

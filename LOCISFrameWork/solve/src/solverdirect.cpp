@@ -20,13 +20,24 @@ bool solverDirect::initSystem()
     if(!system)
         return false;
 
-    //get the solver
-    solver* solv = system->getSolver();
+    //setup system based on options
+    //create solver/options/output
+    solver* solv = getSolverfromSolverName(system->getSolverName());
+    solverOptions* sops = getSolverOptionsFromSolverName(system->getSolverName());
+    solverOutput* sout = getSolverOutputFromSolverName(system->getSolverName());
+    system->setSolver(solv, sops, sout);
 
-    //set the instructions
+    //setup input options/output options
+    sops->rjw.setJSONobjRoot(system->getSolveInput());
+    sout->rjw.setJSONobjRoot(system->getSolveOutput());
+
+    //allocate vars
+    system->allocateSystemDims();
+
+    //set the instructions into the solver
     solv->setPEquationVec(system->getPEquationVec());
 
-    //set the system dimensions
+    //set the system dimensions into the solver
     solv->setSolveDimensions(system->getNumEqu(), system->getNumVar());
 
     //setup variable based on type of system
@@ -47,7 +58,7 @@ bool solverDirect::initSystem()
         break;
     }
 
-    //set the solver parameters
+    //initialize the solver
     if(!solv->init(system->getSolverOptions()))
         return false;
 
@@ -73,7 +84,7 @@ bool solverDirect::solve(double time)
          break;
      }
 
-     return -1;
+     return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
