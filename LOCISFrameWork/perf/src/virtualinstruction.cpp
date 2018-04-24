@@ -147,7 +147,7 @@ void virtualInstructionStack::addFunctionDISO(unsigned int index)
 
 void virtualInstructionStack::addCopyInstruction(virtualOper* cpy)
 {
-    allInst->push_back(virtualOper(cpy->operType, cpy->value, cpy->index));
+    allInst->push_back(virtualOper(cpy->operType, cpy->value, cpy->index, cpy->signal));
 }
 
 void virtualInstructionStack::makeLast()

@@ -111,6 +111,11 @@ void solverSystem::setSolver(solver* solver_arg, solverOptions *sops_arg, solver
     sout = sout_arg;
 }
 
+void solverSystem::setRootSystem(solverSystem *val)
+{
+    root = val;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // set the id for a block in block decomposition mode
@@ -159,7 +164,7 @@ void solverSystem::setBlockSolvers(int alg, int dae)
 void solverSystem::setBlockAlgInputOutput(rapidjson::Value *in, rapidjson::Value *out)
 {
     blockSolverInputAlg = in;
-    blockSolverInputAlg = out;
+    blockSolverOutputAlg = out;
 }
 
 void solverSystem::setBlockDaeInputOutput(rapidjson::Value *in, rapidjson::Value *out)

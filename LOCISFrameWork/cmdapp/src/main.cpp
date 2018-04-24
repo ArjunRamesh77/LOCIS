@@ -337,8 +337,157 @@ int main()
         sk1.solveSystem();
     }
 
+    //---------------------------------BLOCK DECOMPOSITION-SIMPLE---------------------------------------------
+    const char kernelInput2[] ="{\"root\" : {"
+                               "  \"system-type\" : \"SOLVER_ALG_NONLINEAR\","
+                               "  \"num-vars\" : 6,"
+                               "  \"num-equs\" : 6,"
+                               "  \"solution-method\":{ \"type\" : \"SOLVER_MODE_BLOCK_DECOMPOSITION\","
+                               "                        \"solver-dae\" : { \"type\" : \"SOLVER_DAE_NONLINEAR\","
+                               "                                           \"name\" : \"SOLVER_IDA\","
+                               "                                           \"input\" : { \"matrixType\" : 0,"
+                               "                                                        \"linearSolverType\" : 0,"
+                               "                                                        \"iTask\" : 1,"
+                               "                                                        \"relFTol\" : 1.0e-8,"
+                               "                                                        \"absFTol\" : 1.0e-8},"
+                               "                                           \"output\" : {}},"
+                               "                        \"solver-alg\" : {  \"type\" : \"SOLVER_ALG_NON_LINEAR\","
+                               "                                            \"name\" : \"SOLVER_KINSOL\","
+                               "                                            \"input\" : { \"matrixType\" : 0,"
+                               "                                                          \"linearSolverType\" : 0,"
+                               "                                                          \"strategy\" : 0,"
+                               "                                                          \"noInitSetup\" : 0,"
+                               "                                                          \"relFTol\" : 1.0e-10},"
+                               "                                            \"output\" : {}}}"
+                               "}"
+                               "}";
+
+    double C1 = 1.0;
+    double C2 = 2.0;
+    double C3 = 3.0;
+
+    #define X(index) (unsigned int)(index - 1)
+
+    std::vector<virtualOper> bdRes;
+    bdRes.push_back(virtualOper(VR_CONST, C1));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(1)));
+    bdRes.push_back(virtualOper(VR_BIN_MUL));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(3)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(5)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, C1));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, C2));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, 1.0));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    (bdRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(1)));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(3)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(4)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, 2.0));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(6)));
+    bdRes.push_back(virtualOper(VR_BIN_MUL));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, 4.0));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, C2));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    (bdRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(1)));
+    bdRes.push_back(virtualOper(VR_CONST, 2.0));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(3)));
+    bdRes.push_back(virtualOper(VR_BIN_MUL));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, C3));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(5)));
+    bdRes.push_back(virtualOper(VR_BIN_MUL));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, 1.0));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, 2.0));
+    bdRes.push_back(virtualOper(VR_CONST, C2));
+    bdRes.push_back(virtualOper(VR_BIN_MUL));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, C3));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    (bdRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(2)));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(3)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(4)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(5)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, 2.0));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, C2));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    (bdRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(1)));
+    bdRes.push_back(virtualOper(VR_CONST, C2));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(3)));
+    bdRes.push_back(virtualOper(VR_BIN_MUL));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(5)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_CONST, 2.0));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, C2*C2));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    (bdRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(1)));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(3)));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(4)));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    bdRes.push_back(virtualOper(VR_VAR1_INDEX, X(6)));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, 1.0));
+    bdRes.push_back(virtualOper(VR_BIN_SUB));
+    bdRes.push_back(virtualOper(VR_CONST, C2));
+    bdRes.push_back(virtualOper(VR_BIN_ADD));
+    (bdRes.end() - 1)->signal = VR_SIGNAL_LAST;
+
+    //solver kernel
+    solverKernel sk2;
+    sk2.setFlatEquationSet(&bdRes);
+    sk2.setMainSystem(kernelInput2);
+    sk2.allocateGlobalSystemVars();
+
+    //initialize
+    double* xg2 = NULL;
+    //set the guesses
+    xg2 = sk2.getSystem()->getVarX();
+    xg2[0] = 1.0;
+    xg2[1] = 2.0;
+    xg2[2] = 3.0;
+    xg2[3] = 4.0;
+    xg2[4] = 5.0;
+    xg2[5] = 6.0;
+
+    if(sk2.initSystem())
+    {
+        //solve
+        sk2.solveSystem();
+    }
+
+    //solution
+    for(int i = 0; i < 6; ++i)
+        std::cout<<" x[" << i << "] = " << xg2[i];
+
+
     //---------------------------------BLOCK DECOMPOSITION---------------------------------------------
-    const char kernelInput2[] = "{ \"system-type\" : \"SOLVER_DAE_NONLINEAR\","
+    const char kernelInput3[] ="{ \"root\" : {"
+                               "  \"system-type\" : \"SOLVER_DAE_NONLINEAR\","
                                "  \"num-vars\" : 2,"
                                "  \"num-equs\" : 2,"
                                "  \"solution-method\" { \"type\" : \"BLOCK_DECOMPOSITION\","
@@ -368,7 +517,8 @@ int main()
                                "                                                                        \"noInitSetup\" : 0,"
                                "                                                                        \"relFTol\" : 1.0e-6},"
                                "                                                          \"output\" : {}}}}"
-                               " }";
+                               " }"
+                               "}";
 
 
    return 0;

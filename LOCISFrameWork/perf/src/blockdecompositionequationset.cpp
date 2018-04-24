@@ -10,23 +10,35 @@ int blockDecomposition::getEquationSets()
 
     //loop throgh all the instructions create the incidence graph
     virtualOper vo;
-    unsigned int fIndex = 0;
+    unsigned int fIndex = 1;   //1 based indexing
     std::vector<virtualOper>::const_iterator resi_end = mainInputResidual->getAllInst()->end();
     unsigned int resiInstrCount = 0;
     unsigned int numAlg = 0;
     unsigned int numDif = 0;
-    unsigned int vTotalIndex = 0;
+    unsigned int vTotalIndex = 1; //1 based indexing
     residualIndexMap.clear();
     residualIndexMap.push_back(0); //since first residual starts at index 0;
 
     //declare and initialize maps
+    //initializer for dae does not need mapvar2
     mapVar1 = new std::pair<unsigned int, unsigned int>[numVar];
-    mapVar2 = new std::pair<unsigned int, unsigned int>[numVar];
-    for(unsigned int i = 0; i < numVar; ++i)
+    if(!isInitializer)
     {
-        mapVar1[i] = std::make_pair(0,0);
-        mapVar2[i] = std::make_pair(0,0);
+        mapVar2 = new std::pair<unsigned int, unsigned int>[numVar];
+        for(unsigned int i = 0; i < numVar; ++i)
+        {
+            mapVar1[i] = std::make_pair(0,0);
+            mapVar2[i] = std::make_pair(0,0);
+        }
     }
+    else
+    {
+        for(unsigned int i = 0; i < numVar; ++i)
+        {
+            mapVar1[i] = std::make_pair(0,0);
+        }
+    }
+
     std::pair<unsigned int, unsigned int>* mapPair;
     for(std::vector<virtualOper>::const_iterator it = mainInputResidual->getAllInst()->begin(); it != resi_end; ++it)
     {
@@ -36,33 +48,34 @@ int blockDecomposition::getEquationSets()
         if(vo.operType == VR_VAR1_INDEX)
         {
             mapPair = &mapVar1[vo.index];
-            if(mapPair->first > 0)
+            //if variable encountered for the first time
+            if(mapPair->first == 0)
             {
                 mapPair->first = vTotalIndex;
                 mapPair->second = fIndex;
-                igraph.addEdge(fIndex, vTotalIndex);
+                igraph.addEdge(fIndex - 1, vTotalIndex - 1);
                 ++vTotalIndex;
                 ++numAlg;
             }
             else
             {
+                //check if already encountered variable already added the function incidence
                 if(mapPair->second != fIndex)
                 {
                     mapPair->second = fIndex;
-                    igraph.addEdge(fIndex, mapPair->first);
+                    igraph.addEdge(fIndex - 1, mapPair->first - 1);
                 }
             }
-            continue;
         }
 
-        if(vo.operType == VR_VAR2_INDEX)
+        else if(vo.operType == VR_VAR2_INDEX)
         {
             mapPair = &mapVar2[vo.index];
-            if(mapPair->first > 0)
+            if(mapPair->first == 0)
             {
                 mapPair->first = vTotalIndex;
                 mapPair->second = fIndex;
-                igraph.addEdge(fIndex, vTotalIndex);
+                igraph.addEdge(fIndex - 1, vTotalIndex - 1);
                 ++vTotalIndex;
                 ++numDif;
             }
@@ -71,22 +84,41 @@ int blockDecomposition::getEquationSets()
                 if(mapPair->second != fIndex)
                 {
                     mapPair->second = fIndex;
-                    igraph.addEdge(fIndex, mapPair->first);
+                    igraph.addEdge(fIndex - 1, mapPair->first - 1);
                 }
             }
-            continue;
         }
 
         if(vo.signal == VR_SIGNAL_LAST)
         {
             ++fIndex;
-            residualIndexMap.push_back(resiInstrCount);
+            residualIndexMap.push_back(resiInstrCount + 1);
         }
         ++resiInstrCount;
     }
 
+    //convert to zero based indexing
+    if(!isInitializer)
+    {
+        for(unsigned int i = 0; i < numVar; ++i)
+        {
+            --mapVar1[i].first;
+            --mapVar1[i].second;
+            --mapVar2[i].first;
+            --mapVar2[i].second;
+        }
+    }
+    else
+    {
+        for(unsigned int i = 0; i < numVar; ++i)
+        {
+            --mapVar1[i].first;
+            --mapVar1[i].second;
+        }
+    }
+
     //Add dummy source node
-    for(unsigned int i = 0; i < (numVar + 1); ++i)
+    for(unsigned int i = 0; i <= numVar; ++i)
     {
         igraph.addEdge(numVar, i);
     }

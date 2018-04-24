@@ -13,7 +13,8 @@ solverOutputBlockDecomp::solverOutputBlockDecomp() :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // solverBlockdecomposition
 solverBlockDecomposition::solverBlockDecomposition() :
-    solverSolutionMethod()
+    solverSolutionMethod(),
+    isInitializer(false)
 {
 
 }
@@ -21,6 +22,11 @@ solverBlockDecomposition::solverBlockDecomposition() :
 solverBlockDecomposition::~solverBlockDecomposition()
 {
 
+}
+
+void solverBlockDecomposition::setIsInitializer(bool val)
+{
+    isInitializer = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,12 +43,13 @@ bool solverBlockDecomposition::initSystem()
     //get block decomposition equation sets
     genericResidual tempMainRes;
     tempMainRes.createNewInstructionStack(system->getPEquationVec());
+    bd.setInInitializer(isInitializer);
     ret = bd.computeBlockSystem(&tempMainRes, system->getNumVar(), system->getNumEqu());
     if(!ret)
         return false;
 
     //set the number of equation blocks
-    unsigned int numEquBlocks = bd.getNumEquationSets();
+    unsigned int numEquBlocks = bd.getNumEquationSets() - 1;
     if(numEquBlocks <= 0)
         return false;
     system->setNumBlocks(numEquBlocks);
@@ -53,10 +60,11 @@ bool solverBlockDecomposition::initSystem()
         //create a new solver system for each block
         solverSystem* ss = new solverSystem();
 
-        //set root system
-
         //add block to chain(lol)
         blocks.push_back(ss);
+
+        //give the root system to the solver system
+        ss->setRootSystem(system);
 
         //block system size
         unsigned int blNumVar = bd.getVariable1Mapping(i)->size(); //this is the best way to get it
@@ -71,6 +79,17 @@ bool solverBlockDecomposition::initSystem()
             }
         }
 
+        //set each system type since its not known prior to block decopmposition
+        if(blRes->getFunctionType() == FUNCTION_TYPE_ALG)
+        {
+            //for now assume all alg are of type non-linear
+            ss->setSystemType(SOLVER_ALG_NONLINEAR);
+        }
+        else if (blRes->getFunctionType() == FUNCTION_TYPE_DAE)
+        {
+            ss->setSystemType(SOLVER_DAE_NONLINEAR);
+        }
+
         //set block system dimensions
         ss->setSystemDims(blNumVar, blNumEqu);
         ss->allocateSystemDims();
@@ -79,6 +98,8 @@ bool solverBlockDecomposition::initSystem()
         solver* ssolv = NULL;
         solverOptions* ssops = NULL;
         solverOutput* ssout = NULL;
+        solverNonLinearAlg* solvNonLinAlg = NULL;
+        solverNonLinearDae* solvNonLinDae = NULL;
         switch(system->getSystemType())
         {
         case SOLVER_ALG_NONLINEAR:
@@ -88,7 +109,11 @@ bool solverBlockDecomposition::initSystem()
             ssops->rjw.setJSONobjRoot(system->getBlockSolveAlgInput());
             ssout->rjw.setJSONobjRoot(system->getBlockSolveAlgOutput());
 
+            //variable / mappings
             ss->setBlockMapVarX(bd.getVariable1Mapping(i));
+            solvNonLinAlg = static_cast<solverNonLinearAlg*>(ssolv);
+            solvNonLinAlg->setXGuess(ss->getVarX());     //local
+            solvNonLinAlg->setXOrig(system->getVarX());  //global
             break;
 
         case SOLVER_DAE_NONLINEAR:
@@ -98,16 +123,17 @@ bool solverBlockDecomposition::initSystem()
             ssops->rjw.setJSONobjRoot(system->getBlockSolveDaeInput());
             ssout->rjw.setJSONobjRoot(system->getBlockSolveDaeOutput());
 
+            //varible / mappings
             ss->setBlockMapVarYY(bd.getVariable1Mapping(i));
             ss->setBlockMapVarYP(bd.getVariable2Mapping(i));
+            solvNonLinDae = static_cast<solverNonLinearDae*>(ssolv);
+            solvNonLinDae->setGuessYyandYp(ss->getVarYY(), ss->getVarYP());             //local
+            solvNonLinDae->setYyOrigAndYpOrig(system->getVarYY(), system->getVarYP());  //global
             break;
         }
 
         //setup the solver for each block
         ss->setSolver(ssolv, ssops, ssout);
-
-        //setup input options/output options for each block
-
 
         //set the problem size, and residual from block decomposition for each block
         ssolv->setSolveDimensions(blNumVar, blNumEqu);
@@ -174,7 +200,7 @@ bool solverBlockDecomposition::solve(double time)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // get the output
-solverOutput *solverBlockDecomposition::getSolverOutput(solverOutputBlockDecomp *out)
+solverOutput *solverBlockDecomposition::getSolverOutput()
 {
     return NULL;
 }

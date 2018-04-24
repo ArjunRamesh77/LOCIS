@@ -81,6 +81,7 @@ public:
     bool allocateSystemDims();
     void setEquationVector(std::vector<virtualOper>* pEquationVec_arg);
     void setSolver(solver *solver_arg, solverOptions* sops_arg, solverOutput* sout_arg);
+    void setRootSystem(solverSystem* val);
     void setBlockId(unsigned int blid);
     void setNumBlocks(unsigned int blnum);
     void addBlock(solverSystem* blsystem);

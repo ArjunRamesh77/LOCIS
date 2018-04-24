@@ -58,14 +58,13 @@ bool solverKernel::solveDaeInitialization()
     {
         daeInitSolutionMethodPtr = new solverDirect;
     }
-
-    /*
-    if(daeSolveMode == SOLVER_MODE_BLOCK_DECOMPOSITION)
+    else if(daeSolveMode == SOLVER_MODE_BLOCK_DECOMPOSITION)
     {
         daeInitSolutionMethodPtr = new solverBlockDecomposition;
+        static_cast<solverBlockDecomposition*>(daeInitSolutionMethodPtr)->setIsInitializer(true);
     }
-    */
 
+    //initialize
     daeInitSolutionMethodPtr->setSolverSystem(daeInitSystem);
     if(!daeInitSolutionMethodPtr->initSystem())
     {

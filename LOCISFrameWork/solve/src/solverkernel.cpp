@@ -50,9 +50,11 @@ bool solverKernel::initSystem()
 {
     bool ret = true;
     int solveMode = 0;
+    int systemType = 0;
 
     //initialize the system based on direct or block decomposistion
     solveMode = mainSystem.getSolveMode();
+    systemType = mainSystem.getSystemType();
     if(solveMode == SOLVER_MODE_DIRECT)
     {
         if(solutionMethodPtr)
@@ -62,21 +64,23 @@ bool solverKernel::initSystem()
         }
         solutionMethodPtr = new solverDirect;
     }
-
-    /*
-    if(systemType == SOLVER_MODE_BLOCK_DECOMPOSITION)
+    else if(solveMode == SOLVER_MODE_BLOCK_DECOMPOSITION)
     {
         if(solutionMethodPtr)
         {
             delete solutionMethodPtr;
             solutionMethodPtr = NULL;
-            solutionMethodPtr = new solverBlockDecomposition;
+        }
+        solutionMethodPtr = new solverBlockDecomposition;
+
+        if(systemType == SOLVER_ALG_NONLINEAR)
+        {
+            static_cast<solverBlockDecomposition*>(solutionMethodPtr)->setIsInitializer(true);
         }
     }
-    */
 
     //initialize the system if its a dae
-    if(mainSystem.getSystemType() == SOLVER_DAE_NONLINEAR)
+    if(systemType == SOLVER_DAE_NONLINEAR)
     {
         if(!solveDaeInitialization())
         {

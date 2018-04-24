@@ -6,6 +6,7 @@ blockDecomposition::blockDecomposition() :
     numEqu(0),
     systemType(0),
     mainInputResidual(NULL),
+    isInitializer(false),
     igraph(),
     matchAlgo(),
     tarjansAlgo(),
@@ -50,9 +51,15 @@ void blockDecomposition::setNumVarsEqu(unsigned int numVar_arg, unsigned int num
     numEqu = numEqu_arg;
 }
 
+void blockDecomposition::setInInitializer(bool val)
+{
+    isInitializer = val;
+}
+
 bool blockDecomposition::computeBlockSystem(genericResidual *mainInputResidual_arg, unsigned int numVar_arg, unsigned int numEqu_arg)
 {
     int ret = 0;
+    setNumVarsEqu(numVar_arg, numEqu_arg);
 
     //check input sanity
     if(mainInputResidual_arg == NULL)
@@ -62,7 +69,7 @@ bool blockDecomposition::computeBlockSystem(genericResidual *mainInputResidual_a
         return false;
 
     setMainInputResidual(mainInputResidual_arg);
-    setNumVarsEqu(numVar_arg, numEqu_arg);
+
 
     ret = getEquationSets();
     if(ret != 0)
@@ -96,27 +103,3 @@ genericResidual *blockDecomposition::getBlockResidual(unsigned int systemNum)
 {
     return outputResiduals.at(systemNum);
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Generate Jacobians from Residuals
-//int blockDecomposition::generateJacobiansFromResiduals()
-//{
-//    //loop over all the residuals
-//    std::vector<genericResidual*>::const_iterator outputResiduals_end = outputResiduals.end();
-//    for(std::vector<genericResidual*>::const_iterator it = outputResiduals.begin(); it != outputResiduals_end; ++it)
-//    {
-//        genericJacobian* blockJac = new genericJacobian;
-//        blockJac->createNewInstructionStack((*it)->getAllInst());
-
-//        if((*it)->getFunctionType() == FUNCTION_TYPE_DAE)
-//        {
-//            blockJac->generateDualPartJacobian();
-//        }
-//        else
-//        {
-//            blockJac->generateFullJacobianInstr(VDT_NORMAL);
-//        }
-//        outputJacobians.push_back(blockJac);
-//    }
-//    return 0;
-//}

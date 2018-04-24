@@ -4,13 +4,16 @@
 // takes the equation sets and generates the new set of residuals
 int blockDecomposition::generateResidualsFromConnectedSystem()
 {
-    //Loop over all variable sets
+    //Loop over all variable sets(excexpt the last set, its the dummy node)
     unsigned int varIndex = 0;
     unsigned int funcIndex = 0;
     std::vector<virtualOper>* mainResidualInstr = mainInputResidual->getAllInst();
-    residualIndexMap.clear();
+    unsigned int blockCount = 1;
     for(std::list<std::list<incidenceGraphNode*>*>::const_iterator it1 = scc->begin(); it1 != scc->end(); ++it1)
-    {
+    {        
+        if(blockCount == scc->size())
+            break;
+
          //get the variables from each set
          int resiType = FUNCTION_TYPE_ALG;
          std::map<unsigned int, unsigned int> allVars;
@@ -24,34 +27,53 @@ int blockDecomposition::generateResidualsFromConnectedSystem()
          //compute variable1 indices
          varIndex = 0;
          std::vector<unsigned int>* vecV1map = new std::vector<unsigned int>;
-         std::vector<unsigned int>* vecV2map = new std::vector<unsigned int>;
+         std::vector<unsigned int>* vecV2map = NULL;
+         if(!isInitializer)
+           vecV2map = new std::vector<unsigned int>;
 
+         //Map block equation variables to the original set
          //first do algebraic variables, the correspoding differential variable will also
          //share the same index, regardless whether its present or not
          //this will make sure eg. x[0] is aligned to x'[0]
-         for(unsigned int i = 0; i < numVar; ++i)
+         if(!isInitializer)
          {
-             mapVar1[i].second = 0;
-             mapVar2[i].second = 0;
-             if(allVars.find(mapVar1[i].first) != allVars.end())
+             for(unsigned int i = 0; i < numVar; ++i)
              {
-                 vecV1map->push_back(i + 1);
-                 vecV2map->push_back(i + 1);
-                 mapVar1[i].second = varIndex + 1;
-                 mapVar2[i].second = varIndex + 1;
-                 varIndex++;
+                 mapVar1[i].second = 0;
+                 mapVar2[i].second = 0;
+                 if(allVars.find(mapVar1[i].first) != allVars.end())
+                 {
+                     vecV1map->push_back(i);
+                     vecV2map->push_back(i);
+                     mapVar1[i].second = varIndex + 1;
+                     mapVar2[i].second = varIndex + 1;
+                     varIndex++;
+                 }
+             }
+
+             //second, add all extra differential variables if any
+             for(unsigned int i = 0; i < numVar; ++i)
+             {
+                 if(mapVar1[i].second == 0)
+                 {
+                     if(allVars.find(mapVar2[i].first) != allVars.end())
+                     {
+                         vecV2map->push_back(i);
+                         mapVar2[i].second = varIndex + 1;
+                         varIndex++;
+                     }
+                 }
              }
          }
-
-         //second, add all extra differential variables if any
-         for(unsigned int i = 0; i < numVar; ++i)
+         else
          {
-             if(mapVar1[i].second == 0)
+             for(unsigned int i = 0; i < numVar; ++i)
              {
-                 if(allVars.find(mapVar2[i].first) != allVars.end())
+                 mapVar1[i].second = 0;
+                 if(allVars.find(mapVar1[i].first) != allVars.end())
                  {
-                     vecV2map->push_back(i + 1);
-                     mapVar2[i].second = varIndex + 1;
+                     vecV1map->push_back(i);
+                     mapVar1[i].second = varIndex + 1;
                      varIndex++;
                  }
              }
@@ -67,6 +89,7 @@ int blockDecomposition::generateResidualsFromConnectedSystem()
          genericResidual* blockResi = new genericResidual;
          blockResi->createNewInstructionStack(NULL);
          bool endInstLoop = false;
+         unsigned int blockNumEqu = 0;
          for(std::map<unsigned int, unsigned int>::const_iterator it = allVars.begin(); it != allVars.end(); ++it)
          {
             //get the function index
@@ -79,6 +102,7 @@ int blockDecomposition::generateResidualsFromConnectedSystem()
                 if(instrPointer->signal == VR_SIGNAL_LAST)
                 {
                     endInstLoop = true;
+                    blockResi->setNumEquations(++blockNumEqu);
                 }
 
                 switch(instrPointer->operType)
@@ -114,6 +138,7 @@ int blockDecomposition::generateResidualsFromConnectedSystem()
                 }
                 ++instrPointer;
             }
+            endInstLoop = false;
          }
 
          //set residual type
@@ -121,8 +146,11 @@ int blockDecomposition::generateResidualsFromConnectedSystem()
 
          //Now add to list of residuals
          outputResiduals.push_back(blockResi);
+
+         blockCount++;
     }
     return 0;
 }
+
 
 

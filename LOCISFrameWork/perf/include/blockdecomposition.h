@@ -15,6 +15,7 @@ class blockDecomposition
     unsigned int numEqu;
     int systemType;
     genericResidual* mainInputResidual;
+    bool isInitializer;
 
     //algorithms
     incidenceGraph igraph;
@@ -38,6 +39,7 @@ public:
     void setNumVarsEqu(unsigned int numVar, unsigned int numEqu);
     int getEquationSets();
     int generateResidualsFromConnectedSystem();
+    void setInInitializer(bool val);
     bool computeBlockSystem(genericResidual* mainInputResidual_arg, unsigned int numVar_arg, unsigned int numEqu_arg);
 
     unsigned int getNumEquationSets();
