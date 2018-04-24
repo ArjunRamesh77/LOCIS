@@ -22,6 +22,7 @@ struct solverOutputBlockDecomp : public solverOutput
 // supervisor for using block decomposition method for solving system of equations
 class solverBlockDecomposition : public solverSolutionMethod
 {
+    bool isInitializer;
     blockDecomposition bd;
     unsigned int numEquBlocks;
     std::list<solverSystem*> blocks;
@@ -30,8 +31,10 @@ public:
     solverBlockDecomposition();
     ~solverBlockDecomposition();
 
+    void setIsInitializer(bool val);
+
     virtual bool initSystem();
     virtual bool solve(double time = 0.0);
-    virtual solverOutput* getSolverOutput(solverOutputBlockDecomp* out);
+    virtual solverOutput* getSolverOutput();
 };
 
