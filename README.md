@@ -45,7 +45,7 @@ model cstr
   }
 }
 
-odel tank_farm <DYNAMIC 0.0 100.0 100 1.0E-5 1.0E-5>
+model tank_farm <DYNAMIC 0.0 100.0 100 1.0E-5 1.0E-5>
 {
   parameter NUM_TANKS = 2;
   cstr Tanks[NUM_TANKS];
