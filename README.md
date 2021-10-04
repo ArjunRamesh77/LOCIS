@@ -2,7 +2,7 @@
 
 This is the primary repository for the LOCIS project. An object oriented DSL for modeling and simulation.
 
-'''
+```
 Example:
 # CSTR with energy balance
 # Reaction A -> B
@@ -66,4 +66,4 @@ odel tank_farm <DYNAMIC 0.0 100.0 100 1.0E-5 1.0E-5>
     }
   }
 }
-'''
+```
