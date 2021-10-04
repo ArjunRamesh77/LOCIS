@@ -2,8 +2,8 @@
 
 This is the primary repository for the LOCIS project. An object oriented DSL for modeling and simulation.
 
+Example Model
 ```
-Example:
 # CSTR with energy balance
 # Reaction A -> B
 # Adapted from http://apmonitor.com/che436/index.php/Main/CaseStudyCSTR
